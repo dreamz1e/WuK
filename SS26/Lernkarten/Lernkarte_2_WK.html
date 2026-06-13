@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernkarte 2 — WK · Laplace, Binomial, Bayes, Zufallsvariable</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+<style>
+  :root{
+    --accent:#0ea5e9; --accent-soft:#e0f2fe; --accent-dark:#0369a1;
+    --bg:#f4f8fb; --card:#ffffff; --ink:#1e2230; --muted:#5b6376;
+    --line:#e2e9f0; --ok:#10b981; --ok-soft:#ecfdf5;
+    --warn:#f59e0b; --warn-soft:#fffbeb; --danger:#ef4444; --danger-soft:#fef2f2;
+    --code:#eef3f8; --shadow:0 1px 3px rgba(20,30,60,.06),0 8px 24px rgba(20,30,60,.06);
+  }
+  [data-theme="dark"]{
+    --accent:#38bdf8; --accent-soft:#10283a; --accent-dark:#7dd3fc;
+    --bg:#0f1117; --card:#181b25; --ink:#e7e9f0; --muted:#9aa1b4;
+    --line:#272b3a; --ok:#34d399; --ok-soft:#0d2620;
+    --warn:#fbbf24; --warn-soft:#2a2310; --danger:#f87171; --danger-soft:#2a1517;
+    --code:#11141d; --shadow:0 1px 3px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth; scroll-padding-top:80px}
+  body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.65; -webkit-font-smoothing:antialiased; transition:background .3s,color .3s}
+  header.top{position:sticky; top:0; z-index:50; backdrop-filter:saturate(180%) blur(10px);
+    background:color-mix(in srgb,var(--card) 86%,transparent); border-bottom:1px solid var(--line)}
+  .top-inner{max-width:1180px; margin:0 auto; padding:.7rem 1.2rem; display:flex; align-items:center; gap:1rem}
+  .brand{font-weight:800; letter-spacing:-.01em; font-size:1.02rem; display:flex; align-items:center; gap:.55rem}
+  .brand .dot{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#6366f1);
+    display:grid;place-items:center;color:#fff;font-weight:800;box-shadow:0 4px 12px rgba(14,165,233,.4)}
+  .top-spacer{flex:1}
+  .tnav{display:flex; gap:.3rem; flex-wrap:wrap}
+  .tnav a{font-size:.83rem; color:var(--muted); text-decoration:none; padding:.32rem .6rem; border-radius:7px; font-weight:600}
+  .tnav a:hover{background:var(--accent-soft); color:var(--accent-dark)}
+  .theme-btn{cursor:pointer; border:1px solid var(--line); background:var(--card); color:var(--ink);
+    width:38px;height:38px;border-radius:9px;font-size:1.1rem; display:grid; place-items:center}
+  .theme-btn:hover{border-color:var(--accent)}
+  .wrap{max-width:880px; margin:0 auto; padding:2.2rem 1.2rem 5rem}
+  .hero{margin:.5rem 0 2.2rem}
+  .kicker{display:inline-block; font-size:.72rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--accent-dark); background:var(--accent-soft); padding:.3rem .7rem; border-radius:99px}
+  h1{font-size:2.1rem; line-height:1.15; margin:.7rem 0 .3rem; letter-spacing:-.02em}
+  .hero p{color:var(--muted); font-size:1.05rem; margin:.2rem 0 0; max-width:42rem}
+  .pills{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+  .pill{font-size:.78rem;font-weight:700;padding:.35rem .7rem;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+  .pill b{color:var(--accent-dark)}
+  section{margin:2.6rem 0; scroll-margin-top:80px}
+  .sec-head{display:flex; align-items:center; gap:.8rem; margin-bottom:.3rem}
+  .sec-num{flex:none; width:46px;height:46px;border-radius:12px; background:var(--accent); color:#fff;
+    display:grid; place-items:center; font-weight:800; font-size:1.25rem; box-shadow:0 6px 16px rgba(14,165,233,.35)}
+  .sec-head h2{font-size:1.55rem; margin:0; letter-spacing:-.01em}
+  .sec-head .sub{color:var(--muted); font-size:.9rem; font-weight:600}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:1.4rem 1.5rem; box-shadow:var(--shadow); margin:1rem 0}
+  .card h3{margin:.1rem 0 .6rem; font-size:1.12rem}
+  .card h4{margin:1.1rem 0 .4rem; font-size:.95rem; color:var(--accent-dark); text-transform:uppercase; letter-spacing:.04em}
+  p{margin:.55rem 0}
+  .box{border-radius:12px; padding:.9rem 1.1rem; margin:1rem 0; border:1px solid var(--line)}
+  .box .bt{font-weight:800; display:flex; align-items:center; gap:.5rem; margin-bottom:.2rem}
+  .box.intuition{background:var(--accent-soft); border-color:color-mix(in srgb,var(--accent) 30%,transparent)}
+  .box.intuition .bt{color:var(--accent-dark)}
+  .box.warn{background:var(--warn-soft); border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
+  .box.warn .bt{color:var(--warn)}
+  .box.tip{background:var(--ok-soft); border-color:color-mix(in srgb,var(--ok) 40%,transparent)}
+  .box.tip .bt{color:var(--ok)}
+  .formula{background:var(--code); border:1px dashed var(--line); border-radius:12px; padding:1rem 1.2rem; margin:1rem 0; overflow-x:auto}
+  .legend{font-size:.86rem; color:var(--muted); margin-top:.5rem}
+  .legend code{background:var(--accent-soft); color:var(--accent-dark); padding:.05rem .35rem; border-radius:5px; font-weight:700}
+  table{border-collapse:collapse; width:100%; margin:.8rem 0; font-size:.9rem}
+  th,td{border:1px solid var(--line); padding:.45rem .6rem; text-align:left}
+  th{background:var(--accent-soft); color:var(--accent-dark); font-weight:700}
+  .steps{margin:1rem 0}
+  .step{border-left:3px solid var(--line); padding:.2rem 0 .2rem 1rem; margin:.2rem 0; opacity:.28; filter:blur(2.5px); transition:all .35s; pointer-events:none}
+  .step.shown{opacity:1; filter:none; border-left-color:var(--accent); pointer-events:auto}
+  .step .lbl{font-size:.72rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-dark)}
+  .step-ctrl{display:flex; gap:.6rem; align-items:center; margin-top:.4rem; flex-wrap:wrap}
+  .btn{cursor:pointer; border:none; background:var(--accent); color:#fff; font-weight:700; font-size:.88rem; padding:.5rem .95rem; border-radius:9px; transition:transform .1s, background .2s}
+  .btn:hover{background:var(--accent-dark)} .btn:active{transform:scale(.97)}
+  .btn.ghost{background:transparent; color:var(--accent-dark); border:1px solid var(--line)}
+  .btn.ghost:hover{background:var(--accent-soft)}
+  .progress-txt{font-size:.82rem; color:var(--muted); font-weight:600}
+  .calc{background:linear-gradient(180deg,var(--accent-soft),transparent); border:1px solid color-mix(in srgb,var(--accent) 25%,transparent); border-radius:14px; padding:1.2rem; margin:1.1rem 0}
+  .calc .row{display:flex; gap:.8rem; flex-wrap:wrap; align-items:flex-end; margin-bottom:.6rem}
+  .calc label{display:flex; flex-direction:column; font-size:.78rem; font-weight:700; color:var(--muted); gap:.25rem}
+  .calc input{width:90px; padding:.5rem .6rem; border:1px solid var(--line); border-radius:8px; font-size:1rem; background:var(--card); color:var(--ink); font-weight:700}
+  .calc input.wide{width:240px}
+  .calc input:focus{outline:2px solid var(--accent); border-color:var(--accent)}
+  .calc-out{margin-top:.6rem; font-size:1.02rem; min-height:1.6rem}
+  .calc-out .res{font-weight:800; color:var(--accent-dark); font-size:1.2rem}
+  .hint{font-size:.8rem; color:var(--muted)}
+  .quiz .q{font-weight:700; margin:.2rem 0 .7rem}
+  .opts{display:grid; gap:.5rem}
+  .opt{cursor:pointer; border:1px solid var(--line); background:var(--card); border-radius:10px; padding:.65rem .9rem; text-align:left; font-size:.95rem; color:var(--ink); transition:all .15s; font-weight:600}
+  .opt:hover{border-color:var(--accent)}
+  .opt.correct{background:var(--ok-soft); border-color:var(--ok)} .opt.wrong{background:var(--danger-soft); border-color:var(--danger)}
+  .opt .mark{float:right; font-weight:800}
+  .feedback{margin-top:.7rem; font-size:.9rem; font-weight:600; min-height:1.2rem}
+  .feedback.ok{color:var(--ok)} .feedback.no{color:var(--danger)}
+  details{border:1px solid var(--line); border-radius:10px; padding:.2rem .9rem; margin:.6rem 0; background:var(--card)}
+  details summary{cursor:pointer; font-weight:700; padding:.5rem 0; color:var(--accent-dark)}
+  details[open]{background:var(--accent-soft)}
+  .footer{text-align:center; color:var(--muted); font-size:.84rem; margin-top:3rem; padding-top:1.5rem; border-top:1px solid var(--line)}
+  kbd{background:var(--code); border:1px solid var(--line); border-radius:5px; padding:.05rem .35rem; font-size:.82rem}
+  .tag{display:inline-block;font-size:.7rem;font-weight:800;padding:.15rem .5rem;border-radius:6px;background:var(--accent);color:#fff;vertical-align:middle;margin-left:.4rem}
+  .tree{font-family:ui-monospace,Menlo,monospace; font-size:.86rem; background:var(--code); border-radius:10px; padding:1rem; overflow-x:auto; white-space:pre; line-height:1.5}
+  @media(max-width:560px){ h1{font-size:1.7rem} .tnav{display:none} .sec-head h2{font-size:1.3rem} }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><span class="dot">W</span> WuK · Lernkarte 2</div>
+    <div class="top-spacer"></div>
+    <nav class="tnav">
+      <a href="#start">Start</a>
+      <a href="#laplace">#3 Laplace</a>
+      <a href="#binom">#4 Binomial</a>
+      <a href="#bayes">#5 Bayes</a>
+      <a href="#zv">#6 Zufallsvariable</a>
+      <a href="#quiz">Quiz</a>
+      <a href="#spicker">Spicker</a>
+    </nav>
+    <button class="theme-btn" id="themeToggle" title="Hell/Dunkel">🌙</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero" id="start">
+    <span class="kicker">Block WK · Aufgabentypen #3 · #4 · #5 · #6</span>
+    <h1>Wahrscheinlichkeit:<br>Zählen, Verteilen, Schließen</h1>
+    <p>Vier Aufgabentypen, ein roter Faden: vom einfachen Abzählen (Laplace) über die Binomialverteilung und das mächtige Bayes-Schema bis zur Zufallsvariable. <b>Bayes ist die Punkte-Goldgrube</b> — rein schematisch, hohe Ausbeute pro Lernminute.</p>
+    <div class="pills">
+      <span class="pill">⏱️ Block 17.–25.06</span>
+      <span class="pill">🎯 #4 &amp; #5 = <b>Tier 1</b></span>
+      <span class="pill">🧮 #3 Tier 2 · #6 Tier 3</span>
+    </div>
+  </div>
+
+  <!-- ============ #3 LAPLACE ============ -->
+  <section id="laplace">
+    <div class="sec-head"><div class="sec-num">3</div>
+      <div><h2>Laplace-Wahrscheinlichkeit</h2><div class="sub">Abzählen · Würfel · Fahrstuhl</div></div></div>
+    <div class="card">
+      <div class="box intuition"><div class="bt">💡 Intuition</div>
+        Wenn alle Ergebnisse <b>gleich wahrscheinlich</b> sind, ist Wahrscheinlichkeit nur <b>Zählen</b>: günstige Fälle geteilt durch alle Fälle.</div>
+      <h4>Die Formel</h4>
+      <div class="formula" data-tex="P(A)=\dfrac{|A|}{|\Omega|}=\dfrac{\text{günstige Fälle}}{\text{mögliche Fälle}}"></div>
+      <div class="legend">Grundräume, die du auswendig brauchst: <code>2 Würfel → 36</code>, <code>3 Würfel/Würfe → 216</code>, <code>Fahrstuhl → Stockwerke^Personen</code>.</div>
+
+      <div class="box tip"><div class="bt">✅ Der wichtigste Reflex: Gegenereignis</div>
+        Steht „<b>mindestens ein …</b>“ in der Aufgabe → fast immer schneller über das Gegenteil:
+        <div class="formula" data-tex="P(\text{mind. ein }A)=1-P(\text{kein }A)"></div>
+        Beispiel (WS0607 A4): „mindestens eine 6 bei 2 Würfeln“ = <span data-tex="1-\left(\tfrac{5}{6}\right)^2=\tfrac{11}{36}"></span>.</div>
+
+      <h4>Und/Oder-Regeln</h4>
+      <table>
+        <tr><th>Verknüpfung</th><th>Regel</th></tr>
+        <tr><td>UND, unabhängig</td><td><span data-tex="P(A\cap B)=P(A)\cdot P(B)"></span></td></tr>
+        <tr><td>ODER (allgemein)</td><td><span data-tex="P(A\cup B)=P(A)+P(B)-P(A\cap B)"></span></td></tr>
+      </table>
+
+      <h4>📝 Echte Klausuraufgabe — 21SoSe A3 (Fahrstuhl) <span class="tag">verifiziert</span></h4>
+      <p>3 Personen, 3 Stockwerke. Grundraum <span data-tex="3^3=27"></span>. Klick durch:</p>
+      <div class="steps" id="steps-lap">
+        <div class="step"><div class="lbl">a) Fahrstuhl hält nur 1× (alle ins selbe Stockwerk)</div>
+          3 günstige Fälle (alle in Stockwerk 1, 2 oder 3): <span data-tex="\tfrac{3}{27}=\tfrac{1}{9}"></span></div>
+        <div class="step"><div class="lbl">b) hält 3× (alle in verschiedene)</div>
+          erste Person 3 Wahlen, zweite 2, dritte 1: <span data-tex="\tfrac{3\cdot2\cdot1}{27}=\tfrac{6}{27}=\tfrac{2}{9}"></span></div>
+        <div class="step"><div class="lbl">d) Person A steigt allein aus (B, C woanders, aber zusammen erlaubt)</div>
+          A: 3 Wahlen, B &amp; C je in eines der 2 übrigen: <span data-tex="\tfrac{3\cdot2\cdot2}{27}=\tfrac{12}{27}=\tfrac{4}{9}"></span></div>
+      </div>
+      <div class="step-ctrl">
+        <button class="btn" data-steps="steps-lap" data-act="next">Nächster Schritt ▸</button>
+        <button class="btn ghost" data-steps="steps-lap" data-act="all">Alle zeigen</button>
+        <button class="btn ghost" data-steps="steps-lap" data-act="reset">↺</button>
+        <span class="progress-txt" id="prog-steps-lap"></span>
+      </div>
+
+      <h4>Sonderfall: Ziehen aus einer Urne</h4>
+      <div class="box intuition"><div class="bt">💡 Das Schema</div>
+        Kugeln in mehreren Farben, du ziehst k Stück. Zwei Welten — <b>mit Zurücklegen</b> (Kugel kommt zurück, Anzahl bleibt) oder <b>ohne Zurücklegen</b> (Anzahl sinkt mit jedem Zug). Frage meist: „beide/alle gleichfarbig?“</div>
+      <table>
+        <tr><th></th><th>ohne Zurücklegen</th><th>mit Zurücklegen</th></tr>
+        <tr><td>1 Zug, Farbe i</td><td><span data-tex="\tfrac{c_i}{N}"></span></td><td><span data-tex="\tfrac{c_i}{N}"></span></td></tr>
+        <tr><td>2 gleichfarbig</td><td><span data-tex="\sum_i \tfrac{c_i(c_i-1)}{N(N-1)}"></span></td><td><span data-tex="\sum_i \left(\tfrac{c_i}{N}\right)^2"></span></td></tr>
+      </table>
+      <div class="legend"><code>cᵢ</code> = Kugeln der Farbe i, <code>N</code> = alle Kugeln. „Mindestens ein roter“ → wieder <b>Gegenereignis</b>.</div>
+
+      <h4>📝 Echte Klausuraufgabe — WS0607 A3 <span class="tag">verifiziert</span></h4>
+      <p>Urne: <b>3 blau, 2 rot, 5 grün</b> (N = 10). Es werden 2 Kugeln gezogen — beide gleichfarbig?</p>
+      <div class="steps" id="steps-urn">
+        <div class="step"><div class="lbl">a) ohne Zurücklegen</div>
+          <span data-tex="\frac{3\cdot2+2\cdot1+5\cdot4}{10\cdot9}=\frac{6+2+20}{90}=\frac{28}{90}=\mathbf{\tfrac{14}{45}}"></span></div>
+        <div class="step"><div class="lbl">b) mit Zurücklegen</div>
+          <span data-tex="\frac{3^2+2^2+5^2}{10^2}=\frac{9+4+25}{100}=\frac{38}{100}=\mathbf{\tfrac{19}{50}}"></span></div>
+      </div>
+      <div class="step-ctrl">
+        <button class="btn" data-steps="steps-urn" data-act="next">Nächster Schritt ▸</button>
+        <button class="btn ghost" data-steps="steps-urn" data-act="all">Alle zeigen</button>
+        <button class="btn ghost" data-steps="steps-urn" data-act="reset">↺</button>
+        <span class="progress-txt" id="prog-steps-urn"></span>
+      </div>
+
+      <h4>🧮 Urnen-Rechner (2 gleichfarbig)</h4>
+      <div class="calc" id="calc-urn">
+        <div class="row">
+          <label style="flex:1">Kugeln je Farbe (komma-getrennt)
+            <input type="text" class="wide" id="urnIn" value="3, 2, 5" style="width:100%"></label>
+          <button class="btn" id="urnGo">Berechnen</button>
+        </div>
+        <div class="calc-out" id="urnOut"></div>
+        <p class="hint">z.B. <kbd>3, 2, 5</kbd> (blau, rot, grün). Gibt P(2 gleichfarbig) mit und ohne Zurücklegen.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ #4 BINOMIAL ============ -->
+  <section id="binom">
+    <div class="sec-head"><div class="sec-num">4</div>
+      <div><h2>Binomialverteilung</h2><div class="sub">„n-mal, genau k Treffer“ · Münze, Schütze, Tennis</div></div></div>
+    <div class="card">
+      <div class="box intuition"><div class="bt">💡 Intuition</div>
+        Immer dasselbe Experiment <b>n-mal wiederholen</b>, jeder Versuch trifft mit Wahrscheinlichkeit <b>p</b> (unabhängig). Frage: „genau k Treffer?“ →
+        <span data-tex="p^k"></span> (k Treffer) × <span data-tex="(1-p)^{n-k}"></span> (Rest Nieten) × <span data-tex="\binom{n}{k}"></span> (auf wie viele Arten die k Treffer fallen können).</div>
+      <h4>Die Formel</h4>
+      <div class="formula" data-tex="P(X=k)=\binom{n}{k}\,p^{k}\,(1-p)^{\,n-k}"></div>
+      <div class="legend"><b>Kennzahlen:</b> <span data-tex="E[X]=n\,p"></span>, &nbsp; <span data-tex="\mathrm{Var}(X)=n\,p\,(1-p)"></span>.</div>
+
+      <div class="box tip"><div class="bt">✅ „mindestens / höchstens“</div>
+        „mindestens 1 Treffer“ → Gegenereignis <span data-tex="1-(1-p)^n"></span>.
+        „mindestens k“ / „höchstens k“ → Summe über die passenden Einzelwahrscheinlichkeiten.</div>
+
+      <h4>📝 Echte Klausuraufgabe — WS0607 A5 (Tennis) <span class="tag">verifiziert</span></h4>
+      <p>Anne gewinnt einen Satz mit <span data-tex="p=\tfrac{2}{3}"></span>, gespielt werden 4 Sätze.</p>
+      <div class="steps" id="steps-bin">
+        <div class="step"><div class="lbl">a) alle 4 Sätze</div>
+          k = n = 4: <span data-tex="\binom{4}{4}\left(\tfrac{2}{3}\right)^4=\tfrac{16}{81}"></span></div>
+        <div class="step"><div class="lbl">b) genau 2 Sätze</div>
+          <span data-tex="\binom{4}{2}\left(\tfrac{2}{3}\right)^2\left(\tfrac{1}{3}\right)^2=6\cdot\tfrac{4}{81}=\tfrac{24}{81}=\tfrac{8}{27}"></span></div>
+        <div class="step"><div class="lbl">c) mindestens 2 Sätze (Gegenereignis!)</div>
+          <span data-tex="1-P(0)-P(1)=1-\tfrac{1}{81}-\binom{4}{1}\tfrac{2}{3}\left(\tfrac{1}{3}\right)^3=1-\tfrac{1}{81}-\tfrac{8}{81}=\tfrac{72}{81}=\tfrac{8}{9}"></span></div>
+      </div>
+      <div class="step-ctrl">
+        <button class="btn" data-steps="steps-bin" data-act="next">Nächster Schritt ▸</button>
+        <button class="btn ghost" data-steps="steps-bin" data-act="all">Alle zeigen</button>
+        <button class="btn ghost" data-steps="steps-bin" data-act="reset">↺</button>
+        <span class="progress-txt" id="prog-steps-bin"></span>
+      </div>
+
+      <details>
+        <summary>Spezialfall: „Wie viele Versuche n nötig?“ (WS0809 A5)</summary>
+        <p>„Wie oft schießen, damit mit ≥ 90 % mindestens ein Treffer?“ bei p = 1/3:</p>
+        <p><span data-tex="(1-p)^n\le 0{,}1 \;\Rightarrow\; \left(\tfrac{2}{3}\right)^n\le 0{,}1 \;\Rightarrow\; n\ge \dfrac{\ln 0{,}1}{\ln(2/3)}\approx 5{,}68 \;\Rightarrow\; n=6"></span></p>
+        <p class="hint">Aufrunden! Bei „≥ Schwelle“ ist die nächste ganze Zahl die Antwort.</p>
+      </details>
+
+      <h4>🧮 Binomial-Rechner</h4>
+      <div class="calc" id="calc-bin">
+        <div class="row">
+          <label>n (Versuche) <input type="number" id="bN" value="8" min="0"></label>
+          <label>k (Treffer) <input type="number" id="bK" value="4" min="0"></label>
+          <label>p (Trefferws.) <input type="text" id="bP" value="1/3"></label>
+          <button class="btn" id="bGo">Berechnen</button>
+        </div>
+        <div class="calc-out" id="bOut"></div>
+        <p class="hint">p als Dezimalzahl (<kbd>0.5</kbd>) oder Bruch (<kbd>1/3</kbd>). Gibt P(X=k), P(X≥k), P(X≤k), E[X] und Var aus.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ #5 BAYES ============ -->
+  <section id="bayes">
+    <div class="sec-head"><div class="sec-num">5</div>
+      <div><h2>Satz von Bayes</h2><div class="sub">⭐ Punkte-Goldgrube · reines Einsetz-Schema</div></div></div>
+    <div class="card">
+      <div class="box intuition"><div class="bt">💡 Intuition</div>
+        Du kennst die Wahrscheinlichkeit „Ergebnis, <em>wenn</em> Ursache“ — gesucht ist die <b>umgekehrte</b> Richtung: „Ursache, <em>wenn</em> Ergebnis“. Bayes dreht die Bedingung um. Klassiker: Test ist positiv — wie wahrscheinlich bin ich <em>wirklich</em> krank?</div>
+      <h4>Die Formel</h4>
+      <div class="formula" data-tex="P(A\mid B)=\dfrac{P(B\mid A)\,P(A)}{P(B\mid A)\,P(A)+P(B\mid \bar A)\,P(\bar A)}"></div>
+      <div class="legend">Der Nenner ist die <b>totale Wahrscheinlichkeit</b> von B (alle Wege, auf denen B passiert). Immer zuerst die <b>4 Größen</b> aus dem Text lesen:
+        <code>P(A)</code>, <code>P(Ā)=1−P(A)</code>, <code>P(B|A)</code>, <code>P(B|Ā)</code>.</div>
+
+      <div class="box tip"><div class="bt">✅ Baumdiagramm als Spickhilfe</div>
+        <div class="tree">           P(B|A)
+        ┌─────────► B   ① P(A)·P(B|A)
+  P(A) │ A
+───────┤
+  P(Ā) │ Ā           P(B|Ā)
+        └─────────► B   ② P(Ā)·P(B|Ā)
+
+P(A|B) = ① / (① + ②)</div>
+        Erster Ast = Ursache, zweiter Ast = Ergebnis. Gesucht: Anteil des <b>einen</b> Pfades an <b>allen</b> Pfaden, die zu B führen.</div>
+
+      <h4>📝 Echte Klausuraufgabe — SoSe20 A6 (med. Test) <span class="tag">verifiziert</span></h4>
+      <p>Krankheit selten: <span data-tex="P(K)=10^{-5}"></span>. Test: <span data-tex="P(+\mid K)=0{,}99"></span>, Fehlalarm <span data-tex="P(+\mid \bar K)=0{,}005"></span>. Gesucht <span data-tex="P(K\mid +)"></span>:</p>
+      <div class="steps" id="steps-bay">
+        <div class="step"><div class="lbl">1) Größen auslesen</div>
+          <span data-tex="P(K)=10^{-5},\ P(\bar K)\approx 1,\ P(+\mid K)=0{,}99,\ P(+\mid\bar K)=0{,}005"></span></div>
+        <div class="step"><div class="lbl">2) Zähler = „echter“ Pfad</div>
+          <span data-tex="P(+\mid K)\,P(K)=0{,}99\cdot10^{-5}=9{,}9\cdot10^{-6}"></span></div>
+        <div class="step"><div class="lbl">3) Nenner = alle Wege zu „+“</div>
+          <span data-tex="9{,}9\cdot10^{-6}+0{,}005\cdot(1-10^{-5})\approx 9{,}9\cdot10^{-6}+5{,}0\cdot10^{-3}"></span></div>
+        <div class="step"><div class="lbl">4) Ergebnis (überraschend klein!)</div>
+          <span data-tex="P(K\mid +)=\dfrac{22}{11133}\approx 0{,}00198 \approx 0{,}2\%"></span> — trotz positivem Test fast sicher gesund, weil die Krankheit extrem selten ist.</div>
+      </div>
+      <div class="step-ctrl">
+        <button class="btn" data-steps="steps-bay" data-act="next">Nächster Schritt ▸</button>
+        <button class="btn ghost" data-steps="steps-bay" data-act="all">Alle zeigen</button>
+        <button class="btn ghost" data-steps="steps-bay" data-act="reset">↺</button>
+        <span class="progress-txt" id="prog-steps-bay"></span>
+      </div>
+
+      <div class="box warn"><div class="bt">⚠️ Falle</div>
+        Verwechsle nie <span data-tex="P(B\mid A)"></span> mit <span data-tex="P(A\mid B)"></span> — genau das dreht Bayes um! Und vergiss im Nenner den <b>zweiten Pfad</b> <span data-tex="P(B\mid\bar A)P(\bar A)"></span> nicht.</div>
+
+      <h4>🧮 Bayes-Rechner</h4>
+      <div class="calc" id="calc-bay">
+        <div class="row">
+          <label>P(A) <input type="text" id="yA" value="0.00001"></label>
+          <label>P(B|A) <input type="text" id="yBA" value="0.99"></label>
+          <label>P(B|Ā) <input type="text" id="yBnA" value="0.005"></label>
+          <button class="btn" id="yGo">P(A|B) berechnen</button>
+        </div>
+        <div class="calc-out" id="yOut"></div>
+        <p class="hint">Dezimal oder Bruch. Default = der med. Test oben.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ #6 ZV ============ -->
+  <section id="zv">
+    <div class="sec-head"><div class="sec-num">6</div>
+      <div><h2>Zufallsvariable</h2><div class="sub">E[X], Varianz, σ · diskret &amp; stetig <span class="tag" style="background:var(--warn)">Tier 3</span></div></div></div>
+    <div class="card">
+      <div class="box intuition"><div class="bt">💡 Intuition</div>
+        <b>E[X]</b> = der „Schwerpunkt“ / Durchschnittswert auf lange Sicht. <b>Var</b> = wie stark die Werte um diesen Schwerpunkt streuen. <b>σ</b> = √Var, die Streuung in derselben Einheit wie X.</div>
+
+      <h4>Diskret (Wahrscheinlichkeitstabelle)</h4>
+      <div class="formula" data-tex="E[X]=\sum_k k\cdot P(X=k)\qquad \mathrm{Var}(X)=E[X^2]-\big(E[X]\big)^2\qquad \sigma=\sqrt{\mathrm{Var}}"></div>
+      <div class="box warn"><div class="bt">⚠️ Die teure Falle</div>
+        <span data-tex="E[X^2]\neq (E[X])^2"></span>! Für <span data-tex="E[X^2]"></span> jedes <span data-tex="k^2"></span> mit seiner Wahrscheinlichkeit gewichten — <b>getrennt</b> von E[X] rechnen, sonst ist die Varianz falsch.</div>
+
+      <h4>📝 Echte Klausuraufgabe — 21SoSe A6 (Minimum zweier Würfel) <span class="tag">verifiziert</span></h4>
+      <p>X = kleinere der zwei gewürfelten Augen. Verteilung <span data-tex="P(X=k)=\frac{(7-k)^2-(6-k)^2}{36}"></span>:</p>
+      <table>
+        <tr><th>k</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr>
+        <tr><th>P</th><td>11/36</td><td>9/36</td><td>7/36</td><td>5/36</td><td>3/36</td><td>1/36</td></tr>
+      </table>
+      <div class="steps" id="steps-zv">
+        <div class="step"><div class="lbl">E[X]</div> <span data-tex="\sum k\,P(X{=}k)=\tfrac{91}{36}\approx 2{,}528"></span></div>
+        <div class="step"><div class="lbl">E[X²] (getrennt!)</div> <span data-tex="\sum k^2\,P(X{=}k)=\tfrac{301}{36}\approx 8{,}361"></span></div>
+        <div class="step"><div class="lbl">Var = E[X²] − (E[X])²</div> <span data-tex="\tfrac{301}{36}-\left(\tfrac{91}{36}\right)^2=\tfrac{2555}{1296}\approx 1{,}97"></span></div>
+        <div class="step"><div class="lbl">σ = √Var</div> <span data-tex="\sqrt{1{,}97}\approx 1{,}404"></span></div>
+      </div>
+      <div class="step-ctrl">
+        <button class="btn" data-steps="steps-zv" data-act="next">Nächster Schritt ▸</button>
+        <button class="btn ghost" data-steps="steps-zv" data-act="all">Alle zeigen</button>
+        <button class="btn ghost" data-steps="steps-zv" data-act="reset">↺</button>
+        <span class="progress-txt" id="prog-steps-zv"></span>
+      </div>
+
+      <h4>Stetig (Dichtefunktion)</h4>
+      <div class="formula" data-tex="\int_{-\infty}^{\infty} f(x)\,dx=1\ \ (\Rightarrow C)\qquad E[X]=\int x\,f(x)\,dx\qquad E[X^2]=\int x^2 f(x)\,dx"></div>
+      <details>
+        <summary>Stetiges Beispiel — SS14 A6: f(x) = C·x auf [0, a]</summary>
+        <p><b>Normierung</b> bestimmt C: <span data-tex="\int_0^a Cx\,dx=\tfrac{Ca^2}{2}=1 \Rightarrow C=\tfrac{2}{a^2}"></span></p>
+        <p><b>Erwartungswert:</b> <span data-tex="E[X]=\int_0^a x\cdot\tfrac{2x}{a^2}\,dx=\tfrac{2a}{3}"></span></p>
+        <p><b>Varianz:</b> <span data-tex="E[X^2]=\tfrac{a^2}{2},\ \ \mathrm{Var}=\tfrac{a^2}{2}-\left(\tfrac{2a}{3}\right)^2=\tfrac{a^2}{18},\ \ \sigma=\tfrac{a\sqrt2}{6}"></span></p>
+        <p class="hint">Rezept stetig: <b>1.</b> C aus „∫f = 1“ &nbsp;<b>2.</b> E[X] = ∫x·f &nbsp;<b>3.</b> E[X²] = ∫x²·f &nbsp;<b>4.</b> Var = E[X²] − E[X]².</p>
+      </details>
+
+      <h4>🧮 E[X] / Var-Rechner (diskret)</h4>
+      <div class="calc" id="calc-zv">
+        <div class="row">
+          <label style="flex:1">Werte : Wahrscheinlichkeit (komma-getrennt)
+            <input type="text" class="wide" id="zvIn" value="1:11/36, 2:9/36, 3:7/36, 4:5/36, 5:3/36, 6:1/36" style="width:100%">
+          </label>
+        </div>
+        <div class="row"><button class="btn" id="zvGo">Berechnen</button></div>
+        <div class="calc-out" id="zvOut"></div>
+        <p class="hint">Format <kbd>k:p</kbd>, p als Bruch oder Dezimal. Prüft auch, ob die Wahrscheinlichkeiten zu 1 summieren.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section id="quiz">
+    <div class="sec-head"><div class="sec-num" style="background:var(--ok);box-shadow:0 6px 16px rgba(16,185,129,.35)">✓</div>
+      <div><h2>Mini-Quiz</h2><div class="sub">Aktives Erinnern</div></div></div>
+    <div class="card quiz" id="quizBox"></div>
+  </section>
+
+  <!-- ============ SPICKER ============ -->
+  <section id="spicker">
+    <div class="sec-head"><div class="sec-num" style="background:#6366f1;box-shadow:0 6px 16px rgba(99,102,241,.35)">📄</div>
+      <div><h2>Auf den Spicker</h2><div class="sub">Block ③–⑥</div></div></div>
+    <div class="card">
+      <div class="box tip"><div class="bt">③ Laplace</div>
+        <span data-tex="P=\tfrac{\text{günstig}}{\text{möglich}}"></span> · 2 Würfel 36, 3 Würfel 216, Fahrstuhl Stockw.^Pers.<br>
+        <b>Gegenereignis:</b> P(mind. 1) = 1 − P(kein) · UND: P(A)·P(B) · ODER: P(A)+P(B)−P(A∩B)</div>
+      <div class="box tip"><div class="bt">④ Binomial</div>
+        <div class="formula" data-tex="P(X{=}k)=\binom{n}{k}p^k(1-p)^{n-k}"></div>
+        E[X]=np, Var=np(1−p) · „mind. 1“ = 1−(1−p)ⁿ</div>
+      <div class="box tip"><div class="bt">⑤ Bayes</div>
+        <div class="formula" data-tex="P(A|B)=\frac{P(B|A)P(A)}{P(B|A)P(A)+P(B|\bar A)P(\bar A)}"></div>
+        Erst 4 Größen auslesen, Baum zeichnen.</div>
+      <div class="box tip"><div class="bt">⑥ Zufallsvariable</div>
+        diskret: E[X]=Σk·P, Var=E[X²]−(E[X])², σ=√Var<br>
+        stetig: C aus ∫f=1, dann E[X]=∫x·f, E[X²]=∫x²·f</div>
+      <p class="hint">📌 Nächste Karte: <b>Lernkarte 3 (KRYPTO)</b> — der größte Hebel: ein Werkzeugkasten → 3 Aufgaben.</p>
+    </div>
+  </section>
+
+  <div class="footer">WuK SS26 · Lernkarte 2 von 3 · Aufgaben verifiziert aus <code>SS26/Loesungen/</code><br>Klausur Do 09.07.2026</div>
+</div>
+
+<script>
+/* KaTeX */
+function renderMath(){
+  document.querySelectorAll('[data-tex]').forEach(el=>{
+    try{ katex.render(el.getAttribute('data-tex'), el, {throwOnError:false, displayMode: el.classList.contains('formula')}); }
+    catch(e){ el.textContent=el.getAttribute('data-tex'); }
+  });
+}
+window.addEventListener('DOMContentLoaded',()=>{ if(window.katex) renderMath(); else window.addEventListener('load',renderMath); });
+
+/* Theme */
+const tBtn=document.getElementById('themeToggle');
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);tBtn.textContent=t==='dark'?'☀️':'🌙';localStorage.setItem('wuk-theme',t);}
+applyTheme(localStorage.getItem('wuk-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+tBtn.onclick=()=>applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+
+/* Steps */
+function updateProg(id){const c=document.getElementById(id),s=[...c.querySelectorAll('.step')];
+  document.getElementById('prog-'+id).textContent=`Schritt ${s.filter(x=>x.classList.contains('shown')).length} / ${s.length}`;}
+document.querySelectorAll('[data-steps]').forEach(btn=>{btn.onclick=()=>{
+  const id=btn.dataset.steps,c=document.getElementById(id),s=[...c.querySelectorAll('.step')];
+  if(btn.dataset.act==='next'){const n=s.find(x=>!x.classList.contains('shown'));if(n)n.classList.add('shown');}
+  if(btn.dataset.act==='all')s.forEach(x=>x.classList.add('shown'));
+  if(btn.dataset.act==='reset')s.forEach(x=>x.classList.remove('shown'));
+  updateProg(id);};});
+['steps-lap','steps-urn','steps-bin','steps-bay','steps-zv'].forEach(updateProg);
+
+/* helpers */
+function parseNum(s){ s=(s||'').trim(); if(s.includes('/')){const [a,b]=s.split('/').map(Number); return a/b;} return Number(s); }
+function comb(n,k){ if(k<0||k>n)return 0; if(k>n-k)k=n-k; let r=1; for(let i=0;i<k;i++)r=r*(n-i)/(i+1); return r; }
+function fmt(x){ return Math.abs(x)<1e-4||Math.abs(x)>=1e5 ? x.toExponential(4) : (Math.round(x*1e6)/1e6).toLocaleString('de-DE'); }
+
+/* Binomial */
+function calcBin(){
+  const n=parseInt(document.getElementById('bN').value), k=parseInt(document.getElementById('bK').value), p=parseNum(document.getElementById('bP').value);
+  const out=document.getElementById('bOut');
+  if(isNaN(n)||isNaN(k)||isNaN(p)||p<0||p>1){out.innerHTML='<span class="hint">Bitte n, k und p (0–1) prüfen.</span>';return;}
+  const P=k=>comb(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k);
+  const pk=P(k); let geq=0,leq=0; for(let i=0;i<=n;i++){if(i>=k)geq+=P(i); if(i<=k)leq+=P(i);}
+  out.innerHTML=`<div id="bf"></div>
+    <div style="margin-top:.4rem">P(X=${k}) = <span class="res">${fmt(pk)}</span></div>
+    <div class="hint">P(X≥${k}) = ${fmt(geq)} · P(X≤${k}) = ${fmt(leq)} · E[X] = ${fmt(n*p)} · Var = ${fmt(n*p*(1-p))}</div>`;
+  katex.render(`P(X{=}${k})=\\binom{${n}}{${k}}\\,p^{${k}}(1-p)^{${n-k}}`, document.getElementById('bf'), {throwOnError:false,displayMode:true});
+}
+document.getElementById('bGo').onclick=calcBin;
+['bN','bK','bP'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')calcBin();}));
+
+/* Bayes */
+function calcBay(){
+  const pa=parseNum(document.getElementById('yA').value), pba=parseNum(document.getElementById('yBA').value), pbna=parseNum(document.getElementById('yBnA').value);
+  const out=document.getElementById('yOut');
+  if([pa,pba,pbna].some(v=>isNaN(v)||v<0||v>1)){out.innerHTML='<span class="hint">Alle Werte zwischen 0 und 1 angeben.</span>';return;}
+  const num=pba*pa, den=pba*pa+pbna*(1-pa), res=num/den;
+  out.innerHTML=`<div id="yf"></div>
+    <div style="margin-top:.4rem">P(A|B) = <span class="res">${fmt(res)}</span> &nbsp;≈ ${fmt(res*100)} %</div>`;
+  katex.render(`P(A|B)=\\frac{${fmt(pba)}\\cdot ${fmt(pa)}}{${fmt(pba)}\\cdot ${fmt(pa)}+${fmt(pbna)}\\cdot ${fmt(1-pa)}}`, document.getElementById('yf'), {throwOnError:false,displayMode:true});
+}
+document.getElementById('yGo').onclick=calcBay;
+['yA','yBA','yBnA'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')calcBay();}));
+
+/* ZV discrete */
+function calcZV(){
+  const out=document.getElementById('zvOut');
+  const pairs=document.getElementById('zvIn').value.split(',').map(s=>s.trim()).filter(Boolean);
+  let Ex=0,Ex2=0,sum=0,ok=true;
+  pairs.forEach(pr=>{const [k,p]=pr.split(':'); const kv=parseNum(k), pv=parseNum(p); if(isNaN(kv)||isNaN(pv)){ok=false;return;} Ex+=kv*pv; Ex2+=kv*kv*pv; sum+=pv;});
+  if(!ok){out.innerHTML='<span class="hint">Format prüfen: k:p, durch Komma getrennt.</span>';return;}
+  const varX=Ex2-Ex*Ex;
+  const warn=Math.abs(sum-1)>1e-6?` <span style="color:var(--warn)">⚠️ Σp = ${fmt(sum)} ≠ 1</span>`:' ✓ Σp = 1';
+  out.innerHTML=`<div>E[X] = <span class="res">${fmt(Ex)}</span> · E[X²] = <b>${fmt(Ex2)}</b></div>
+    <div style="margin-top:.3rem">Var = E[X²] − (E[X])² = <span class="res">${fmt(varX)}</span> · σ = ${fmt(Math.sqrt(Math.max(0,varX)))}</div>
+    <div class="hint">${warn}</div>`;
+}
+document.getElementById('zvGo').onclick=calcZV;
+document.getElementById('zvIn').addEventListener('keydown',e=>{if(e.key==='Enter')calcZV();});
+
+/* Urne (2 gleichfarbig) */
+function calcUrn(){
+  const out=document.getElementById('urnOut');
+  const counts=document.getElementById('urnIn').value.split(',').map(s=>parseInt(s.trim())).filter(x=>!isNaN(x)&&x>=0);
+  if(counts.length<1){out.innerHTML='<span class="hint">Mindestens eine Farbe angeben, z.B. 3, 2, 5.</span>';return;}
+  const N=counts.reduce((a,b)=>a+b,0);
+  if(N<2){out.innerHTML='<span class="hint">Insgesamt mindestens 2 Kugeln nötig.</span>';return;}
+  const ohne=counts.reduce((a,c)=>a+c*(c-1),0)/(N*(N-1));
+  const mit=counts.reduce((a,c)=>a+c*c,0)/(N*N);
+  out.innerHTML=`<div class="hint">N = ${N} Kugeln, Farben: ${counts.join(', ')}</div>
+    <div style="margin-top:.3rem">P(2 gleichfarbig) <b>ohne</b> Zurücklegen = <span class="res">${fmt(ohne)}</span></div>
+    <div>P(2 gleichfarbig) <b>mit</b> Zurücklegen = <span class="res">${fmt(mit)}</span></div>`;
+}
+document.getElementById('urnGo').onclick=calcUrn;
+document.getElementById('urnIn').addEventListener('keydown',e=>{if(e.key==='Enter')calcUrn();});
+
+/* Quiz */
+const quizData=[
+  {q:'„Mindestens eine 6 bei 3 Würfen“ — schnellster Weg?',
+   opts:['3·(1/6)','1 − (5/6)³','(1/6)³','C(3,1)·(1/6)·(5/6)²'], correct:1,
+   why:'Gegenereignis „keine 6“: 1 − (5/6)³ = 91/216. Bei „mindestens ein“ fast immer übers Gegenteil.'},
+  {q:'Binomial: n=8, p=1/3, genau 4 Treffer. Ansatz?',
+   opts:['(1/3)⁴','C(8,4)·(1/3)⁴·(2/3)⁴','C(8,4)·(1/3)⁴','8·(1/3)⁴·(2/3)⁴'], correct:1,
+   why:'P(X=k)=C(n,k)·pᵏ·(1−p)ⁿ⁻ᵏ = C(8,4)·(1/3)⁴·(2/3)⁴ = 1120/6561.'},
+  {q:'Bei Bayes P(A|B): was steht im Nenner?',
+   opts:['nur P(B|A)·P(A)','P(B|A)·P(A) + P(B|Ā)·P(Ā)','P(A)+P(B)','P(B|A)·P(B|Ā)'], correct:1,
+   why:'Der Nenner ist die totale Wahrscheinlichkeit von B = beide Pfade addiert. Den zweiten Pfad nie vergessen!'},
+  {q:'Welche Aussage zur Varianz stimmt?',
+   opts:['Var = (E[X])² − E[X²]','Var = E[X²] − (E[X])²','Var = E[X] − E[X²]','Var = (E[X²] − E[X])²'], correct:1,
+   why:'Var = E[X²] − (E[X])². E[X²] und (E[X])² getrennt berechnen — das ist die teure Falle.'}
+];
+const qb=document.getElementById('quizBox');
+quizData.forEach((item,i)=>{
+  const d=document.createElement('div'); d.style.marginBottom='1.6rem';
+  d.innerHTML=`<div class="q">${i+1}. ${item.q}</div><div class="opts"></div><div class="feedback"></div>`;
+  const optsEl=d.querySelector('.opts'), fb=d.querySelector('.feedback');
+  item.opts.forEach((o,j)=>{const b=document.createElement('button');b.className='opt';b.innerHTML=o;
+    b.onclick=()=>{ if(d.dataset.done)return; d.dataset.done='1';
+      optsEl.querySelectorAll('.opt').forEach((x,xi)=>{if(xi===item.correct)x.classList.add('correct');});
+      if(j===item.correct){b.innerHTML+=' <span class="mark">✓</span>';fb.className='feedback ok';fb.textContent='Richtig! '+item.why;}
+      else{b.classList.add('wrong');b.innerHTML+=' <span class="mark">✗</span>';fb.className='feedback no';fb.textContent='Nicht ganz. '+item.why;}};
+    optsEl.appendChild(b);});
+  qb.appendChild(d);
+});
+</script>
+</body>
+</html>

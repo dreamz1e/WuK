@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernkarte 3 — KRYPTO · Werkzeugkasten, Affine, RSA</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+<style>
+  :root{
+    --accent:#16a34a; --accent-soft:#dcfce7; --accent-dark:#15803d;
+    --bg:#f3faf5; --card:#ffffff; --ink:#1e2230; --muted:#5b6376;
+    --line:#dceae0; --ok:#10b981; --ok-soft:#ecfdf5;
+    --warn:#f59e0b; --warn-soft:#fffbeb; --danger:#ef4444; --danger-soft:#fef2f2;
+    --code:#eef5ef; --shadow:0 1px 3px rgba(20,30,60,.06),0 8px 24px rgba(20,30,60,.06);
+  }
+  [data-theme="dark"]{
+    --accent:#4ade80; --accent-soft:#0e2a1a; --accent-dark:#86efac;
+    --bg:#0f1117; --card:#181b25; --ink:#e7e9f0; --muted:#9aa1b4;
+    --line:#272b3a; --ok:#34d399; --ok-soft:#0d2620;
+    --warn:#fbbf24; --warn-soft:#2a2310; --danger:#f87171; --danger-soft:#2a1517;
+    --code:#11141d; --shadow:0 1px 3px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth; scroll-padding-top:80px}
+  body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.65; -webkit-font-smoothing:antialiased; transition:background .3s,color .3s}
+  header.top{position:sticky; top:0; z-index:50; backdrop-filter:saturate(180%) blur(10px);
+    background:color-mix(in srgb,var(--card) 86%,transparent); border-bottom:1px solid var(--line)}
+  .top-inner{max-width:1180px; margin:0 auto; padding:.7rem 1.2rem; display:flex; align-items:center; gap:1rem}
+  .brand{font-weight:800; letter-spacing:-.01em; font-size:1.02rem; display:flex; align-items:center; gap:.55rem}
+  .brand .dot{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#0891b2);
+    display:grid;place-items:center;color:#fff;font-weight:800;box-shadow:0 4px 12px rgba(22,163,74,.4)}
+  .top-spacer{flex:1}
+  .tnav{display:flex; gap:.3rem; flex-wrap:wrap}
+  .tnav a{font-size:.83rem; color:var(--muted); text-decoration:none; padding:.32rem .6rem; border-radius:7px; font-weight:600}
+  .tnav a:hover{background:var(--accent-soft); color:var(--accent-dark)}
+  .theme-btn{cursor:pointer; border:1px solid var(--line); background:var(--card); color:var(--ink);
+    width:38px;height:38px;border-radius:9px;font-size:1.1rem; display:grid; place-items:center}
+  .theme-btn:hover{border-color:var(--accent)}
+  .wrap{max-width:880px; margin:0 auto; padding:2.2rem 1.2rem 5rem}
+  .hero{margin:.5rem 0 2.2rem}
+  .kicker{display:inline-block; font-size:.72rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--accent-dark); background:var(--accent-soft); padding:.3rem .7rem; border-radius:99px}
+  h1{font-size:2.1rem; line-height:1.15; margin:.7rem 0 .3rem; letter-spacing:-.02em}
+  .hero p{color:var(--muted); font-size:1.05rem; margin:.2rem 0 0; max-width:42rem}
+  .pills{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+  .pill{font-size:.78rem;font-weight:700;padding:.35rem .7rem;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+  .pill b{color:var(--accent-dark)}
+  section{margin:2.6rem 0; scroll-margin-top:80px}
+  .sec-head{display:flex; align-items:center; gap:.8rem; margin-bottom:.3rem}
+  .sec-num{flex:none; width:46px;height:46px;border-radius:12px; background:var(--accent); color:#fff;
+    display:grid; place-items:center; font-weight:800; font-size:1.25rem; box-shadow:0 6px 16px rgba(22,163,74,.35)}
+  .sec-head h2{font-size:1.55rem; margin:0; letter-spacing:-.01em}
+  .sec-head .sub{color:var(--muted); font-size:.9rem; font-weight:600}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:1.4rem 1.5rem; box-shadow:var(--shadow); margin:1rem 0}
+  .card h3{margin:.1rem 0 .6rem; font-size:1.12rem}
+  .card h4{margin:1.2rem 0 .4rem; font-size:.95rem; color:var(--accent-dark); text-transform:uppercase; letter-spacing:.04em}
+  p{margin:.55rem 0}
+  .box{border-radius:12px; padding:.9rem 1.1rem; margin:1rem 0; border:1px solid var(--line)}
+  .box .bt{font-weight:800; display:flex; align-items:center; gap:.5rem; margin-bottom:.2rem}
+  .box.intuition{background:var(--accent-soft); border-color:color-mix(in srgb,var(--accent) 30%,transparent)}
+  .box.intuition .bt{color:var(--accent-dark)}
+  .box.warn{background:var(--warn-soft); border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
+  .box.warn .bt{color:var(--warn)}
+  .box.tip{background:var(--ok-soft); border-color:color-mix(in srgb,var(--ok) 40%,transparent)}
+  .box.tip .bt{color:var(--ok)}
+  .formula{background:var(--code); border:1px dashed var(--line); border-radius:12px; padding:1rem 1.2rem; margin:1rem 0; overflow-x:auto}
+  .legend{font-size:.86rem; color:var(--muted); margin-top:.5rem}
+  .legend code{background:var(--accent-soft); color:var(--accent-dark); padding:.05rem .35rem; border-radius:5px; font-weight:700}
+  table{border-collapse:collapse; width:100%; margin:.8rem 0; font-size:.9rem}
+  th,td{border:1px solid var(--line); padding:.45rem .6rem; text-align:left}
+  th{background:var(--accent-soft); color:var(--accent-dark); font-weight:700}
+  .steps{margin:1rem 0}
+  .step{border-left:3px solid var(--line); padding:.2rem 0 .2rem 1rem; margin:.2rem 0; opacity:.28; filter:blur(2.5px); transition:all .35s; pointer-events:none}
+  .step.shown{opacity:1; filter:none; border-left-color:var(--accent); pointer-events:auto}
+  .step .lbl{font-size:.72rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-dark)}
+  .step-ctrl{display:flex; gap:.6rem; align-items:center; margin-top:.4rem; flex-wrap:wrap}
+  .btn{cursor:pointer; border:none; background:var(--accent); color:#fff; font-weight:700; font-size:.88rem; padding:.5rem .95rem; border-radius:9px; transition:transform .1s, background .2s}
+  .btn:hover{background:var(--accent-dark)} .btn:active{transform:scale(.97)}
+  .btn.ghost{background:transparent; color:var(--accent-dark); border:1px solid var(--line)}
+  .btn.ghost:hover{background:var(--accent-soft)}
+  .progress-txt{font-size:.82rem; color:var(--muted); font-weight:600}
+  .calc{background:linear-gradient(180deg,var(--accent-soft),transparent); border:1px solid color-mix(in srgb,var(--accent) 25%,transparent); border-radius:14px; padding:1.2rem; margin:1.1rem 0}
+  .calc .row{display:flex; gap:.8rem; flex-wrap:wrap; align-items:flex-end; margin-bottom:.6rem}
+  .calc label{display:flex; flex-direction:column; font-size:.78rem; font-weight:700; color:var(--muted); gap:.25rem}
+  .calc input{width:90px; padding:.5rem .6rem; border:1px solid var(--line); border-radius:8px; font-size:1rem; background:var(--card); color:var(--ink); font-weight:700}
+  .calc input.sm{width:64px}
+  .calc input:focus{outline:2px solid var(--accent); border-color:var(--accent)}
+  .calc-out{margin-top:.6rem; font-size:1.0rem; min-height:1.6rem}
+  .calc-out .res{font-weight:800; color:var(--accent-dark); font-size:1.2rem}
+  .calc-out .line{padding:.15rem 0; border-bottom:1px dotted var(--line)}
+  .mono{font-family:ui-monospace,Menlo,monospace}
+  .hint{font-size:.8rem; color:var(--muted)}
+  .quiz .q{font-weight:700; margin:.2rem 0 .7rem}
+  .opts{display:grid; gap:.5rem}
+  .opt{cursor:pointer; border:1px solid var(--line); background:var(--card); border-radius:10px; padding:.65rem .9rem; text-align:left; font-size:.95rem; color:var(--ink); transition:all .15s; font-weight:600}
+  .opt:hover{border-color:var(--accent)}
+  .opt.correct{background:var(--ok-soft); border-color:var(--ok)} .opt.wrong{background:var(--danger-soft); border-color:var(--danger)}
+  .opt .mark{float:right; font-weight:800}
+  .feedback{margin-top:.7rem; font-size:.9rem; font-weight:600; min-height:1.2rem}
+  .feedback.ok{color:var(--ok)} .feedback.no{color:var(--danger)}
+  details{border:1px solid var(--line); border-radius:10px; padding:.2rem .9rem; margin:.6rem 0; background:var(--card)}
+  details summary{cursor:pointer; font-weight:700; padding:.5rem 0; color:var(--accent-dark)}
+  details[open]{background:var(--accent-soft)}
+  .footer{text-align:center; color:var(--muted); font-size:.84rem; margin-top:3rem; padding-top:1.5rem; border-top:1px solid var(--line)}
+  kbd{background:var(--code); border:1px solid var(--line); border-radius:5px; padding:.05rem .35rem; font-size:.82rem}
+  .tag{display:inline-block;font-size:.7rem;font-weight:800;padding:.15rem .5rem;border-radius:6px;background:var(--accent);color:#fff;vertical-align:middle;margin-left:.4rem}
+  .alpha{font-family:ui-monospace,Menlo,monospace; font-size:.78rem; background:var(--code); padding:.5rem .7rem; border-radius:8px; overflow-x:auto; letter-spacing:.05em}
+  @media(max-width:560px){ h1{font-size:1.7rem} .tnav{display:none} .sec-head h2{font-size:1.3rem} }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><span class="dot">K</span> WuK · Lernkarte 3</div>
+    <div class="top-spacer"></div>
+    <nav class="tnav">
+      <a href="#start">Start</a>
+      <a href="#werkzeug">#7 Werkzeugkasten</a>
+      <a href="#affine">#8 Affine</a>
+      <a href="#rsa">#9 RSA</a>
+      <a href="#quiz">Quiz</a>
+      <a href="#spicker">Spicker</a>
+    </nav>
+    <button class="theme-btn" id="themeToggle" title="Hell/Dunkel">🌙</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero" id="start">
+    <span class="kicker">Block KRYPTO · Aufgabentypen #7 · #8 · #9</span>
+    <h1>Kryptographie:<br>Ein Werkzeugkasten, drei Aufgaben</h1>
+    <p><b>Der größte Hebel der ganzen Klausur.</b> Modulo-Rechnen, ggT, erweiterter Euklid, φ-Funktion und Euler-Theorem lernst du <b>einmal</b> — und schaltest damit Zahlentheorie (#7), Affine Chiffre (#8) <b>und</b> RSA (#9) frei. Zusammen ≈ 30–40 Punkte.</p>
+    <div class="pills">
+      <span class="pill">⏱️ Block 26.06.–05.07</span>
+      <span class="pill">🎯 #9 RSA = <b>Tier 1</b></span>
+      <span class="pill">⚠️ jeden Quadrierschritt mit TR prüfen!</span>
+    </div>
+  </div>
+
+  <!-- ============ #7 WERKZEUGKASTEN ============ -->
+  <section id="werkzeug">
+    <div class="sec-head"><div class="sec-num">7</div>
+      <div><h2>Der Modulo-Werkzeugkasten</h2><div class="sub">ggT · erw. Euklid · φ · Euler · schnelle Exponentiation</div></div></div>
+
+    <div class="card">
+      <h3>① ggT &amp; erweiterter Euklid</h3>
+      <div class="box intuition"><div class="bt">💡 Intuition</div>
+        Der <b>ggT</b> ist der letzte Rest ≠ 0 im Euklid-Algorithmus (fortlaufend „teile mit Rest“). Der <b>erweiterte</b> Euklid liefert zusätzlich x, y mit <span data-tex="a\cdot x + b\cdot y = \gcd(a,b)"></span> — die Basis für modulare Inverse.</div>
+      <div class="legend"><b>Lösbarkeit:</b> <span data-tex="a x + b y = c"></span> hat ganzzahlige Lösungen <span data-tex="\iff \gcd(a,b)\,\mid\,c"></span> (ggT teilt c).</div>
+
+      <h4>📝 Echte Klausuraufgabe — SoSe20 A7b <span class="tag">verifiziert</span></h4>
+      <p>Löse <span data-tex="582x + 123y = 6"></span>.</p>
+      <div class="steps" id="steps-euk">
+        <div class="step"><div class="lbl">Euklid vorwärts (ggT)</div>
+          <span class="mono">582 = 4·123 + 90 · 123 = 1·90 + 33 · 90 = 2·33 + 24 · 33 = 1·24 + 9 · 24 = 2·9 + 6 · 9 = 1·6 + <b>3</b> · 6 = 2·3 + 0</span> → <b>ggT = 3</b></div>
+        <div class="step"><div class="lbl">lösbar?</div> 3 | 6 ✓ (ggT teilt die rechte Seite)</div>
+        <div class="step"><div class="lbl">rückwärts einsetzen → Basislösung</div>
+          <span data-tex="3 = (-15)\cdot 582 + 71\cdot 123"></span></div>
+        <div class="step"><div class="lbl">auf „= 6“ skalieren (×2)</div>
+          <span data-tex="x=-30,\ y=142"></span> &nbsp;(Probe: 582·(−30)+123·142 = 6 ✓)</div>
+      </div>
+      <div class="step-ctrl">
+        <button class="btn" data-steps="steps-euk" data-act="next">Nächster Schritt ▸</button>
+        <button class="btn ghost" data-steps="steps-euk" data-act="all">Alle</button>
+        <button class="btn ghost" data-steps="steps-euk" data-act="reset">↺</button>
+        <span class="progress-txt" id="prog-steps-euk"></span>
+      </div>
+
+      <h4>🧮 Erweiterter-Euklid-Rechner</h4>
+      <div class="calc">
+        <div class="row">
+          <label>a <input type="number" id="eA" value="582"></label>
+          <label>b <input type="number" id="eB" value="123"></label>
+          <button class="btn" id="eGo">ggT &amp; x,y</button>
+        </div>
+        <div class="calc-out" id="eOut"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>② φ-Funktion (Eulersche Phi)</h3>
+      <div class="legend">φ(n) = Anzahl der zu n teilerfremden Zahlen unter n. Du brauchst nur drei Fälle:</div>
+      <div class="formula" data-tex="\varphi(p)=p-1\qquad \varphi(p\cdot q)=(p-1)(q-1)\qquad \boxed{\varphi(p^2)=p\,(p-1)}"></div>
+      <div class="box warn"><div class="bt">⚠️ Die berüchtigtste Falle</div>
+        <span data-tex="\varphi(25)=\varphi(5^2)=5\cdot 4 = 20"></span> — <b>nicht</b> 16! Bei Primzahl-Quadraten gilt <span data-tex="\varphi(p^2)=p(p-1)"></span>, nicht <span data-tex="(p-1)^2"></span>. Dieser Fehler hat in der alten Lösung ein komplettes RSA-Ergebnis ruiniert.</div>
+
+      <h3>③ Euler-Theorem &amp; schnelle Exponentiation</h3>
+      <div class="box intuition"><div class="bt">💡 Intuition</div>
+        Riesige Potenzen mod n werden zahm: Ist <span data-tex="\gcd(a,n)=1"></span>, so <span data-tex="a^{\varphi(n)}\equiv 1 \pmod n"></span> — du darfst den <b>Exponenten mod φ(n) reduzieren</b>. Der Rest wird per <b>Quadrieren</b> berechnet.</div>
+      <div class="formula" data-tex="\gcd(a,n)=1 \;\Rightarrow\; a^{\varphi(n)}\equiv 1 \pmod n \;\Rightarrow\; a^{e}\equiv a^{\,e \bmod \varphi(n)} \pmod n"></div>
+
+      <h4>📝 Echte Klausuraufgabe — 21SoSe A7a <span class="tag">verifiziert</span></h4>
+      <p>Berechne <span data-tex="8^{243} \bmod 25"></span>.</p>
+      <div class="steps" id="steps-eul">
+        <div class="step"><div class="lbl">φ bestimmen</div> <span data-tex="\varphi(25)=5\cdot4=20"></span>, und <span data-tex="\gcd(8,25)=1"></span> ✓</div>
+        <div class="step"><div class="lbl">Exponent reduzieren</div> <span data-tex="243 = 20\cdot 12 + 3 \;\Rightarrow\; 8^{243}\equiv 8^{3}\pmod{25}"></span></div>
+        <div class="step"><div class="lbl">Rest ausrechnen</div> <span data-tex="8^3 = 512 = 20\cdot 25 + 12 \;\Rightarrow\; \equiv \mathbf{12}\pmod{25}"></span></div>
+      </div>
+      <div class="step-ctrl">
+        <button class="btn" data-steps="steps-eul" data-act="next">Nächster Schritt ▸</button>
+        <button class="btn ghost" data-steps="steps-eul" data-act="all">Alle</button>
+        <button class="btn ghost" data-steps="steps-eul" data-act="reset">↺</button>
+        <span class="progress-txt" id="prog-steps-eul"></span>
+      </div>
+
+      <h4>🧮 Schnelle-Exponentiation-Rechner <span data-tex="(a^e \bmod n)"></span></h4>
+      <div class="calc">
+        <div class="row">
+          <label>a (Basis) <input type="number" id="pBase" value="10"></label>
+          <label>e (Exponent) <input type="number" id="pExp" value="17"></label>
+          <label>n (Modul) <input type="number" id="pMod" value="91"></label>
+          <button class="btn" id="pGo">Berechnen + Schritte</button>
+        </div>
+        <div class="calc-out" id="pOut"></div>
+        <p class="hint">Zeigt die Quadrier-Schritte — genau die, die du in der Klausur mit dem TR prüfst.</p>
+      </div>
+
+      <h4>🧮 Modulare Inverse <span data-tex="(a^{-1}\bmod m)"></span></h4>
+      <div class="calc">
+        <div class="row">
+          <label>a <input type="number" id="iA" value="17"></label>
+          <label>m <input type="number" id="iM" value="72"></label>
+          <button class="btn" id="iGo">Inverse</button>
+        </div>
+        <div class="calc-out" id="iOut"></div>
+        <p class="hint">Existiert nur, wenn ggT(a,m)=1. Kernschritt für d in RSA und für die affine Entschlüsselung.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ #8 AFFINE ============ -->
+  <section id="affine">
+    <div class="sec-head"><div class="sec-num">8</div>
+      <div><h2>Affine Chiffre</h2><div class="sub">f(x) = (a·x + b) mod 26</div></div></div>
+    <div class="card">
+      <div class="box intuition"><div class="bt">💡 Intuition</div>
+        Jeder Buchstabe → Zahl (A=0, …, Z=25), dann <span data-tex="f(x)=(a x+b)\bmod 26"></span>. Aus <b>zwei</b> bekannten Klartext→Geheim-Paaren bekommst du zwei Gleichungen und löst nach a und b.</div>
+      <div class="alpha">A0 B1 C2 D3 E4 F5 G6 H7 I8 J9 K10 L11 M12 N13 O14 P15 Q16 R17 S18 T19 U20 V21 W22 X23 Y24 Z25</div>
+
+      <h4>Das Rezept</h4>
+      <table>
+        <tr><th>Schritt</th><th>Tun</th></tr>
+        <tr><td>1</td><td>Zwei Gleichungen <span data-tex="a x_1 + b \equiv y_1,\quad a x_2 + b \equiv y_2 \pmod{26}"></span></td></tr>
+        <tr><td>2</td><td><b>Subtrahieren</b> → b fällt weg: <span data-tex="a(x_1-x_2)\equiv (y_1-y_2)\pmod{26}"></span></td></tr>
+        <tr><td>3</td><td>Nach a auflösen (ggT-Tücke beachten!), dann b aus einer Gleichung</td></tr>
+        <tr><td>4</td><td><b>Gültigkeit prüfen:</b> nur <span data-tex="\gcd(a,26)=1"></span> ist ein echter Schlüssel</td></tr>
+      </table>
+      <div class="box warn"><div class="bt">⚠️ Die ggT-Tücke (kostet die meisten Punkte)</div>
+        Taucht z.B. <span data-tex="6a\equiv 20 \pmod{26}"></span> auf und <span data-tex="\gcd(6,26)=2"></span>: <b>nicht</b> „keine Lösung“! Wenn 2 die rechte Seite teilt, <b>durch 2 teilen</b> → <span data-tex="3a\equiv 10\pmod{13}"></span>. Das gibt <b>mehrere</b> a-Kandidaten — gültig ist nur der mit <span data-tex="\gcd(a,26)=1"></span>.</div>
+
+      <h4>📝 Echte Klausuraufgabe — 21SoSe A8 <span class="tag">verifiziert</span></h4>
+      <p>E→K und K→E, also <span data-tex="f(4)=10"></span> und <span data-tex="f(10)=4"></span>.</p>
+      <div class="steps" id="steps-aff">
+        <div class="step"><div class="lbl">Gleichungen</div> <span data-tex="4a+b\equiv 10,\quad 10a+b\equiv 4 \pmod{26}"></span></div>
+        <div class="step"><div class="lbl">Subtrahieren</div> <span data-tex="6a\equiv -6\equiv 20\pmod{26}"></span></div>
+        <div class="step"><div class="lbl">ggT-Tücke</div> <span data-tex="\gcd(6,26)=2,\ 2\mid 20 \Rightarrow 3a\equiv 10\pmod{13}"></span></div>
+        <div class="step"><div class="lbl">a lösen</div> <span data-tex="3^{-1}\equiv 9\ (13)\Rightarrow a\equiv 90\equiv 12\ (13)\Rightarrow a\in\{12,25\}\ (26)"></span></div>
+        <div class="step"><div class="lbl">gültigen Schlüssel wählen</div> <span data-tex="\gcd(12,26)=2"></span> ✗, <span data-tex="\gcd(25,26)=1"></span> ✓ → <b>a = 25</b></div>
+        <div class="step"><div class="lbl">b bestimmen</div> <span data-tex="100+b\equiv 10 \Rightarrow b=14"></span> → <b>(a,b) = (25, 14)</b></div>
+      </div>
+      <div class="step-ctrl">
+        <button class="btn" data-steps="steps-aff" data-act="next">Nächster Schritt ▸</button>
+        <button class="btn ghost" data-steps="steps-aff" data-act="all">Alle</button>
+        <button class="btn ghost" data-steps="steps-aff" data-act="reset">↺</button>
+        <span class="progress-txt" id="prog-steps-aff"></span>
+      </div>
+
+      <h4>🧮 Affine-Löser (aus 2 Buchstabenpaaren)</h4>
+      <div class="calc">
+        <div class="row">
+          <label>Klartext 1 <input type="text" class="sm" id="af_x1" value="E"></label>
+          <label>→ Geheim 1 <input type="text" class="sm" id="af_y1" value="K"></label>
+          <label>Klartext 2 <input type="text" class="sm" id="af_x2" value="K"></label>
+          <label>→ Geheim 2 <input type="text" class="sm" id="af_y2" value="E"></label>
+          <button class="btn" id="afGo">a, b lösen</button>
+        </div>
+        <div class="calc-out" id="afOut"></div>
+        <p class="hint">Buchstaben (A–Z) oder Zahlen 0–25. Findet alle a-Kandidaten und markiert den gültigen Schlüssel.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ #9 RSA ============ -->
+  <section id="rsa">
+    <div class="sec-head"><div class="sec-num">9</div>
+      <div><h2>RSA-Entschlüsselung</h2><div class="sub">n → φ → d → c^d · die zuverlässigste Krypto-Aufgabe</div></div></div>
+    <div class="card">
+      <div class="box intuition"><div class="bt">💡 Intuition</div>
+        Verschlüsseln: <span data-tex="c=m^e\bmod n"></span>. Zum Entschlüsseln brauchst du den geheimen Exponenten <b>d</b> — und den findest du nur, wenn du n in seine zwei Primfaktoren zerlegst (das ist die „Falltür“).</div>
+      <h4>Das 4-Schritt-Rezept</h4>
+      <table>
+        <tr><th>#</th><th>Schritt</th><th>Werkzeug</th></tr>
+        <tr><td>1</td><td><span data-tex="n=p\cdot q"></span> faktorisieren</td><td>kleine Primzahlen probieren</td></tr>
+        <tr><td>2</td><td><span data-tex="\varphi=(p-1)(q-1)"></span></td><td>φ-Funktion</td></tr>
+        <tr><td>3</td><td><span data-tex="d=e^{-1}\bmod \varphi"></span></td><td>erw. Euklid (Inverse)</td></tr>
+        <tr><td>4</td><td><span data-tex="m=c^{d}\bmod n"></span></td><td>schnelle Exponentiation ⚠️</td></tr>
+      </table>
+
+      <h4>📝 Echte Klausuraufgabe — SoSe20 A9 <span class="tag">verifiziert</span></h4>
+      <p>n = 35, e = 5, Geheimtext c = 10. Gesucht: Klartext m.</p>
+      <div class="steps" id="steps-rsa">
+        <div class="step"><div class="lbl">1) faktorisieren</div> <span data-tex="35 = 5\cdot 7"></span></div>
+        <div class="step"><div class="lbl">2) φ</div> <span data-tex="\varphi = 4\cdot 6 = 24"></span></div>
+        <div class="step"><div class="lbl">3) d = e⁻¹ mod φ</div> <span data-tex="5\cdot 5 = 25\equiv 1\pmod{24} \Rightarrow d = 5"></span></div>
+        <div class="step"><div class="lbl">4) m = c^d mod n</div> <span data-tex="10^2\equiv 30,\ 10^4\equiv 30^2=900\equiv 25,\ 10^5\equiv 25\cdot 10=250\equiv \mathbf{5}\pmod{35}"></span></div>
+      </div>
+      <div class="step-ctrl">
+        <button class="btn" data-steps="steps-rsa" data-act="next">Nächster Schritt ▸</button>
+        <button class="btn ghost" data-steps="steps-rsa" data-act="all">Alle</button>
+        <button class="btn ghost" data-steps="steps-rsa" data-act="reset">↺</button>
+        <span class="progress-txt" id="prog-steps-rsa"></span>
+      </div>
+
+      <div class="box warn"><div class="bt">⚠️ Falle: Quadrierschritte</div>
+        Bei der schnellen Exponentiation jeden Schritt <b>mit dem TR nachrechnen</b>. In der alten Lösung wurde <span data-tex="10^8\bmod 91"></span> als 20 statt korrekt <b>9</b> gerechnet → RSA-Ergebnis komplett falsch. Ein Quadrierfehler ruiniert alles danach.</div>
+
+      <h4>🧮 RSA-Entschlüsselungs-Assistent</h4>
+      <div class="calc">
+        <div class="row">
+          <label>n <input type="number" id="rN" value="91"></label>
+          <label>e <input type="number" id="rE" value="17"></label>
+          <label>c (Geheim) <input type="number" id="rC" value="10"></label>
+          <button class="btn" id="rGo">Komplett lösen</button>
+        </div>
+        <div class="calc-out" id="rOut"></div>
+        <p class="hint">Faktorisiert n, rechnet φ, d und m — Schritt für Schritt. Probier auch <kbd>n=77, e=43, c=60</kbd> (→ 25) oder <kbd>n=77, e=11, c=24</kbd> (→ 68).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section id="quiz">
+    <div class="sec-head"><div class="sec-num" style="background:var(--ok);box-shadow:0 6px 16px rgba(16,185,129,.35)">✓</div>
+      <div><h2>Mini-Quiz</h2><div class="sub">Aktives Erinnern</div></div></div>
+    <div class="card quiz" id="quizBox"></div>
+  </section>
+
+  <!-- ============ SPICKER ============ -->
+  <section id="spicker">
+    <div class="sec-head"><div class="sec-num" style="background:#0891b2;box-shadow:0 6px 16px rgba(8,145,178,.35)">📄</div>
+      <div><h2>Auf den Spicker</h2><div class="sub">Block ⑦–⑨ · der gemeinsame Werkzeugkasten</div></div></div>
+    <div class="card">
+      <div class="box tip"><div class="bt">⑦ Werkzeugkasten</div>
+        <b>ggT</b> = letzter Rest ≠ 0; rückwärts → ax+by=ggT · lösbar ⇔ ggT | c<br>
+        <b>φ:</b> φ(p)=p−1 · φ(pq)=(p−1)(q−1) · <b>φ(p²)=p(p−1)</b> ⚠️ (φ(25)=20)<br>
+        <b>Euler:</b> ggT(a,n)=1 ⇒ a^φ(n)≡1 ⇒ Exponent <b>mod φ(n)</b> reduzieren<br>
+        <b>Inverse:</b> erw. Euklid mit a·x+m·y=1 → x mod m · <b>schnelle Exp.:</b> a², a⁴, a⁸ … (TR prüfen!)</div>
+      <div class="box tip"><div class="bt">⑧ Affine f(x)=(a·x+b) mod 26</div>
+        2 Paare → 2 Gleichungen → subtrahieren → c·a ≡ d (mod 26)<br>
+        ggT(c,26)=g: falls g | d → durch g teilen (Modul 26/g) · gültig nur ggT(a,26)=1<br>
+        Entschlüsseln: x = a⁻¹·(y − b) mod 26</div>
+      <div class="box tip"><div class="bt">⑨ RSA-Entschlüsselung</div>
+        1) n=p·q · 2) φ=(p−1)(q−1) · 3) d=e⁻¹ mod φ · 4) m=c^d mod n<br>
+        Verschlüsseln: c = m^e mod n</div>
+      <p class="hint">📌 Geschafft — alle 3 Lernkarten durch! Jetzt: Probeklausuren rechnen (SoSe20 → 21SoSe) und Spicker per Hand schreiben.</p>
+    </div>
+  </section>
+
+  <div class="footer">WuK SS26 · Lernkarte 3 von 3 · Aufgaben verifiziert aus <code>SS26/Loesungen/</code><br>Klausur Do 09.07.2026 · <b>Jeden Quadrierschritt mit dem Taschenrechner prüfen!</b></div>
+</div>
+
+<script>
+/* KaTeX */
+function renderMath(){
+  document.querySelectorAll('[data-tex]').forEach(el=>{
+    try{ katex.render(el.getAttribute('data-tex'), el, {throwOnError:false, displayMode: el.classList.contains('formula')}); }
+    catch(e){ el.textContent=el.getAttribute('data-tex'); }
+  });
+}
+window.addEventListener('DOMContentLoaded',()=>{ if(window.katex) renderMath(); else window.addEventListener('load',renderMath); });
+
+/* Theme */
+const tBtn=document.getElementById('themeToggle');
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);tBtn.textContent=t==='dark'?'☀️':'🌙';localStorage.setItem('wuk-theme',t);}
+applyTheme(localStorage.getItem('wuk-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+tBtn.onclick=()=>applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+
+/* Steps */
+function updateProg(id){const c=document.getElementById(id),s=[...c.querySelectorAll('.step')];
+  document.getElementById('prog-'+id).textContent=`Schritt ${s.filter(x=>x.classList.contains('shown')).length} / ${s.length}`;}
+document.querySelectorAll('[data-steps]').forEach(btn=>{btn.onclick=()=>{
+  const id=btn.dataset.steps,c=document.getElementById(id),s=[...c.querySelectorAll('.step')];
+  if(btn.dataset.act==='next'){const n=s.find(x=>!x.classList.contains('shown'));if(n)n.classList.add('shown');}
+  if(btn.dataset.act==='all')s.forEach(x=>x.classList.add('shown'));
+  if(btn.dataset.act==='reset')s.forEach(x=>x.classList.remove('shown'));
+  updateProg(id);};});
+['steps-euk','steps-eul','steps-aff','steps-rsa'].forEach(updateProg);
+
+/* ---- number theory ---- */
+function mod(a,m){ return ((a%m)+m)%m; }
+function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){[a,b]=[b,a%b];} return a; }
+function extgcd(a,b){ if(b===0) return [a,1,0]; const [g,x,y]=extgcd(b,a%b); return [g,y,x-Math.floor(a/b)*y]; }
+function modinv(a,m){ a=mod(a,m); const [g,x]=extgcd(a,m); if(g!==1) return null; return mod(x,m); }
+function powmodSteps(base,exp,m){
+  base=mod(base,m); let result=1, b=base, e=exp; const sq=[]; let i=0;
+  while(e>0){ const bit=e&1; sq.push({i,pow:b,used:!!bit}); if(bit) result=mod(result*b,m); b=mod(b*b,m); e=Math.floor(e/2); i++; }
+  return {result, sq};
+}
+
+/* erw. Euklid */
+document.getElementById('eGo').onclick=()=>{
+  const a=parseInt(document.getElementById('eA').value), b=parseInt(document.getElementById('eB').value);
+  const out=document.getElementById('eOut');
+  if(isNaN(a)||isNaN(b)){out.innerHTML='<span class="hint">a und b eingeben.</span>';return;}
+  const [g,x,y]=extgcd(a,b);
+  out.innerHTML=`<div class="line">ggT(${a}, ${b}) = <span class="res">${g}</span></div>
+    <div class="line mono">${a}·(${x}) + ${b}·(${y}) = ${g}</div>
+    <div class="hint">⇒ a·x+b·y=c ist lösbar für jedes c, das durch ${g} teilbar ist (dann ×c/${g}).</div>`;
+};
+['eA','eB'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('eGo').click();}));
+
+/* schnelle Exp */
+document.getElementById('pGo').onclick=()=>{
+  const a=parseInt(document.getElementById('pBase').value), e=parseInt(document.getElementById('pExp').value), m=parseInt(document.getElementById('pMod').value);
+  const out=document.getElementById('pOut');
+  if(isNaN(a)||isNaN(e)||isNaN(m)||m<=0||e<0){out.innerHTML='<span class="hint">a, e und n (n>0, e≥0) prüfen.</span>';return;}
+  const {result,sq}=powmodSteps(a,e,m);
+  const rows=sq.map(s=>`<div class="line mono">${a}^(2^${s.i}) ≡ ${s.pow} (mod ${m}) ${s.used?'<b style="color:var(--accent-dark)">← multipliziert</b>':'<span class="hint">(Bit 0)</span>'}</div>`).join('');
+  out.innerHTML=`<div style="margin-bottom:.4rem">${a}<sup>${e}</sup> mod ${m} = <span class="res">${result}</span></div>
+    <div class="hint">Quadrierschritte (Exponent ${e} = binär ${e.toString(2)}):</div>${rows}`;
+};
+['pBase','pExp','pMod'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('pGo').click();}));
+
+/* modulare Inverse */
+document.getElementById('iGo').onclick=()=>{
+  const a=parseInt(document.getElementById('iA').value), m=parseInt(document.getElementById('iM').value);
+  const out=document.getElementById('iOut');
+  if(isNaN(a)||isNaN(m)||m<=0){out.innerHTML='<span class="hint">a und m (m>0) eingeben.</span>';return;}
+  const inv=modinv(a,m);
+  if(inv===null) out.innerHTML=`<div class="line" style="color:var(--danger);font-weight:700">Keine Inverse — ggT(${a}, ${m}) = ${gcd(a,m)} ≠ 1.</div>`;
+  else out.innerHTML=`<div class="line">${a}⁻¹ mod ${m} = <span class="res">${inv}</span></div>
+    <div class="hint mono">Probe: ${a}·${inv} = ${a*inv} ≡ ${mod(a*inv,m)} (mod ${m}) ✓</div>`;
+};
+['iA','iM'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('iGo').click();}));
+
+/* Affine solver */
+function toNum(s){ s=(s||'').trim().toUpperCase(); if(/^[A-Z]$/.test(s)) return s.charCodeAt(0)-65; const n=parseInt(s); return isNaN(n)?null:mod(n,26); }
+function solveCong(c,d,m){ // c*a ≡ d (mod m), alle a
+  c=mod(c,m); d=mod(d,m); const g=gcd(c,m);
+  if(d%g!==0) return [];
+  const cc=c/g, dd=d/g, mm=m/g; const inv=modinv(cc,mm);
+  const a0=mod(dd*inv,mm); const sols=[]; for(let t=0;t<g;t++) sols.push(mod(a0+t*mm,m)); return sols.sort((p,q)=>p-q);
+}
+document.getElementById('afGo').onclick=()=>{
+  const x1=toNum(document.getElementById('af_x1').value), y1=toNum(document.getElementById('af_y1').value);
+  const x2=toNum(document.getElementById('af_x2').value), y2=toNum(document.getElementById('af_y2').value);
+  const out=document.getElementById('afOut');
+  if([x1,y1,x2,y2].some(v=>v===null)){out.innerHTML='<span class="hint">Vier Werte (A–Z oder 0–25) angeben.</span>';return;}
+  const cc=mod(x1-x2,26), dd=mod(y1-y2,26);
+  const aCands=solveCong(cc,dd,26);
+  if(aCands.length===0){out.innerHTML='<div class="line" style="color:var(--danger)">Keine Lösung für a (ggT teilt rechte Seite nicht).</div>';return;}
+  let html=`<div class="line mono">Subtraktion: ${cc}·a ≡ ${dd} (mod 26)</div>
+    <div class="line">a-Kandidaten: ${aCands.join(', ')}</div>`;
+  const valid=aCands.filter(a=>gcd(a,26)===1);
+  if(valid.length===0){ html+=`<div class="line" style="color:var(--warn)">⚠️ Kein a mit ggT(a,26)=1 — kein gültiger Schlüssel (Chiffre nicht eindeutig).</div>`; }
+  else valid.forEach(a=>{ const b=mod(y1-a*x1,26); html+=`<div class="line">✅ gültig: <span class="res">a = ${a}, b = ${b}</span> &nbsp;<span class="hint mono">f(x)=(${a}x+${b}) mod 26</span></div>`; });
+  const invalid=aCands.filter(a=>gcd(a,26)!==1);
+  if(invalid.length) html+=`<div class="hint">verworfen (ggT≠1): a = ${invalid.join(', ')}</div>`;
+  out.innerHTML=html;
+};
+['af_x1','af_y1','af_x2','af_y2'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('afGo').click();}));
+
+/* RSA */
+function factor(n){ for(let p=2;p*p<=n;p++){ if(n%p===0) return [p,n/p]; } return null; }
+document.getElementById('rGo').onclick=()=>{
+  const n=parseInt(document.getElementById('rN').value), e=parseInt(document.getElementById('rE').value), c=parseInt(document.getElementById('rC').value);
+  const out=document.getElementById('rOut');
+  if(isNaN(n)||isNaN(e)||isNaN(c)||n<4){out.innerHTML='<span class="hint">n, e und c eingeben (n ≥ 4).</span>';return;}
+  const f=factor(n);
+  if(!f){out.innerHTML=`<div class="line" style="color:var(--danger)">n = ${n} ist prim oder nicht in 2 Faktoren zerlegbar — kein gültiges RSA-n.</div>`;return;}
+  const [p,q]=f, phi=(p-1)*(q-1);
+  if(gcd(e,phi)!==1){out.innerHTML=`<div class="line">1) n = ${p}·${q}</div><div class="line">2) φ = ${phi}</div>
+    <div class="line" style="color:var(--danger)">ggT(e=${e}, φ=${phi}) = ${gcd(e,phi)} ≠ 1 — dieser e ist ungültig (keine Inverse d).</div>`;return;}
+  const d=modinv(e,phi); const {result,sq}=powmodSteps(c,d,n);
+  const rows=sq.map(s=>`<div class="line mono" style="font-size:.85rem">${c}^(2^${s.i}) ≡ ${s.pow} (mod ${n}) ${s.used?'<b style="color:var(--accent-dark)">←</b>':''}</div>`).join('');
+  out.innerHTML=`<div class="line">1) n = <b>${p}·${q}</b></div>
+    <div class="line">2) φ = (${p}−1)(${q}−1) = <b>${phi}</b></div>
+    <div class="line">3) d = ${e}⁻¹ mod ${phi} = <b>${d}</b></div>
+    <div class="line">4) m = ${c}<sup>${d}</sup> mod ${n} = <span class="res">${result}</span></div>
+    <div class="hint">schnelle Exponentiation (Exponent d=${d} binär ${d.toString(2)}):</div>${rows}`;
+};
+['rN','rE','rC'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('rGo').click();}));
+
+/* Quiz */
+const quizData=[
+  {q:'φ(25) = ?', opts:['16','20','24','5'], correct:1,
+   why:'φ(p²)=p(p−1), also φ(25)=5·4=20. NICHT (p−1)²=16 — die berüchtigtste Falle.'},
+  {q:'Du sollst 7²²² mod 10 (letzte Ziffer) — welcher Trick?', opts:['Direkt ausrechnen','Exponent mod φ(10)=4 reduzieren','7·222','222 mod 7'], correct:1,
+   why:'ggT(7,10)=1 ⇒ Euler: Exponent mod φ(10)=4. 222=4·55+2 → 7²≡9. Letzte Ziffer 9.'},
+  {q:'Bei der affinen Chiffre: welcher a-Wert ist ein GÜLTIGER Schlüssel mod 26?', opts:['a=13','a=12','a=25','a=4'], correct:2,
+   why:'Gültig nur, wenn ggT(a,26)=1. ggT(25,26)=1 ✓. 13, 12, 4 teilen sich Faktoren mit 26.'},
+  {q:'RSA: Reihenfolge der Entschlüsselung?', opts:['φ → n → d → m','n=p·q → φ → d=e⁻¹ → m=c^d','d → φ → n → m','m → d → φ → n'], correct:1,
+   why:'1) n faktorisieren 2) φ=(p−1)(q−1) 3) d=e⁻¹ mod φ 4) m=c^d mod n.'}
+];
+const qb=document.getElementById('quizBox');
+quizData.forEach((item,i)=>{
+  const dv=document.createElement('div'); dv.style.marginBottom='1.6rem';
+  dv.innerHTML=`<div class="q">${i+1}. ${item.q}</div><div class="opts"></div><div class="feedback"></div>`;
+  const optsEl=dv.querySelector('.opts'), fb=dv.querySelector('.feedback');
+  item.opts.forEach((o,j)=>{const b=document.createElement('button');b.className='opt';b.innerHTML=o;
+    b.onclick=()=>{ if(dv.dataset.done)return; dv.dataset.done='1';
+      optsEl.querySelectorAll('.opt').forEach((x,xi)=>{if(xi===item.correct)x.classList.add('correct');});
+      if(j===item.correct){b.innerHTML+=' <span class="mark">✓</span>';fb.className='feedback ok';fb.textContent='Richtig! '+item.why;}
+      else{b.classList.add('wrong');b.innerHTML+=' <span class="mark">✗</span>';fb.className='feedback no';fb.textContent='Nicht ganz. '+item.why;}};
+    optsEl.appendChild(b);});
+  qb.appendChild(dv);
+});
+</script>
+</body>
+</html>
