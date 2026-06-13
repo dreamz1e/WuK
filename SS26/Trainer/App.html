@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#6366f1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WuK Trainer">
+<link rel="manifest" href="manifest.json">
+<title>WuK Trainer</title>
+<style>
+  :root{
+    --accent:#6366f1; --accent-soft:#eef2ff; --accent-dark:#4338ca;
+    --bg:#f4f6fb; --card:#ffffff; --ink:#1e2230; --muted:#5b6376;
+    --line:#e4e8f0; --ok:#10b981; --ok-soft:#ecfdf5; --okline:#a7f3d0;
+    --warn:#f59e0b; --danger:#ef4444; --danger-soft:#fef2f2; --dline:#fecaca;
+    --code:#f1f3f9; --shadow:0 1px 3px rgba(20,30,60,.08),0 8px 24px rgba(20,30,60,.07);
+    --tabh:64px;
+  }
+  [data-theme="dark"]{
+    --accent:#818cf8; --accent-soft:#1e2342; --accent-dark:#a5b4fc;
+    --bg:#0f1117; --card:#181b25; --ink:#e7e9f0; --muted:#9aa1b4;
+    --line:#272b3a; --ok:#34d399; --ok-soft:#0d2620; --okline:#16513c;
+    --warn:#fbbf24; --danger:#f87171; --danger-soft:#2a1517; --dline:#5b2326;
+    --code:#11141d; --shadow:0 1px 3px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.55; -webkit-font-smoothing:antialiased;
+    padding-bottom:calc(var(--tabh) + env(safe-area-inset-bottom)); transition:background .3s,color .3s}
+  /* header */
+  header{position:sticky; top:0; z-index:20; background:color-mix(in srgb,var(--card) 90%,transparent);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--line); padding:env(safe-area-inset-top) .9rem 0}
+  .hbar{display:flex; align-items:center; gap:.6rem; height:54px}
+  .logo{font-weight:800; font-size:1.05rem; display:flex; align-items:center; gap:.5rem}
+  .logo .b{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#a855f7);
+    display:grid;place-items:center;color:#fff;font-weight:800; font-size:.95rem}
+  .spacer{flex:1}
+  .stat{font-size:.78rem; font-weight:700; color:var(--muted); background:var(--accent-soft); padding:.25rem .55rem; border-radius:99px}
+  .stat b{color:var(--accent-dark)}
+  .tbtn{cursor:pointer; border:1px solid var(--line); background:var(--card); color:var(--ink); width:36px;height:36px;border-radius:9px; font-size:1rem}
+  /* main */
+  main{max-width:640px; margin:0 auto; padding:1rem .9rem 1.5rem}
+  .screen{display:none} .screen.active{display:block; animation:fade .25s}
+  @keyframes fade{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
+  h2.title{font-size:1.3rem; margin:.3rem 0 .2rem; letter-spacing:-.01em}
+  .sub{color:var(--muted); font-size:.88rem; margin:0 0 1rem}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:1.1rem 1.15rem; box-shadow:var(--shadow); margin:.8rem 0}
+  /* chips */
+  .chips{display:flex; gap:.4rem; flex-wrap:wrap; margin:.2rem 0 1rem}
+  .chip{cursor:pointer; border:1px solid var(--line); background:var(--card); color:var(--muted); font-weight:700;
+    font-size:.82rem; padding:.4rem .7rem; border-radius:99px; transition:.15s}
+  .chip.on{background:var(--accent); color:#fff; border-color:var(--accent)}
+  /* problem */
+  .ptype{font-size:.72rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-dark)}
+  .prompt{font-size:1.05rem; margin:.5rem 0 1rem; line-height:1.6}
+  .prompt .hl{background:var(--accent-soft); color:var(--accent-dark); padding:.05rem .35rem; border-radius:6px; font-weight:700; font-family:ui-monospace,Menlo,monospace}
+  .fields{display:flex; flex-direction:column; gap:.7rem; margin-bottom:.9rem}
+  .field{display:flex; align-items:center; gap:.6rem}
+  .field label{font-weight:700; font-size:.95rem; min-width:1.4rem}
+  .field input{flex:1; padding:.7rem .8rem; border:1px solid var(--line); border-radius:11px; font-size:1.1rem;
+    background:var(--bg); color:var(--ink); font-weight:700; min-width:0}
+  .field input:focus{outline:2px solid var(--accent); border-color:var(--accent)}
+  .field input.ok{border-color:var(--ok); background:var(--ok-soft)}
+  .field input.bad{border-color:var(--danger); background:var(--danger-soft)}
+  .btn{cursor:pointer; border:none; background:var(--accent); color:#fff; font-weight:800; font-size:1rem;
+    padding:.8rem 1rem; border-radius:12px; width:100%; transition:transform .08s,background .2s}
+  .btn:active{transform:scale(.98)} .btn.ghost{background:var(--card); color:var(--accent-dark); border:1px solid var(--line)}
+  .btn.ghost:active{background:var(--accent-soft)}
+  .btn.sm{width:auto; padding:.6rem .9rem; font-size:.9rem}
+  .btnrow{display:flex; gap:.6rem; margin-top:.3rem}
+  .fb{margin:.6rem 0; padding:.7rem .9rem; border-radius:11px; font-weight:700; font-size:.95rem; display:none}
+  .fb.show{display:block}
+  .fb.ok{background:var(--ok-soft); color:var(--ok); border:1px solid var(--okline)}
+  .fb.bad{background:var(--danger-soft); color:var(--danger); border:1px solid var(--dline)}
+  .sol{margin-top:.6rem; background:var(--code); border:1px solid var(--line); border-radius:11px; padding:.8rem .9rem; font-size:.9rem; line-height:1.7; display:none}
+  .sol.show{display:block}
+  .sol .lbl{font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--accent-dark); display:block; margin-bottom:.3rem}
+  .mono{font-family:ui-monospace,Menlo,monospace}
+  /* tab bar */
+  nav.tabs{position:fixed; bottom:0; left:0; right:0; z-index:30; height:calc(var(--tabh) + env(safe-area-inset-bottom));
+    padding-bottom:env(safe-area-inset-bottom); background:color-mix(in srgb,var(--card) 92%,transparent);
+    backdrop-filter:blur(12px); border-top:1px solid var(--line); display:flex}
+  nav.tabs button{flex:1; border:none; background:none; color:var(--muted); font-size:.66rem; font-weight:700;
+    display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; padding-top:.5rem}
+  nav.tabs button .ic{font-size:1.35rem; line-height:1}
+  nav.tabs button.on{color:var(--accent)}
+  /* progress bars */
+  .prog{height:8px; background:var(--line); border-radius:99px; overflow:hidden; margin:.3rem 0}
+  .prog>i{display:block; height:100%; background:var(--accent); border-radius:99px; transition:width .4s}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:.6rem}
+  .mini{background:var(--card); border:1px solid var(--line); border-radius:13px; padding:.8rem; text-align:center}
+  .mini .n{font-size:1.5rem; font-weight:800; color:var(--accent-dark)} .mini .l{font-size:.75rem; color:var(--muted); font-weight:700}
+  .row{display:flex; align-items:center; gap:.6rem; padding:.55rem 0; border-bottom:1px dotted var(--line); font-size:.9rem}
+  .row:last-child{border-bottom:none}
+  .row .name{font-weight:700; flex:1}
+  .boxbadge{font-size:.72rem; font-weight:800; padding:.15rem .5rem; border-radius:6px; background:var(--accent-soft); color:var(--accent-dark)}
+  .due{color:var(--warn)} .fresh{color:var(--ok)}
+  /* flashcard */
+  .flash{min-height:160px; display:flex; align-items:center; justify-content:center; text-align:center; cursor:pointer;
+    font-size:1.15rem; font-weight:700; padding:1.5rem 1rem}
+  .flash .face{width:100%} .flash .q{color:var(--ink)} .flash .a{color:var(--accent-dark)}
+  .flash .hint{font-size:.75rem; color:var(--muted); font-weight:600; margin-top:.8rem}
+  /* timer */
+  .timer{font-size:2rem; font-weight:800; text-align:center; font-variant-numeric:tabular-nums; letter-spacing:.02em}
+  .timer.low{color:var(--danger)}
+  .dots{display:flex; gap:.35rem; justify-content:center; flex-wrap:wrap; margin:.6rem 0}
+  .dot{width:26px;height:26px;border-radius:8px; display:grid; place-items:center; font-size:.75rem; font-weight:800;
+    background:var(--line); color:var(--muted); cursor:pointer}
+  .dot.cur{outline:2px solid var(--accent)} .dot.done{background:var(--accent-soft); color:var(--accent-dark)}
+  .dot.ok{background:var(--ok); color:#fff} .dot.bad{background:var(--danger); color:#fff}
+  .center{text-align:center} .muted{color:var(--muted); font-size:.88rem}
+  a.lnk{color:var(--accent-dark); font-weight:700}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hbar">
+    <div class="logo"><span class="b">WuK</span> Trainer</div>
+    <div class="spacer"></div>
+    <div class="stat" id="streakStat">🔥 <b id="streakN">0</b></div>
+    <button class="tbtn" id="themeBtn" title="Hell/Dunkel">🌙</button>
+  </div>
+</header>
+
+<main>
+  <!-- ===== DRILL ===== -->
+  <section class="screen active" id="s-drill">
+    <h2 class="title">🎯 Drill</h2>
+    <p class="sub">Zufallsaufgabe lösen, Antwort eintippen, sofort Feedback.</p>
+    <div class="chips" id="typeChips"></div>
+    <div class="card" id="drillCard"></div>
+  </section>
+
+  <!-- ===== WIEDERHOLUNG ===== -->
+  <section class="screen" id="s-rep">
+    <h2 class="title">🔁 Wiederholung</h2>
+    <p class="sub">Leitner-System: Schwaches kommt oft, Sicheres selten. Hält dich frisch.</p>
+    <div class="card" id="repStatus"></div>
+    <div class="card" id="repCard" style="display:none"></div>
+  </section>
+
+  <!-- ===== KARTEN ===== -->
+  <section class="screen" id="s-cards">
+    <h2 class="title">🃏 Karteikarten</h2>
+    <p class="sub">Formeln & Konzepte schnell wiederholen. Tippen zum Umdrehen.</p>
+    <div class="card"><div class="flash" id="flash"></div></div>
+    <div class="btnrow"><button class="btn ghost" id="flashNo">Nochmal ✗</button><button class="btn" id="flashYes">Gewusst ✓</button></div>
+    <p class="muted center" id="flashProg" style="margin-top:.8rem"></p>
+  </section>
+
+  <!-- ===== KLAUSUR ===== -->
+  <section class="screen" id="s-exam">
+    <h2 class="title">⏱️ Mini-Klausur</h2>
+    <p class="sub">Je 1 Aufgabe pro Typ unter Zeit — simuliert das Klausur-Tempo.</p>
+    <div id="examIntro" class="card center">
+      <p>9 Aufgaben · 30 Minuten · alle Typen gemischt.</p>
+      <button class="btn" id="examStart">Mini-Klausur starten</button>
+    </div>
+    <div id="examRun" style="display:none">
+      <div class="card">
+        <div class="timer" id="examTimer">30:00</div>
+        <div class="dots" id="examDots"></div>
+      </div>
+      <div class="card" id="examCard"></div>
+      <div class="btnrow"><button class="btn ghost sm" id="examPrev">‹ Zurück</button><button class="btn ghost sm" id="examNext">Weiter ›</button><button class="btn sm" id="examSubmit">Abgeben</button></div>
+    </div>
+    <div id="examResult" style="display:none"></div>
+  </section>
+
+  <!-- ===== STATS ===== -->
+  <section class="screen" id="s-stats">
+    <h2 class="title">📊 Fortschritt</h2>
+    <p class="sub">Dein Stand pro Aufgabentyp.</p>
+    <div class="grid" style="margin-bottom:.8rem">
+      <div class="mini"><div class="n" id="stTotal">0</div><div class="l">gelöst gesamt</div></div>
+      <div class="mini"><div class="n" id="stAcc">–</div><div class="l">Trefferquote</div></div>
+    </div>
+    <div class="card" id="statList"></div>
+    <div class="card center">
+      <p class="muted">Alle Daten liegen nur lokal auf diesem Gerät.</p>
+      <button class="btn ghost sm" id="resetBtn">Fortschritt zurücksetzen</button>
+    </div>
+    <p class="muted center" style="margin-top:1rem">WuK SS26 · Klausur 09.07.2026 · <a class="lnk" href="../Lernkarten/Lernkarte_1_KOMB.html">Lernkarten →</a></p>
+  </section>
+</main>
+
+<nav class="tabs">
+  <button data-go="drill" class="on"><span class="ic">🎯</span>Drill</button>
+  <button data-go="rep"><span class="ic">🔁</span>Wdh.</button>
+  <button data-go="cards"><span class="ic">🃏</span>Karten</button>
+  <button data-go="exam"><span class="ic">⏱️</span>Klausur</button>
+  <button data-go="stats"><span class="ic">📊</span>Stats</button>
+</nav>
+
+<script>
+/* ============================================================
+   WuK Trainer — deterministische Aufgaben-Generatoren + Modi
+   ============================================================ */
+
+/* ---------- Math primitives (verifiziert) ---------- */
+const RI=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function fact(n){let r=1;for(let i=2;i<=n;i++)r*=i;return r;}
+function comb(n,k){if(k<0||k>n)return 0;if(k>n-k)k=n-k;let r=1;for(let i=0;i<k;i++)r=r*(n-i)/(i+1);return Math.round(r);}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b];}return a;}
+function egcd(a,b){if(b===0)return[a,1,0];const[g,x,y]=egcd(b,a%b);return[g,y,x-Math.floor(a/b)*y];}
+const mod=(a,m)=>((a%m)+m)%m;
+function modinv(a,m){a=mod(a,m);const[g,x]=egcd(a,m);return g!==1?null:mod(x,m);}
+function powmod(b,e,m){b=mod(b,m);let r=1;while(e>0){if(e&1)r=mod(r*b,m);b=mod(b*b,m);e=Math.floor(e/2);}return r;}
+const PRIMES=[3,5,7,11,13];
+const L=i=>String.fromCharCode(65+i);
+function gcdFrac(a,b){const g=gcd(a,b)||1;return[a/g,b/g];}
+function fracStr(num,den){const[a,b]=gcdFrac(num,den);return b===1?(''+a):(a+'/'+b);}
+
+/* ---------- Answer parsing/checking ---------- */
+function parseNum(s){s=(''+s).trim().replace(',', '.');if(!s)return NaN;if(s.includes('/')){const p=s.split('/');return Number(p[0])/Number(p[1]);}return Number(s);}
+function checkInt(u,v){const x=parseNum(u);return Number.isFinite(x)&&Math.abs(x-v)<1e-6;}
+function checkProb(u,v){const x=parseNum(u);return Number.isFinite(x)&&Math.abs(x-v)<=Math.max(0.005,Math.abs(v)*0.02);}
+
+/* ============================================================
+   GENERATORS  — jeder gibt {key,title,prompt,fields,solution}
+   fields: [{label, kind:'int'|'prob', value}]
+   ============================================================ */
+const TYPES=[
+  {key:'perm',  label:'#1 Perm'},
+  {key:'comb',  label:'#2 Ausw.'},
+  {key:'lap',   label:'#3 Lapl.'},
+  {key:'binom', label:'#4 Binom'},
+  {key:'bayes', label:'#5 Bayes'},
+  {key:'zv',    label:'#6 ZV'},
+  {key:'mod',   label:'#7 Werkz.'},
+  {key:'aff',   label:'#8 Affin'},
+  {key:'rsa',   label:'#9 RSA'},
+];
+const TITLE={perm:'#1 Permutation',comb:'#2 Auswahl',lap:'#3 Laplace',binom:'#4 Binomial',
+  bayes:'#5 Bayes',zv:'#6 Zufallsvariable',mod:'#7 Werkzeugkasten',aff:'#8 Affine Chiffre',rsa:'#9 RSA'};
+
+function gPerm(){
+  const pool=['A','E','N','R','S','T','L','O','M','B'];
+  const d=RI(2,3); const letters=[]; const used=new Set();
+  while(letters.length<d){const c=pick(pool);if(!used.has(c)){used.add(c);letters.push(c);}}
+  const counts=letters.map(()=>1); let n=letters.length; const target=RI(5,Math.min(7,d*3));
+  while(n<target){const i=RI(0,letters.length-1); if(counts[i]<3){counts[i]++;n++;}}
+  const seq=[]; letters.forEach((c,i)=>{for(let j=0;j<counts[i];j++)seq.push(c);});
+  const denom=counts.reduce((a,c)=>a*fact(c),1);
+  const block = Math.random()<0.5 && counts.some(c=>c>=2);
+  if(!block){
+    const ans=fact(n)/denom;
+    return {key:'perm',title:TITLE.perm,
+      prompt:`Wie viele <b>unterscheidbare Anordnungen</b> der Buchstaben <span class="hl">${seq.join(', ')}</span> gibt es?`,
+      fields:[{label:'=',kind:'int',value:ans}],
+      solution:`n=${n}, Häufigkeiten ${letters.map((c,i)=>c+':'+counts[i]).join(', ')}.<br>${n}! / (${counts.map(c=>c+'!').join('·')}) = <b>${ans}</b>`};
+  }else{
+    const bi=counts.findIndex(c=>c>=2); const bc=counts[bi];
+    const remCounts=counts.slice(); remCounts[bi]=1; // block = 1 element
+    const nn=n-bc+1; const denom2=remCounts.reduce((a,c)=>a*fact(c),1);
+    const ans=fact(nn)/denom2;
+    return {key:'perm',title:TITLE.perm,
+      prompt:`Buchstaben <span class="hl">${seq.join(', ')}</span>: In wie vielen Anordnungen stehen <b>alle ${bc} „${letters[bi]}“ direkt zusammen</b>?`,
+      fields:[{label:'=',kind:'int',value:ans}],
+      solution:`Die ${bc}×„${letters[bi]}“ als <b>1 Block</b> → ${nn} Elemente.<br>${nn}! / (${remCounts.map(c=>c+'!').join('·')}) = <b>${ans}</b>`};
+  }
+}
+
+function gComb(){
+  const v=pick(['plain','firstM','exactJ','multi']);
+  if(v==='plain'){const n=RI(8,14),k=RI(3,n-2);const ans=comb(n,k);
+    return {key:'comb',title:TITLE.comb,prompt:`Auf wie viele Arten kann man <b>${k} aus ${n}</b> auswählen (Reihenfolge egal)?`,
+      fields:[{label:'=',kind:'int',value:ans}],solution:`C(${n},${k}) = <b>${ans}</b>`};}
+  if(v==='firstM'){const n=RI(9,13),k=RI(4,n-3),m=RI(1,Math.min(3,k-1));const ans=comb(n-m,k-m);
+    return {key:'comb',title:TITLE.comb,prompt:`${k} aus ${n} auswählen, wobei die <b>ersten ${m} Pflicht</b> sind. Wie viele Möglichkeiten?`,
+      fields:[{label:'=',kind:'int',value:ans}],solution:`${m} fix → C(${n-m},${k-m}) = <b>${ans}</b>`};}
+  if(v==='exactJ'){let n,k,p,j,t=0;do{n=RI(10,14);k=RI(4,n-3);p=RI(4,6);j=RI(2,Math.min(3,k-1,p-1));t++;}while((k-j>n-p||k-j<0)&&t<50);
+    const ans=comb(p,j)*comb(n-p,k-j);
+    return {key:'comb',title:TITLE.comb,prompt:`${k} aus ${n} auswählen, davon <b>genau ${j} der ersten ${p}</b>. Wie viele Möglichkeiten?`,
+      fields:[{label:'=',kind:'int',value:ans}],solution:`C(${p},${j})·C(${n-p},${k-j}) = ${comb(p,j)}·${comb(n-p,k-j)} = <b>${ans}</b>`};}
+  // multiset
+  const sorten=RI(3,5),k=RI(4,7);const ans=comb(sorten+k-1,k);
+  return {key:'comb',title:TITLE.comb,prompt:`<b>${k}</b> Stück aus <b>${sorten} Sorten</b> auswählen, <b>mit Wiederholung</b> (Reihenfolge egal). Wie viele Möglichkeiten?`,
+    fields:[{label:'=',kind:'int',value:ans}],solution:`Mit Wiederholung: C(${sorten}+${k}−1, ${k}) = C(${sorten+k-1},${k}) = <b>${ans}</b>`};
+}
+
+function gLap(){
+  const v=pick(['sum','atleast','urn']);
+  if(v==='sum'){const s=RI(2,12);let c=0;for(let a=1;a<=6;a++)for(let b=1;b<=6;b++)if(a+b===s)c++;
+    return {key:'lap',title:TITLE.lap,prompt:`Zwei Würfel werden geworfen. Wie wahrscheinlich ist die <b>Augensumme ${s}</b>? (Bruch oder Dezimal)`,
+      fields:[{label:'P =',kind:'prob',value:c/36}],solution:`${c} günstige von 36 → ${fracStr(c,36)} ≈ ${(c/36).toFixed(3)}`};}
+  if(v==='atleast'){const f=RI(1,6);
+    return {key:'lap',title:TITLE.lap,prompt:`Zwei Würfel. Wie wahrscheinlich ist <b>mindestens eine ${f}</b>? (Gegenereignis!)`,
+      fields:[{label:'P =',kind:'prob',value:1-25/36}],solution:`1 − (5/6)² = 1 − 25/36 = 11/36 ≈ ${(11/36).toFixed(3)}`};}
+  const names=['blau','rot','grün','gelb']; const nc=RI(2,3); const cnt=[]; for(let i=0;i<nc;i++)cnt.push(RI(2,5));
+  const N=cnt.reduce((a,b)=>a+b,0); const num=cnt.reduce((a,c)=>a+c*(c-1),0); const ans=num/(N*(N-1));
+  return {key:'lap',title:TITLE.lap,prompt:`Urne mit ${cnt.map((c,i)=>c+' '+names[i]).join(', ')} (${N} Kugeln). Es werden 2 <b>ohne Zurücklegen</b> gezogen. Wie wahrscheinlich sind <b>beide gleichfarbig</b>?`,
+    fields:[{label:'P =',kind:'prob',value:ans}],solution:`Σ cᵢ(cᵢ−1) / (N(N−1)) = (${cnt.map(c=>c+'·'+(c-1)).join('+')}) / (${N}·${N-1}) = ${num}/${N*(N-1)} ≈ ${ans.toFixed(3)}`};
+}
+
+function gBinom(){
+  const n=RI(4,9); const ps=[[1,2],[1,3],[2,3],[1,4],[3,4],[1,5],[2,5]]; const [pn,pd]=pick(ps); const p=pn/pd;
+  if(Math.random()<0.5){const k=RI(0,n);const ans=comb(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k);
+    return {key:'binom',title:TITLE.binom,prompt:`n=${n} unabhängige Versuche, Trefferws. p=${pn}/${pd}. Wie wahrscheinlich <b>genau ${k} Treffer</b>? (Dezimal, 3 Stellen)`,
+      fields:[{label:'P =',kind:'prob',value:ans}],solution:`C(${n},${k})·(${pn}/${pd})^${k}·(${pd-pn}/${pd})^${n-k} ≈ <b>${ans.toFixed(4)}</b>`};}
+  const ans=1-Math.pow(1-p,n);
+  return {key:'binom',title:TITLE.binom,prompt:`n=${n} Versuche, Trefferws. p=${pn}/${pd}. Wie wahrscheinlich <b>mindestens ein Treffer</b>? (Dezimal)`,
+    fields:[{label:'P =',kind:'prob',value:ans}],solution:`1 − (1−p)ⁿ = 1 − (${pd-pn}/${pd})^${n} ≈ <b>${ans.toFixed(4)}</b>`};
+}
+
+function gBayes(){
+  const pa=pick([0.001,0.005,0.01,0.02,0.05]); const pba=pick([0.9,0.95,0.99]); const pbna=pick([0.01,0.02,0.05,0.1]);
+  const ans=pba*pa/(pba*pa+pbna*(1-pa));
+  return {key:'bayes',title:TITLE.bayes,
+    prompt:`P(A)=${pa}, P(B|A)=${pba}, P(B|Ā)=${pbna}. Berechne <b>P(A|B)</b>. (Dezimal, 3 Stellen)`,
+    fields:[{label:'P(A|B) =',kind:'prob',value:ans}],
+    solution:`P(B|A)·P(A) / [P(B|A)·P(A)+P(B|Ā)·P(Ā)]<br>= ${(pba*pa).toExponential(2)} / (${(pba*pa).toExponential(2)} + ${(pbna*(1-pa)).toExponential(2)}) ≈ <b>${ans.toFixed(4)}</b>`};
+}
+
+function gZV(){
+  const m=RI(3,4); const D=pick([8,10,12]); const num=Array(m).fill(1); let rem=D-m;
+  while(rem>0){num[RI(0,m-1)]++;rem--;}
+  let E=0; for(let i=0;i<m;i++)E+=(i+1)*num[i]/D;
+  const tbl=num.map((nm,i)=>`P(X=${i+1})=${fracStr(nm,D)}`).join(', ');
+  return {key:'zv',title:TITLE.zv,prompt:`Zufallsvariable X mit ${tbl}. Berechne den <b>Erwartungswert E[X]</b>. (Bruch oder Dezimal)`,
+    fields:[{label:'E[X] =',kind:'prob',value:E}],
+    solution:`E[X] = Σ k·P(X=k) = (${num.map((nm,i)=>(i+1)+'·'+nm).join(' + ')})/${D} = ${fracStr(num.reduce((a,nm,i)=>a+(i+1)*nm,0),D)} ≈ <b>${E.toFixed(3)}</b>`};
+}
+
+function gMod(){
+  const v=pick(['ggt','inv','pow']);
+  if(v==='ggt'){const a=RI(40,200),b=RI(12,a-1);const ans=gcd(a,b);
+    return {key:'mod',title:TITLE.mod,prompt:`Berechne den <b>ggT(${a}, ${b})</b> (Euklid).`,
+      fields:[{label:'ggT =',kind:'int',value:ans}],solution:`Euklid-Algorithmus → ggT(${a},${b}) = <b>${ans}</b>`};}
+  if(v==='inv'){const m=pick([26,11,13,17]);let a;do{a=RI(2,m-1);}while(gcd(a,m)!==1);const ans=modinv(a,m);
+    return {key:'mod',title:TITLE.mod,prompt:`Berechne die <b>Inverse ${a}⁻¹ mod ${m}</b>.`,
+      fields:[{label:'=',kind:'int',value:ans}],solution:`${a}·${ans} = ${a*ans} ≡ 1 (mod ${m}) → <b>${ans}</b>`};}
+  const n=pick([25,7,9,11,13]); let a;do{a=RI(2,n-1);}while(gcd(a,n)!==1); const e=RI(40,300); const ans=powmod(a,e,n);
+  return {key:'mod',title:TITLE.mod,prompt:`Berechne <b>${a}<sup>${e}</sup> mod ${n}</b> (Euler-Theorem: Exponent mod φ reduzieren).`,
+    fields:[{label:'=',kind:'int',value:ans}],solution:`Mit Euler/schneller Exponentiation: ${a}^${e} ≡ <b>${ans}</b> (mod ${n})`};
+}
+
+function gAff(){
+  const keys=[3,5,7,9,11,15,17,19,21,23,25]; const a=pick(keys); const b=RI(0,25);
+  let x1,x2; do{x1=RI(0,25);x2=RI(0,25);}while(x1===x2||gcd(mod(x1-x2,26),26)!==1);
+  const y1=mod(a*x1+b,26), y2=mod(a*x2+b,26);
+  return {key:'aff',title:TITLE.aff,
+    prompt:`Affine Chiffre f(x)=(a·x+b) mod 26 (A=0…Z=25). Bekannt: <span class="hl">${L(x1)}→${L(y1)}</span> und <span class="hl">${L(x2)}→${L(y2)}</span>. Bestimme <b>a</b> und <b>b</b>.`,
+    fields:[{label:'a =',kind:'int',value:a},{label:'b =',kind:'int',value:b}],
+    solution:`${x1}a+b≡${y1}, ${x2}a+b≡${y2} → subtrahieren: ${mod(x1-x2,26)}a≡${mod(y1-y2,26)} (mod 26).<br>Auflösen → <b>a=${a}</b>, dann b≡${y1}−${a}·${x1} → <b>b=${b}</b>. (ggT(a,26)=1 ✓)`};
+}
+
+function gRSA(){
+  let p,q,n; do{p=pick(PRIMES);q=pick(PRIMES);n=p*q;}while(p===q||n>200);
+  const phi=(p-1)*(q-1); const ecand=[3,5,7,11,17].filter(e=>e<phi&&gcd(e,phi)===1); const e=pick(ecand);
+  let m;do{m=RI(2,n-1);}while(gcd(m,n)!==1); const c=powmod(m,e,n); const d=modinv(e,phi);
+  return {key:'rsa',title:TITLE.rsa,
+    prompt:`RSA: öffentlicher Schlüssel n=${n}, e=${e}. Geheimtext c=${c}. Bestimme den <b>Klartext m</b>.`,
+    fields:[{label:'m =',kind:'int',value:m}],
+    solution:`n=${p}·${q} → φ=${phi}. d=${e}⁻¹ mod ${phi}=${d}. m=c^d mod n = ${c}^${d} mod ${n} = <b>${m}</b>`};
+}
+
+const GEN={perm:gPerm,comb:gComb,lap:gLap,binom:gBinom,bayes:gBayes,zv:gZV,mod:gMod,aff:gAff,rsa:gRSA};
+function genProblem(key){ if(!key||key==='all') key=pick(TYPES).key; return GEN[key](); }
+
+/* ============================================================
+   STATE  (localStorage)
+   ============================================================ */
+const SKEY='wuk-trainer-v1';
+const today=()=>{const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();};
+let S=load();
+function load(){
+  let s; try{s=JSON.parse(localStorage.getItem(SKEY));}catch(e){}
+  if(!s) s={};
+  s.solved=s.solved||0; s.correct=s.correct||0;
+  s.per=s.per||{}; TYPES.forEach(t=>{ s.per[t.key]=s.per[t.key]||{n:0,c:0,box:1,last:0}; });
+  s.streak=s.streak||0; s.lastDay=s.lastDay||0;
+  return s;
+}
+function save(){localStorage.setItem(SKEY,JSON.stringify(S));}
+function bump(key,ok){
+  S.solved++; if(ok)S.correct++;
+  const p=S.per[key]; p.n++; if(ok)p.c++;
+  p.box = ok ? Math.min(5,p.box+1) : 1; p.last=today();
+  // streak
+  const t=today();
+  if(S.lastDay!==t){ S.streak = (S.lastDay && isYesterday(S.lastDay,t)) ? S.streak+1 : 1; S.lastDay=t; }
+  save(); refreshHeader();
+}
+function isYesterday(prev,cur){ const dp=dayFromInt(prev),dc=dayFromInt(cur); return Math.round((dc-dp)/86400000)===1; }
+function dayFromInt(i){const y=Math.floor(i/10000),m=Math.floor(i/100)%100,d=i%100;return new Date(y,m-1,d).getTime();}
+const BOX_INT={1:0,2:1,3:2,4:4,5:7};
+function daysSince(last){ if(!last)return 999; return Math.round((dayFromInt(today())-dayFromInt(last))/86400000); }
+function isDue(key){ const p=S.per[key]; return daysSince(p.last) >= BOX_INT[p.box]; }
+function dueList(){ return TYPES.filter(t=>isDue(t.key)).sort((a,b)=>S.per[a.key].box-S.per[b.key].box); }
+
+/* ============================================================
+   UI helpers — render a problem into a container
+   ============================================================ */
+function renderProblem(container, prob, onResult){
+  container.innerHTML='';
+  const head=document.createElement('div'); head.className='ptype'; head.textContent=prob.title;
+  const pr=document.createElement('div'); pr.className='prompt'; pr.innerHTML=prob.prompt;
+  const fieldsWrap=document.createElement('div'); fieldsWrap.className='fields';
+  const inputs=[];
+  prob.fields.forEach((f,i)=>{
+    const row=document.createElement('div'); row.className='field';
+    const lab=document.createElement('label'); lab.textContent=f.label;
+    const inp=document.createElement('input'); inp.type='text'; inp.inputMode='text'; inp.autocomplete='off';
+    inp.placeholder=f.kind==='prob'?'z.B. 0.25 oder 1/4':'Zahl';
+    row.appendChild(lab); row.appendChild(inp); fieldsWrap.appendChild(row); inputs.push(inp);
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter'){ if(i<inputs.length-1)inputs[i+1].focus(); else checkBtn.click(); }});
+  });
+  const fb=document.createElement('div'); fb.className='fb';
+  const sol=document.createElement('div'); sol.className='sol'; sol.innerHTML='<span class="lbl">Rechenweg</span>'+prob.solution;
+  const checkBtn=document.createElement('button'); checkBtn.className='btn'; checkBtn.textContent='Prüfen';
+  const nextRow=document.createElement('div'); nextRow.className='btnrow'; nextRow.style.display='none';
+  const solBtn=document.createElement('button'); solBtn.className='btn ghost'; solBtn.textContent='Rechenweg';
+  const nextBtn=document.createElement('button'); nextBtn.className='btn'; nextBtn.textContent='Nächste ›';
+  nextRow.appendChild(solBtn); nextRow.appendChild(nextBtn);
+
+  let answered=false;
+  checkBtn.onclick=()=>{
+    if(answered)return;
+    let allOk=true, anyEmpty=false;
+    prob.fields.forEach((f,i)=>{
+      const u=inputs[i].value; if(!u.trim())anyEmpty=true;
+      const ok=f.kind==='prob'?checkProb(u,f.value):checkInt(u,f.value);
+      inputs[i].classList.add(ok?'ok':'bad'); inputs[i].disabled=true; if(!ok)allOk=false;
+    });
+    if(anyEmpty && prob.fields.every((f,i)=>!inputs[i].value.trim())){ inputs.forEach(x=>{x.classList.remove('bad');x.disabled=false;}); inputs[0].focus(); fb.className='fb show bad'; fb.textContent='Bitte etwas eintippen.'; return; }
+    answered=true;
+    const corr=prob.fields.map(f=>f.kind==='prob'?(Math.abs(f.value-Math.round(f.value))<1e-9?f.value:Number(f.value.toFixed(4))):f.value);
+    fb.className='fb show '+(allOk?'ok':'bad');
+    fb.innerHTML=allOk?'✓ Richtig!':('✗ Falsch. Lösung: '+corr.join(', '));
+    sol.classList.add('show');
+    checkBtn.style.display='none'; nextRow.style.display='flex';
+    onResult(allOk);
+  };
+  solBtn.onclick=()=>sol.classList.toggle('show');
+  nextBtn.onclick=()=>nextBtn._next&&nextBtn._next();
+  container.append(head,pr,fieldsWrap,fb,checkBtn,nextRow,sol);
+  setTimeout(()=>inputs[0]&&inputs[0].focus(),50);
+  return {nextBtn};
+}
+
+/* ============================================================
+   DRILL
+   ============================================================ */
+let drillType='all';
+function buildChips(){
+  const wrap=document.getElementById('typeChips'); wrap.innerHTML='';
+  const all=[{key:'all',label:'🎲 Gemischt'}].concat(TYPES);
+  all.forEach(t=>{const c=document.createElement('div');c.className='chip'+(t.key===drillType?' on':'');c.textContent=t.label;
+    c.onclick=()=>{drillType=t.key;buildChips();newDrill();};wrap.appendChild(c);});
+}
+function newDrill(){
+  const prob=genProblem(drillType);
+  const {nextBtn}=renderProblem(document.getElementById('drillCard'),prob,ok=>bump(prob.key,ok));
+  nextBtn._next=newDrill;
+}
+
+/* ============================================================
+   WIEDERHOLUNG (Leitner)
+   ============================================================ */
+function renderRepStatus(){
+  const due=dueList(); const box=document.getElementById('repStatus'); const card=document.getElementById('repCard');
+  card.style.display='none';
+  if(due.length===0){
+    box.innerHTML='<div class="center"><p style="font-size:1.05rem;font-weight:700">✓ Alles frisch!</p><p class="muted">Gerade ist nichts zur Wiederholung fällig. Komm später wieder oder übe im Drill.</p></div>';
+    return;
+  }
+  box.innerHTML='<p style="font-weight:700;margin:.2rem 0 .6rem">Fällig zur Wiederholung: '+due.length+'</p>'+
+    due.map(t=>`<div class="row"><span class="name">${TITLE[t.key]}</span><span class="boxbadge">Box ${S.per[t.key].box}</span></div>`).join('')+
+    '<button class="btn" id="repStart" style="margin-top:.8rem">Wiederholung starten</button>';
+  document.getElementById('repStart').onclick=()=>nextRep();
+}
+function nextRep(){
+  const due=dueList(); const box=document.getElementById('repStatus'); const card=document.getElementById('repCard');
+  if(due.length===0){ renderRepStatus(); return; }
+  box.innerHTML='<p class="muted">Noch fällig: '+due.length+' Themen</p>';
+  card.style.display='block';
+  const key=due[0].key; const prob=genProblem(key);
+  const {nextBtn}=renderProblem(card,prob,ok=>bump(key,ok));
+  nextBtn.textContent='Weiter ›'; nextBtn._next=nextRep;
+}
+
+/* ============================================================
+   KARTEIKARTEN
+   ============================================================ */
+const DECK=[
+  {q:'Permutation mit Wiederholung — Formel?',a:'n! / (n₁!·n₂!·…)'},
+  {q:'Binomialkoeffizient C(n,k)?',a:'n! / (k!·(n−k)!)'},
+  {q:'Auswahl MIT Wiederholung (Multimengen)?',a:'C(n+k−1, k)'},
+  {q:'Laplace-Wahrscheinlichkeit?',a:'günstige / mögliche Fälle'},
+  {q:'„Mindestens ein …“ — bester Trick?',a:'Gegenereignis: 1 − P(kein …)'},
+  {q:'Binomialverteilung P(X=k)?',a:'C(n,k)·pᵏ·(1−p)ⁿ⁻ᵏ'},
+  {q:'Binomial: E[X] und Var?',a:'E[X]=n·p, Var=n·p·(1−p)'},
+  {q:'Satz von Bayes — P(A|B)?',a:'P(B|A)P(A) / [P(B|A)P(A)+P(B|Ā)P(Ā)]'},
+  {q:'Varianz aus E[X], E[X²]?',a:'Var = E[X²] − (E[X])²'},
+  {q:'φ(p) für Primzahl p?',a:'p − 1'},
+  {q:'φ(p·q) für zwei Primzahlen?',a:'(p−1)(q−1)'},
+  {q:'φ(p²) — Achtung Falle!',a:'p·(p−1)   (z.B. φ(25)=20, NICHT 16)'},
+  {q:'Euler-Theorem (ggT(a,n)=1)?',a:'a^φ(n) ≡ 1 (mod n) → Exponent mod φ(n) reduzieren'},
+  {q:'ggT im Euklid-Algorithmus ablesen?',a:'der letzte Rest ≠ 0'},
+  {q:'ax+by=c ganzzahlig lösbar ⇔ ?',a:'ggT(a,b) | c'},
+  {q:'Affine Chiffre f(x)?',a:'(a·x + b) mod 26'},
+  {q:'Affine: gültiger Schlüssel a?',a:'nur wenn ggT(a,26)=1'},
+  {q:'Affine entschlüsseln?',a:'x = a⁻¹·(y − b) mod 26'},
+  {q:'RSA-Entschlüsselung — 4 Schritte?',a:'1) n=p·q  2) φ=(p−1)(q−1)  3) d=e⁻¹ mod φ  4) m=c^d mod n'},
+  {q:'RSA verschlüsseln?',a:'c = m^e mod n'},
+  {q:'2 Würfel: Grundraum? 3 Würfel?',a:'36   bzw.   216'},
+  {q:'Fahrstuhl-Grundraum?',a:'Stockwerke ^ Personen'},
+];
+let deckOrder=[],deckPos=0,flipped=false;
+function shuffleDeck(){deckOrder=DECK.map((_,i)=>i).sort(()=>Math.random()-0.5);deckPos=0;flipped=false;}
+function renderFlash(){
+  const el=document.getElementById('flash'); const card=DECK[deckOrder[deckPos]];
+  el.innerHTML=`<div class="face"><div class="${flipped?'a':'q'}">${flipped?card.a:card.q}</div><div class="hint">${flipped?'Wusstest du es?':'Tippen zum Umdrehen'}</div></div>`;
+  document.getElementById('flashProg').textContent=`Karte ${deckPos+1} / ${DECK.length}`;
+}
+function nextFlash(){deckPos=(deckPos+1)%DECK.length; if(deckPos===0)shuffleDeck(); flipped=false; renderFlash();}
+
+/* ============================================================
+   MINI-KLAUSUR
+   ============================================================ */
+let exam=null,examTimer=null;
+function startExam(){
+  exam={probs:TYPES.map(t=>genProblem(t.key)),answers:Array(9).fill(null),cur:0,left:30*60};
+  document.getElementById('examIntro').style.display='none';
+  document.getElementById('examResult').style.display='none';
+  document.getElementById('examRun').style.display='block';
+  renderExamDots(); renderExamCard(); tickExam();
+  examTimer=setInterval(()=>{exam.left--; tickExam(); if(exam.left<=0)submitExam();},1000);
+}
+function tickExam(){const m=Math.floor(exam.left/60),s=exam.left%60;const t=document.getElementById('examTimer');
+  t.textContent=`${m}:${(''+s).padStart(2,'0')}`; t.classList.toggle('low',exam.left<=120);}
+function renderExamDots(){const d=document.getElementById('examDots');d.innerHTML='';
+  exam.probs.forEach((p,i)=>{const x=document.createElement('div');x.className='dot'+(i===exam.cur?' cur':'')+(exam.answers[i]!=null?' done':'');
+    x.textContent=i+1;x.onclick=()=>{saveExamInputs();exam.cur=i;renderExamCard();renderExamDots();};d.appendChild(x);});}
+function renderExamCard(){
+  const prob=exam.probs[exam.cur]; const c=document.getElementById('examCard'); c.innerHTML='';
+  const head=document.createElement('div');head.className='ptype';head.textContent=`Aufgabe ${exam.cur+1}/9 · ${prob.title}`;
+  const pr=document.createElement('div');pr.className='prompt';pr.innerHTML=prob.prompt;
+  const fw=document.createElement('div');fw.className='fields';
+  prob._inputs=[];
+  prob.fields.forEach((f,i)=>{const row=document.createElement('div');row.className='field';
+    const lab=document.createElement('label');lab.textContent=f.label;
+    const inp=document.createElement('input');inp.type='text';inp.autocomplete='off';
+    const saved=exam.answers[exam.cur]; if(saved&&saved[i]!=null)inp.value=saved[i];
+    row.append(lab,inp);fw.appendChild(row);prob._inputs.push(inp);});
+  c.append(head,pr,fw);
+}
+function saveExamInputs(){const prob=exam.probs[exam.cur]; if(prob._inputs)exam.answers[exam.cur]=prob._inputs.map(i=>i.value);}
+function submitExam(){
+  clearInterval(examTimer); saveExamInputs();
+  let score=0; const detail=exam.probs.map((prob,i)=>{
+    const ans=exam.answers[i]||[]; const ok=prob.fields.every((f,j)=>{const u=ans[j]||'';return f.kind==='prob'?checkProb(u,f.value):checkInt(u,f.value);});
+    if(ok)score++; bump(prob.key,ok); return {prob,ok};
+  });
+  document.getElementById('examRun').style.display='none';
+  const r=document.getElementById('examResult'); r.style.display='block';
+  r.innerHTML=`<div class="card center"><div class="n" style="font-size:2.2rem;font-weight:800;color:var(--accent-dark)">${score} / 9</div>
+    <p class="muted">richtig in dieser Mini-Klausur</p></div>
+    <div class="card">${detail.map((d,i)=>`<div class="row"><span class="name">${d.ok?'✓':'✗'} ${d.prob.title}</span><span class="boxbadge">${d.ok?'ok':'üben'}</span></div>`).join('')}</div>
+    <button class="btn" onclick="document.getElementById('examResult').style.display='none';document.getElementById('examIntro').style.display='block';">Neue Mini-Klausur</button>`;
+}
+
+/* ============================================================
+   STATS
+   ============================================================ */
+function renderStats(){
+  document.getElementById('stTotal').textContent=S.solved;
+  document.getElementById('stAcc').textContent=S.solved?Math.round(100*S.correct/S.solved)+'%':'–';
+  const list=document.getElementById('statList');
+  list.innerHTML=TYPES.map(t=>{const p=S.per[t.key];const acc=p.n?Math.round(100*p.c/p.n):0;
+    return `<div class="row"><span class="name">${TITLE[t.key]}</span>
+      <span style="width:90px"><div class="prog"><i style="width:${acc}%"></i></div></span>
+      <span class="boxbadge">Box ${p.box}</span>
+      <span class="${isDue(t.key)?'due':'fresh'}" style="font-size:.72rem;font-weight:700;width:54px;text-align:right">${p.n?(isDue(t.key)?'fällig':'frisch'):'neu'}</span></div>`;}).join('');
+}
+
+/* ============================================================
+   NAV + THEME + INIT
+   ============================================================ */
+function go(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-'+name).classList.add('active');
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.go===name));
+  if(name==='rep')renderRepStatus();
+  if(name==='stats')renderStats();
+  if(name==='cards'){if(!deckOrder.length)shuffleDeck();renderFlash();}
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('nav.tabs button').forEach(b=>b.onclick=()=>go(b.dataset.go));
+document.getElementById('flash').onclick=()=>{flipped=!flipped;renderFlash();};
+document.getElementById('flashYes').onclick=()=>nextFlash();
+document.getElementById('flashNo').onclick=()=>{deckOrder.push(deckOrder[deckPos]);nextFlash();};
+document.getElementById('examStart').onclick=startExam;
+document.getElementById('examPrev').onclick=()=>{saveExamInputs();exam.cur=(exam.cur+8)%9;renderExamCard();renderExamDots();};
+document.getElementById('examNext').onclick=()=>{saveExamInputs();exam.cur=(exam.cur+1)%9;renderExamCard();renderExamDots();};
+document.getElementById('examSubmit').onclick=()=>{if(confirm('Mini-Klausur abgeben und auswerten?'))submitExam();};
+document.getElementById('resetBtn').onclick=()=>{if(confirm('Wirklich allen Fortschritt löschen?')){localStorage.removeItem(SKEY);S=load();refreshHeader();renderStats();}};
+
+const themeBtn=document.getElementById('themeBtn');
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);themeBtn.textContent=t==='dark'?'☀️':'🌙';localStorage.setItem('wuk-theme',t);}
+applyTheme(localStorage.getItem('wuk-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+themeBtn.onclick=()=>applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+
+function refreshHeader(){document.getElementById('streakN').textContent=S.streak;}
+
+buildChips(); newDrill(); refreshHeader();
+
+/* Service worker (nur über http/https aktiv, schadet lokal nicht) */
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+}
+</script>
+</body>
+</html>

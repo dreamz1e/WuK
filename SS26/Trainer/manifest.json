@@ -1,0 +1,19 @@
+{
+  "name": "WuK Trainer",
+  "short_name": "WuK",
+  "description": "Übungs-Trainer für die Klausur Wahrscheinlichkeitsrechnung & Kryptographie",
+  "start_url": "./App.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f6fb",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
