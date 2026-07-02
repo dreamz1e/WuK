@@ -1,6 +1,6 @@
 /* Minimaler Service Worker: cached die App fürs Offline-Nutzen.
    Aktiv nur über http(s) (GitHub Pages o.ä.), nicht über file://. */
-const CACHE = 'wuk-trainer-v1';
+const CACHE = 'wuk-trainer-v2';
 const ASSETS = ['./', './App.html', './manifest.json', './icon.svg'];
 
 self.addEventListener('install', e => {

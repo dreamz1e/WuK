@@ -284,17 +284,52 @@ function gComb(){
 }
 
 function gLap(){
-  const v=pick(['sum','atleast','urn']);
+  const v=pick(['sum','atleast','urn','fahr','fahr']);
   if(v==='sum'){const s=RI(2,12);let c=0;for(let a=1;a<=6;a++)for(let b=1;b<=6;b++)if(a+b===s)c++;
     return {key:'lap',title:TITLE.lap,prompt:`Zwei Würfel werden geworfen. Wie wahrscheinlich ist die <b>Augensumme ${s}</b>? (Bruch oder Dezimal)`,
       fields:[{label:'P =',kind:'prob',value:c/36}],solution:`${c} günstige von 36 → ${fracStr(c,36)} ≈ ${(c/36).toFixed(3)}`};}
   if(v==='atleast'){const f=RI(1,6);
     return {key:'lap',title:TITLE.lap,prompt:`Zwei Würfel. Wie wahrscheinlich ist <b>mindestens eine ${f}</b>? (Gegenereignis!)`,
       fields:[{label:'P =',kind:'prob',value:1-25/36}],solution:`1 − (5/6)² = 1 − 25/36 = 11/36 ≈ ${(11/36).toFixed(3)}`};}
-  const names=['blau','rot','grün','gelb']; const nc=RI(2,3); const cnt=[]; for(let i=0;i<nc;i++)cnt.push(RI(2,5));
-  const N=cnt.reduce((a,b)=>a+b,0); const num=cnt.reduce((a,c)=>a+c*(c-1),0); const ans=num/(N*(N-1));
-  return {key:'lap',title:TITLE.lap,prompt:`Urne mit ${cnt.map((c,i)=>c+' '+names[i]).join(', ')} (${N} Kugeln). Es werden 2 <b>ohne Zurücklegen</b> gezogen. Wie wahrscheinlich sind <b>beide gleichfarbig</b>?`,
-    fields:[{label:'P =',kind:'prob',value:ans}],solution:`Σ cᵢ(cᵢ−1) / (N(N−1)) = (${cnt.map(c=>c+'·'+(c-1)).join('+')}) / (${N}·${N-1}) = ${num}/${N*(N-1)} ≈ ${ans.toFixed(3)}`};
+  if(v==='urn'){
+    const names=['blau','rot','grün','gelb']; const nc=RI(2,3); const cnt=[]; for(let i=0;i<nc;i++)cnt.push(RI(2,5));
+    const N=cnt.reduce((a,b)=>a+b,0); const num=cnt.reduce((a,c)=>a+c*(c-1),0); const ans=num/(N*(N-1));
+    return {key:'lap',title:TITLE.lap,prompt:`Urne mit ${cnt.map((c,i)=>c+' '+names[i]).join(', ')} (${N} Kugeln). Es werden 2 <b>ohne Zurücklegen</b> gezogen. Wie wahrscheinlich sind <b>beide gleichfarbig</b>?`,
+      fields:[{label:'P =',kind:'prob',value:ans}],solution:`Σ cᵢ(cᵢ−1) / (N(N−1)) = (${cnt.map(c=>c+'·'+(c-1)).join('+')}) / (${N}·${N-1}) = ${num}/${N*(N-1)} ≈ ${ans.toFixed(3)}`};
+  }
+  return gFahr();
+}
+
+/* Fahrstuhl — eigene große Aufgabe in beiden modernen Klausuren (16–18 Pkt) */
+function gFahr(){
+  const k=RI(3,5); // Stockwerke
+  const v=pick(['once','allstop','together','alone','twostops']);
+  if(v==='once'){const n=RI(3,4); const ans=k/Math.pow(k,n);
+    return {key:'lap',title:TITLE.lap,
+      prompt:`Fahrstuhl: <b>${n} Personen</b> fahren unabhängig in eines von <b>${k} Stockwerken</b> (alle gleich wahrscheinlich). Wie wahrscheinlich hält der Fahrstuhl <b>nur einmal</b>?`,
+      fields:[{label:'P =',kind:'prob',value:ans}],
+      solution:`Alle im selben Stockwerk: ${k} günstige von ${k}<sup>${n}</sup> = ${Math.pow(k,n)} → ${fracStr(k,Math.pow(k,n))} ≈ ${ans.toFixed(4)}`};}
+  if(v==='allstop'){const n=RI(3,Math.min(4,k)); let num=1; for(let i=0;i<n;i++)num*=(k-i); const ans=num/Math.pow(k,n);
+    return {key:'lap',title:TITLE.lap,
+      prompt:`Fahrstuhl: <b>${n} Personen</b>, <b>${k} Stockwerke</b>. Wie wahrscheinlich hält der Fahrstuhl <b>${n}-mal</b> (alle steigen einzeln aus)?`,
+      fields:[{label:'P =',kind:'prob',value:ans}],
+      solution:`Alle verschieden: ${Array.from({length:n},(_,i)=>k-i).join('·')} / ${k}<sup>${n}</sup> = ${num}/${Math.pow(k,n)} = ${fracStr(num,Math.pow(k,n))} ≈ ${ans.toFixed(4)}`};}
+  if(v==='together'){const n=RI(3,4); const ans=1/k;
+    return {key:'lap',title:TITLE.lap,
+      prompt:`Fahrstuhl: <b>${n} Personen</b> (darunter A und B), <b>${k} Stockwerke</b>. Wie wahrscheinlich steigen <b>A und B gemeinsam</b> aus (egal wo die anderen aussteigen)?`,
+      fields:[{label:'P =',kind:'prob',value:ans}],
+      solution:`${k} Stockwerke für das Paar · ${k}<sup>${n-2}</sup> für den Rest / ${k}<sup>${n}</sup> = ${k}·${Math.pow(k,n-2)}/${Math.pow(k,n)} = <b>1/${k}</b>`};}
+  if(v==='alone'){const n=RI(3,4); const num=k*Math.pow(k-1,n-1); const ans=num/Math.pow(k,n);
+    return {key:'lap',title:TITLE.lap,
+      prompt:`Fahrstuhl: <b>${n} Personen</b>, <b>${k} Stockwerke</b>. Wie wahrscheinlich verlässt <b>Person A den Fahrstuhl allein</b>?`,
+      fields:[{label:'P =',kind:'prob',value:ans}],
+      solution:`A: ${k} Stockwerke · die anderen ${n-1} je nur ${k-1} übrige: ${k}·${k-1}<sup>${n-1}</sup>/${k}<sup>${n}</sup> = ${num}/${Math.pow(k,n)} = ${fracStr(num,Math.pow(k,n))} ≈ ${ans.toFixed(4)}`};}
+  // twostops: 4 Personen, genau 2 Stockwerke à 2 Personen (SoSe20 A5b)
+  const num=comb(k,2)*6; const ans=num/Math.pow(k,4);
+  return {key:'lap',title:TITLE.lap,
+    prompt:`Fahrstuhl: <b>4 Personen</b>, <b>${k} Stockwerke</b>. Wie wahrscheinlich hält der Fahrstuhl <b>genau zweimal</b> und es steigen <b>jedes Mal zwei</b> Personen aus?`,
+    fields:[{label:'P =',kind:'prob',value:ans}],
+    solution:`Stockwerks-Paar wählen: C(${k},2)=${comb(k,2)} · Personen aufteilen: 4!/(2!·2!)=6 → ${comb(k,2)}·6/${k}⁴ = ${num}/${Math.pow(k,4)} = ${fracStr(num,Math.pow(k,4))} ≈ ${ans.toFixed(4)}`};
 }
 
 function gBinom(){
@@ -317,17 +352,35 @@ function gBayes(){
 }
 
 function gZV(){
+  if(Math.random()<0.5){
+    // Min/Max zweier Würfel (21SoSe A6)
+    const isMin=Math.random()<0.5; const kk=RI(1,6);
+    const ans=isMin?(Math.pow(7-kk,2)-Math.pow(6-kk,2))/36:(kk*kk-(kk-1)*(kk-1))/36;
+    const num=Math.round(ans*36);
+    return {key:'zv',title:TITLE.zv,
+      prompt:`Zwei Würfel werden geworfen. X sei die <b>${isMin?'kleinere':'größere'}</b> der beiden Augenzahlen. Berechne <b>P(X = ${kk})</b>. (Bruch oder Dezimal)`,
+      fields:[{label:'P =',kind:'prob',value:ans}],
+      solution:(isMin
+        ?`P(Min=k) = [(7−k)² − (6−k)²]/36 = [${Math.pow(7-kk,2)} − ${Math.pow(6-kk,2)}]/36`
+        :`P(Max=k) = [k² − (k−1)²]/36 = [${kk*kk} − ${(kk-1)*(kk-1)}]/36`)
+        +` = ${fracStr(num,36)} ≈ <b>${ans.toFixed(4)}</b><br>(beide ≥/≤ k minus beide ≥/≤ k±1 — Formel auf den Spicker!)`};
+  }
   const m=RI(3,4); const D=pick([8,10,12]); const num=Array(m).fill(1); let rem=D-m;
   while(rem>0){num[RI(0,m-1)]++;rem--;}
-  let E=0; for(let i=0;i<m;i++)E+=(i+1)*num[i]/D;
+  let E=0,E2=0; for(let i=0;i<m;i++){E+=(i+1)*num[i]/D; E2+=(i+1)*(i+1)*num[i]/D;}
+  const V=E2-E*E;
   const tbl=num.map((nm,i)=>`P(X=${i+1})=${fracStr(nm,D)}`).join(', ');
-  return {key:'zv',title:TITLE.zv,prompt:`Zufallsvariable X mit ${tbl}. Berechne den <b>Erwartungswert E[X]</b>. (Bruch oder Dezimal)`,
-    fields:[{label:'E[X] =',kind:'prob',value:E}],
-    solution:`E[X] = Σ k·P(X=k) = (${num.map((nm,i)=>(i+1)+'·'+nm).join(' + ')})/${D} = ${fracStr(num.reduce((a,nm,i)=>a+(i+1)*nm,0),D)} ≈ <b>${E.toFixed(3)}</b>`};
+  return {key:'zv',title:TITLE.zv,prompt:`Zufallsvariable X mit ${tbl}. Berechne <b>E[X]</b> und <b>Var(X)</b>. (Bruch oder Dezimal, 3 Stellen)`,
+    fields:[{label:'E[X] =',kind:'prob',value:E},{label:'Var =',kind:'prob',value:V}],
+    solution:`E[X] = Σ k·P(X=k) = (${num.map((nm,i)=>(i+1)+'·'+nm).join(' + ')})/${D} = ${fracStr(num.reduce((a,nm,i)=>a+(i+1)*nm,0),D)} ≈ <b>${E.toFixed(3)}</b><br>E[X²] = (${num.map((nm,i)=>(i+1)+'²·'+nm).join(' + ')})/${D} = ${fracStr(num.reduce((a,nm,i)=>a+(i+1)*(i+1)*nm,0),D)} ≈ ${E2.toFixed(3)}<br>Var = E[X²] − (E[X])² ≈ <b>${V.toFixed(3)}</b>  (σ = √Var ≈ ${Math.sqrt(V).toFixed(3)})`};
 }
 
 function gMod(){
-  const v=pick(['ggt','inv','pow']);
+  const v=pick(['ggt','inv','pow','digit']);
+  if(v==='digit'){const a=pick([3,7,9]); const e=RI(50,400); const ans=powmod(a,e,10);
+    return {key:'mod',title:TITLE.mod,prompt:`Was ist die <b>letzte Dezimalstelle</b> von <b>${a}<sup>${e}</sup></b>? (= ${a}<sup>${e}</sup> mod 10)`,
+      fields:[{label:'=',kind:'int',value:ans}],
+      solution:`φ(10)=4, ggT(${a},10)=1 → Exponent mod 4: ${e} ≡ ${e%4} (mod 4) → ${a}<sup>${e}</sup> ≡ ${a}<sup>${e%4===0?4:e%4}</sup> ≡ <b>${ans}</b> (mod 10)`};}
   if(v==='ggt'){const a=RI(40,200),b=RI(12,a-1);const ans=gcd(a,b);
     return {key:'mod',title:TITLE.mod,prompt:`Berechne den <b>ggT(${a}, ${b})</b> (Euklid).`,
       fields:[{label:'ggT =',kind:'int',value:ans}],solution:`Euklid-Algorithmus → ggT(${a},${b}) = <b>${ans}</b>`};}
@@ -341,22 +394,46 @@ function gMod(){
 
 function gAff(){
   const keys=[3,5,7,9,11,15,17,19,21,23,25]; const a=pick(keys); const b=RI(0,25);
-  let x1,x2; do{x1=RI(0,25);x2=RI(0,25);}while(x1===x2||gcd(mod(x1-x2,26),26)!==1);
+  const tricky=Math.random()<0.5; // ggT-Tücke: ggT(Δx,26)=2 → durch 2 teilen, 2 Kandidaten
+  let x1,x2;
+  do{x1=RI(0,25);x2=RI(0,25);}while(x1===x2||gcd(mod(x1-x2,26),26)!==(tricky?2:1));
   const y1=mod(a*x1+b,26), y2=mod(a*x2+b,26);
+  const dx=mod(x1-x2,26), dy=mod(y1-y2,26);
+  let sol;
+  if(!tricky){
+    sol=`${x1}a+b≡${y1}, ${x2}a+b≡${y2} → subtrahieren: ${dx}a≡${dy} (mod 26).<br>ggT(${dx},26)=1 → eindeutig auflösen → <b>a=${a}</b>, dann b≡${y1}−${a}·${x1} → <b>b=${b}</b>. (ggT(a,26)=1 ✓)`;
+  }else{
+    const a13=mod(modinv(dx/2,13)*(dy/2),13); const c1=a13, c2=a13+13;
+    const bad=(gcd(c1,26)===1)?c2:c1;
+    sol=`${x1}a+b≡${y1}, ${x2}a+b≡${y2} → subtrahieren: ${dx}a≡${dy} (mod 26).<br>`+
+      `⚠️ <b>ggT-Tücke:</b> ggT(${dx},26)=2 und 2|${dy} → durch 2 teilen: ${dx/2}a≡${dy/2} (mod 13) → a≡${a13} (mod 13)<br>`+
+      `→ Kandidaten a∈{${c1}, ${c2}} (mod 26). Gültig nur ggT(a,26)=1: a=${bad} ✗, <b>a=${a}</b> ✓.<br>`+
+      `b≡${y1}−${a}·${x1} → <b>b=${b}</b>.`;
+  }
   return {key:'aff',title:TITLE.aff,
-    prompt:`Affine Chiffre f(x)=(a·x+b) mod 26 (A=0…Z=25). Bekannt: <span class="hl">${L(x1)}→${L(y1)}</span> und <span class="hl">${L(x2)}→${L(y2)}</span>. Bestimme <b>a</b> und <b>b</b>.`,
+    prompt:`Affine Chiffre f(x)=(a·x+b) mod 26 (A=0…Z=25). Bekannt: <span class="hl">${L(x1)}→${L(y1)}</span> und <span class="hl">${L(x2)}→${L(y2)}</span>. Bestimme den <b>gültigen Schlüssel a</b> und <b>b</b>.`,
     fields:[{label:'a =',kind:'int',value:a},{label:'b =',kind:'int',value:b}],
-    solution:`${x1}a+b≡${y1}, ${x2}a+b≡${y2} → subtrahieren: ${mod(x1-x2,26)}a≡${mod(y1-y2,26)} (mod 26).<br>Auflösen → <b>a=${a}</b>, dann b≡${y1}−${a}·${x1} → <b>b=${b}</b>. (ggT(a,26)=1 ✓)`};
+    solution:sol};
 }
 
 function gRSA(){
   let p,q,n; do{p=pick(PRIMES);q=pick(PRIMES);n=p*q;}while(p===q||n>200);
   const phi=(p-1)*(q-1); const ecand=[3,5,7,11,17].filter(e=>e<phi&&gcd(e,phi)===1); const e=pick(ecand);
   let m;do{m=RI(2,n-1);}while(gcd(m,n)!==1); const c=powmod(m,e,n); const d=modinv(e,phi);
+  if(Math.random()<0.5){
+    return {key:'rsa',title:TITLE.rsa,
+      prompt:`RSA: öffentlicher Schlüssel n=${n}, e=${e}. Geheimtext c=${c}. Bestimme den <b>Klartext m</b>.`,
+      fields:[{label:'m =',kind:'int',value:m}],
+      solution:`n=${p}·${q} → φ=${phi}. d=${e}⁻¹ mod ${phi}=${d}. m=c^d mod n = ${c}^${d} mod ${n} = <b>${m}</b>`};
+  }
+  // e-Wahl-Variante (21SoSe A8): nur einer von 3 Kandidaten hat ggT(e,φ)=1
+  const invalids=[]; for(let x=2;x<phi;x++)if(gcd(x,phi)>1)invalids.push(x);
+  const b1=pick(invalids); let b2; do{b2=pick(invalids);}while(b2===b1);
+  const cands=[e,b1,b2].sort((x,y)=>x-y);
   return {key:'rsa',title:TITLE.rsa,
-    prompt:`RSA: öffentlicher Schlüssel n=${n}, e=${e}. Geheimtext c=${c}. Bestimme den <b>Klartext m</b>.`,
-    fields:[{label:'m =',kind:'int',value:m}],
-    solution:`n=${p}·${q} → φ=${phi}. d=${e}⁻¹ mod ${phi}=${d}. m=c^d mod n = ${c}^${d} mod ${n} = <b>${m}</b>`};
+    prompt:`RSA: Modul n=${n}, Geheimtext c=${c}. Der öffentliche Exponent ist einer von <span class="hl">{${cands.join(', ')}}</span> — nur einer ist gültig. Bestimme <b>e</b>, den privaten Schlüssel <b>d</b> und den <b>Klartext m</b>.`,
+    fields:[{label:'e =',kind:'int',value:e},{label:'d =',kind:'int',value:d},{label:'m =',kind:'int',value:m}],
+    solution:`n=${p}·${q} → φ=${phi}. Gültig nur ggT(e,φ)=1: ${cands.map(x=>`ggT(${x},${phi})=${gcd(x,phi)}${gcd(x,phi)===1?' ✓':' ✗'}`).join(' · ')} → <b>e=${e}</b>.<br>d=${e}⁻¹ mod ${phi} = <b>${d}</b> (erw. Euklid). m=${c}^${d} mod ${n} = <b>${m}</b> (schnelle Exp., jeden Schritt mit TR prüfen!)`};
 }
 
 const GEN={perm:gPerm,comb:gComb,lap:gLap,binom:gBinom,bayes:gBayes,zv:gZV,mod:gMod,aff:gAff,rsa:gRSA};
@@ -509,7 +586,17 @@ const DECK=[
   {q:'RSA-Entschlüsselung — 4 Schritte?',a:'1) n=p·q  2) φ=(p−1)(q−1)  3) d=e⁻¹ mod φ  4) m=c^d mod n'},
   {q:'RSA verschlüsseln?',a:'c = m^e mod n'},
   {q:'2 Würfel: Grundraum? 3 Würfel?',a:'36   bzw.   216'},
-  {q:'Fahrstuhl-Grundraum?',a:'Stockwerke ^ Personen'},
+  {q:'Fahrstuhl-Grundraum?',a:'Stockwerke ^ Personen  (kⁿ)'},
+  {q:'Fahrstuhl hält nur 1× (n Pers., k Stockw.)?',a:'k / kⁿ'},
+  {q:'Fahrstuhl: Person A steigt allein aus?',a:'k·(k−1)ⁿ⁻¹ / kⁿ'},
+  {q:'Fahrstuhl: A und B steigen gemeinsam aus?',a:'k·kⁿ⁻² / kⁿ = 1/k'},
+  {q:'Fahrstuhl hält genau r× mit Verteilung n₁,…,nᵣ?',a:'C(k,r) · n!/(n₁!·…·nᵣ!) / kⁿ'},
+  {q:'2 Würfel: P(Min = k)?',a:'[(7−k)² − (6−k)²] / 36'},
+  {q:'2 Würfel: P(Max = k)?',a:'[k² − (k−1)²] / 36'},
+  {q:'Kleiner Fermat (p prim)?',a:'aᵖ ≡ a (mod p);  aᵖ⁻¹ ≡ 1 falls p ∤ a'},
+  {q:'Beweis: a⁵−a durch 5 teilbar?',a:'Fermat mit p=5: a⁵ ≡ a (mod 5) → a⁵−a ≡ 0'},
+  {q:'Urne ohne Zurücklegen: genau k Treffer?',a:'hypergeometrisch: C(r,k)·C(n−r,m−k) / C(n,m)'},
+  {q:'2 Kugeln gleichfarbig (ohne Zurücklegen)?',a:'Σ cᵢ(cᵢ−1) / (N(N−1))'},
 ];
 let deckOrder=[],deckPos=0,flipped=false;
 function shuffleDeck(){deckOrder=DECK.map((_,i)=>i).sort(()=>Math.random()-0.5);deckPos=0;flipped=false;}

@@ -23,7 +23,7 @@ Lernkarten: `[Lernkarten/](./Lernkarten/)` · Lösungen: `[Loesungen/](./Loesung
 | [x] | **Sa 13.06** 🟦 | Strategie (`[00](./00_Strategie_WuK.md)`) querlesen + **Lernkarte 1**, Abschnitt **#1 Permutation** durcharbeiten | 60 min |
 | [x] | **So 14.06** 🟧 | #1 drillen: 21SoSe A1, SoSe20 A1, **WS0809 A1 (BANANEN)**                                                         | 60 min |
 | [x] | **Mo 15.06** 🟦 | **Lernkarte 1**, **#2 Auswahl** + **Auswahl mit Wiederholung** (Multimengen)                                      | 60 min |
-| [ ] | **Di 16.06** 🟧 | #2 drillen: 21SoSe A2, SoSe20 A2/A3a, SS14 A2 + `[Woche1_KOMB](./Uebungen/Woche1_KOMB.md)` → **Spicker ①②**       | 75 min |
+| [x] | **Di 16.06** 🟧 | #2 drillen: 21SoSe A2, SoSe20 A2/A3a, SS14 A2 + `[Woche1_KOMB](./Uebungen/Woche1_KOMB.md)` → **Spicker ①②**       | 75 min |
 
 
 ---
@@ -33,13 +33,13 @@ Lernkarten: `[Lernkarten/](./Lernkarten/)` · Lösungen: `[Loesungen/](./Loesung
 
 |     | Datum           | Paket                                                                                                          | ~Zeit  |
 | --- | --------------- | -------------------------------------------------------------------------------------------------------------- | ------ |
-| [ ] | **Mi 17.06** 🟦 | **Lernkarte 2**, **#4 Binomial** + Binomial-Rechner                                                            | 60 min |
-| [ ] | **Do 18.06** 🟧 | #4 drillen: SoSe20 A4, WS0607 A5 (Tennis), WS0809 A5                                                           | 60 min |
-| [ ] | **Fr 19.06** 🟦 | **Lernkarte 2**, **#3 Laplace** + **Urnenziehen** + Urnen-Rechner                                              | 60 min |
-| [ ] | **Sa 20.06** 🟧 | #3 drillen: 21SoSe A3 (Fahrstuhl), WS0607 A3/A4, SS14 A3/A4                                                    | 60 min |
-| [ ] | **So 21.06** 🟩 | **Puffer:** schwächste #1–#4-Aufgabe nochmal · **Spicker ③④** (oder Ruhetag)                                   | 45 min |
-| [ ] | **Mo 22.06** 🟦 | **Lernkarte 2**, **#5 Bayes** + Bayes-Rechner + Baumdiagramm                                                   | 60 min |
-| [ ] | **Di 23.06** 🟧 | #5 drillen: 21SoSe A5, SoSe20 A6, SS14 A5                                                                      | 60 min |
+| [x] | **Mi 17.06** 🟦 | **Lernkarte 2**, **#4 Binomial** + Binomial-Rechner                                                            | 60 min |
+| [x] | **Do 18.06** 🟧 | #4 drillen: SoSe20 A4, WS0607 A5 (Tennis), WS0809 A5                                                           | 60 min |
+| [x] | **Fr 19.06** 🟦 | **Lernkarte 2**, **#3 Laplace** + **Urnenziehen** + Urnen-Rechner                                              | 60 min |
+| [x] | **Sa 20.06** 🟧 | #3 drillen: 21SoSe A3 (Fahrstuhl), WS0607 A3/A4, SS14 A3/A4                                                    | 60 min |
+| [x] | **So 21.06** 🟩 | **Puffer:** schwächste #1–#4-Aufgabe nochmal · **Spicker ③④** (oder Ruhetag)                                   | 45 min |
+| [x] | **Mo 22.06** 🟦 | **Lernkarte 2**, **#5 Bayes** + Bayes-Rechner + Baumdiagramm                                                   | 60 min |
+| [x] | **Di 23.06** 🟧 | #5 drillen: 21SoSe A5, SoSe20 A6, SS14 A5                                                                      | 60 min |
 | [ ] | **Mi 24.06** 🟦 | **Lernkarte 2**, **#6 Zufallsvariable** (diskret + stetig)                                                     | 60 min |
 | [ ] | **Do 25.06** 🟧 | #6 drillen: 21SoSe A6 (diskret), SS14 A6 (stetig) + `[Woche3](./Uebungen/Woche3_Bayes_ZV.md)` → **Spicker ⑤⑥** | 75 min |
 
@@ -47,6 +47,10 @@ Lernkarten: `[Lernkarten/](./Lernkarten/)` · Lösungen: `[Loesungen/](./Loesung
 ---
 
 ## 📦 Block KRYPTO · 26.06.–05.07  *(größter Hebel)*
+
+> ⚠️ **Stand 02.07.:** Die Tage ab hier wurden nicht geschafft. **Es gilt jetzt der
+> [🏁 Endspurt-Plan (03_Endspurt_Tagesplan.md)](./03_Endspurt_Tagesplan.md)** — gleiche Pakete,
+> nichts gestrichen, verdichtet auf 02.–08.07 mit ~3 h/Tag. Die Tabellen unten nur noch als Referenz.
 
 
 |     | Datum           | Paket                                                                                                      | ~Zeit   |
@@ -58,9 +62,9 @@ Lernkarten: `[Lernkarten/](./Lernkarten/)` · Lösungen: `[Loesungen/](./Loesung
 | [ ] | **Di 30.06** 🟩 | **Puffer:** alle 4 Krypto-Rechner durchspielen, Werkzeugkasten festigen · **Spicker ⑦**                    | 45 min  |
 | [ ] | **Mi 01.07** 🧪 | **1. Probeklausur: SoSe20** unter Zeit + korrigieren mit `[Loesung_SoSe20](./Loesungen/Loesung_SoSe20.md)` | 150 min |
 | [ ] | **Do 02.07** 🟦 | **Lernkarte 3**, **#9 RSA** + RSA-Assistent (jeden Quadrierschritt prüfen!)                                | 60 min  |
-| [ ] | **Fr 03.07** 🟧 | #9 drillen: SoSe20 A9, WS0607 A9, WS0809 A9, 21SoSe A9                                                     | 75 min  |
+| [ ] | **Fr 03.07** 🟧 | #9 drillen: SoSe20 A9, WS0607 A9, WS0809 A9, 21SoSe A8                                                     | 75 min  |
 | [ ] | **Sa 04.07** 🟦 | **Lernkarte 3**, **#8 Affine** + Affine-Löser                                                              | 60 min  |
-| [ ] | **So 05.07** 🟧 | #8 drillen: 21SoSe A8, SS14 A8, WS0809 A8 + `[Woche5](./Uebungen/Woche5_RSA_Affine.md)` → **Spicker ⑧⑨**   | 75 min  |
+| [ ] | **So 05.07** 🟧 | #8 drillen: SoSe20 A8, SS14 A8, WS0809 A8 + `[Woche5](./Uebungen/Woche5_RSA_Affine.md)` → **Spicker ⑧⑨**   | 75 min  |
 
 
 ---

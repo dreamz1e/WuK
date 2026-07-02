@@ -36,7 +36,7 @@ sich **dieselben 9 Aufgabentypen** in nahezu identischer Form. Das heißt:
 | 5 | **Bayes** (Test/Defekte) | 3/5 (alle modernen) | ★★★★★ | 5–12 |
 | 6 | **Zufallsvariable** E[X], Var, σ (diskret) bzw. stetige Dichte (C, σ) | 5/5 | ★★★☆☆ | 6–12 |
 | 7 | **Zahlentheorie** (Euler-Theorem aᵏ mod n + erw. Euklid + Teilbarkeit) | 5/5 | ★★★★☆ | 8–14 |
-| 8 | **Affine Chiffre** (a·x+b mod 26 aus 2 Buchstaben lösen) | 5/5 | ★★★★☆ | 7–18 |
+| 8 | **Affine Chiffre** (a·x+b mod 26 aus 2 Buchstaben lösen) | 4/5 (nicht in 21SoSe) | ★★★★☆ | 7–18 |
 | 9 | **RSA-Entschlüsselung** (n→φ→d→c^d) | 5/5 | ★★★★★ | 5–18 |
 
 ---

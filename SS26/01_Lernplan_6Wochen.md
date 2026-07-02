@@ -76,9 +76,9 @@ Skript-Seiten beziehen sich auf `VFHWUK.pdf`.
 
 - **Skript:** S. 423–427 (RSA), S. 356–367 (monoalphabetisch/affin/Vigenère).
 - **Einheit 1 — RSA (#9):** Rezept: (1) `n=p·q` faktorisieren → (2) `φ=(p−1)(q−1)` → (3) `d=e⁻¹ mod φ` (erw. Euklid) → (4) `m=c^d mod n` (schnelle Exp.). **Jeden Quadrierschritt mit TR prüfen!**
-  **Drill:** SoSe20 A9, SS14 A9, **21SoSe A9 (richtig: m=82!)**, WS0607 A9 (=25), WS0809 A9 (=68).
+  **Drill:** SoSe20 A9, SS14 A9, **21SoSe A8 (richtig: m=82!)**, WS0607 A9 (=25), WS0809 A9 (=68).
   **Affine (#8):** zwei Gleichungen `a·x+b≡y (mod 26)` aufstellen, subtrahieren, nach `a` lösen (ggT-Tücke!), dann `b`. Nur `ggT(a,26)=1` ist gültiger Schlüssel.
-  **Drill:** SS14 A8, WS0809 A8, 21SoSe A8.
+  **Drill:** SS14 A8, WS0809 A8, SoSe20 A8. *(21SoSe enthält keine Affine-Aufgabe.)*
 - **Einheit 2 — 🧪 1. komplette Probeklausur unter Zeit (120 min): SoSe20.**
   Danach mit `Loesungen/Loesung_SoSe20.md` korrigieren, Fehler notieren.
 - ✅ **Meilenstein W5:** Erste Vollklausur ≥ 50 %. Alle Tier-1/2-Schemata abgedeckt.

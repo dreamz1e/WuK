@@ -1,5 +1,8 @@
 # 📅 Lernplan AKTUELL — „Vollgas" (WuK SS26)
 
+> ⚠️ **Stand 02.07.:** Für die letzte Woche gilt der **[🏁 Endspurt-Plan](./03_Endspurt_Tagesplan.md)**
+> (02.–08.07, ~3 h/Tag, nichts gestrichen). Dieser Plan bleibt als Referenz.
+
 > **Reevaluiert am Sa, 13.06.2026.** Der ursprüngliche 6-Wochen-Plan (`01_Lernplan_6Wochen.md`)
 > ging von Start am 27.05 aus — tatsächlich beginnt das Lernen erst am **13.06**. Dieser Plan
 > verdichtet den Stoff auf die **verbleibenden ~3,7 Wochen** bei **~8 h/Woche (≈ 30 h gesamt)**.
@@ -59,9 +62,9 @@ Goldene Regel pro Einheit: **1.** Lernkarte durcharbeiten (Rechenwege durchklick
   **Drill:** SoSe20 A7b, SS14 A7b, WS0809 A7b; 21SoSe A7a (8²⁴³ mod 25), SoSe20 A7a.
 - **🧪 1. Probeklausur (Di 01.07): SoSe20** unter Zeit (120 min) → mit `Loesungen/Loesung_SoSe20.md` korrigieren.
 - **#9 RSA (Mi 02.07 – Do 03.07, Tier 1):** Rezept n→φ→d→c^d. **Jeden Quadrierschritt mit TR prüfen!**
-  **Drill:** SoSe20 A9 (=5), WS0607 A9 (=25), WS0809 A9 (=68), 21SoSe A9 (=82).
+  **Drill:** SoSe20 A9 (=5), WS0607 A9 (=25), WS0809 A9 (=68), 21SoSe A8 (=82).
 - **#8 Affine (Fr 04.07 – So 05.07):** 2 Paare → subtrahieren → a lösen (ggT-Tücke!) → b. Gültig nur ggT(a,26)=1.
-  **Drill:** 21SoSe A8, SoSe20 A8, SS14 A8, WS0809 A8.
+  **Drill:** SoSe20 A8, SS14 A8, WS0809 A8. *(21SoSe enthält keine Affine-Aufgabe.)*
 - **Übungssets:** [`Uebungen/Woche4_Krypto_Werkzeugkasten.md`](./Uebungen/Woche4_Krypto_Werkzeugkasten.md), [`Uebungen/Woche5_RSA_Affine.md`](./Uebungen/Woche5_RSA_Affine.md)
 - ✅ **Meilenstein:** ggT/Euklid/Inverse/φ/Euler sicher; RSA + Affine je in < 12 min.
 

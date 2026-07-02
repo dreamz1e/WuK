@@ -1,4 +1,8 @@
-# ✅ Verifizierte Lösung — 21SoSe (modern, 9 Aufgaben, 120 min)
+# ✅ Verifizierte Lösung — 21SoSe (modern, 8 Aufgaben, 110 Pkt, 120 min)
+
+> ℹ️ **Nummerierung korrigiert (02.07.26):** Die echte 21SoSe-Klausur hat **8 Aufgaben** und
+> **keine Affine-Aufgabe** — A8 ist die RSA-Aufgabe. Die Affine-Aufgabe E↔K gehört zur
+> **SoSe20-Klausur (dort A8)**; sie bleibt unten als Bonus-Übung stehen.
 
 > Alle Zahlen mit Python/sympy gegenrechnet. **⚠️ = Korrektur ggü. SS25-Lösung.**
 > Buchstaben-Konvention: A=0, B=1, …, Z=25.
@@ -23,8 +27,7 @@
 
 ## A4 — Sportschützen, p = 0,5 / 0,3 / 0,2
 - a) B schießt 3×, genau 2 Treffer: C(3,2)·0,3²·0,7 = 3·0,09·0,7 = **0,189**
-- b) alle treffen einmal: 0,5·0,3·0,2 = **0,03**
-- c) mindestens einer trifft: 1 − (0,5·0,7·0,8) = 1 − 0,28 = **0,72**
+- b) alle schießen 1× — „Zielscheibe wird getroffen" = mind. einer trifft: 1 − (0,5·0,7·0,8) = 1 − 0,28 = **0,72**
 
 ## A5 — Bayes, defekte Produkte
 P(D)=0,03 · P(A|D)=0,90 · P(A|G)=0,02 · Gesucht P(G|A):
@@ -46,18 +49,18 @@ P(min=k) = [(7−k)² − (6−k)²]/36:
 **a) 8²⁴³ mod 25:** φ(25) = 5·4 = **20**; ggT(8,25)=1 ✓. 243 = 20·12 + 3 → 8²⁴³ ≡ 8³ = 512 ≡ **12 (mod 25)**.
 **b) a⁵ − a durch 5 teilbar:** Fall a ≡ 0 (mod 5): a⁵−a ≡ 0. Fall a ≢ 0: Fermat a⁴ ≡ 1 ⇒ a⁵ = a·a⁴ ≡ a ⇒ a⁵−a ≡ 0. ✓
 
-## A8 — Affine Chiffre, E→K, K→E   ⚠️ (SS25: „keine Lösung" — FALSCH)
-4a+b ≡ 10, 10a+b ≡ 4 (mod 26). Subtraktion: 6a ≡ −6 ≡ 20 (mod 26).
-ggT(6,26)=2 und 2 | 20 → durch 2 teilen: **3a ≡ 10 (mod 13)**. 3⁻¹ ≡ 9 (mod 13) → a ≡ 9·10 = 90 ≡ **12 (mod 13)** → a ∈ {12, 25} (mod 26).
-Gültiger Schlüssel nur mit ggT(a,26)=1: a=12 ✗, **a=25 ✓**. b: 100+b ≡ 10 → **b = 14**.
-**→ (a,b) = (25, 14)**, d.h. f(x) = 25x+14 ≡ 14 − x (Spiegelung; daher E↔K, denn 4+10=14). ✓
-
-## A9 — RSA, n=91, e∈{12,15,17}, c=10   ⚠️ (SS25: m=87 — FALSCH)
+## A8 — RSA, n=91, e∈{12,15,17}, c=10   ⚠️ (SS25: m=87 — FALSCH)
 - a) 91 = 7·13 → **φ = 6·12 = 72**. ggT(12,72)=12 ✗, ggT(15,72)=3 ✗, ggT(17,72)=1 ✓ → **e = 17**.
 - b) d = 17⁻¹ mod 72: 17·17 = 289 = 4·72+1 → **d = 17**.
 - c) m = 10¹⁷ mod 91 (schnelle Exp.): 10²≡9 · 10⁴≡81 · **10⁸≡81²=6561≡9** (nicht 20!) · 10¹⁶≡81 · 10¹⁷ = 10¹⁶·10 ≡ 81·10 = 810 ≡ **82 (mod 91)**.
 - **→ Klarnachricht m = 82**
 
+## Bonus (≙ SoSe20 A8) — Affine Chiffre, E→K, K→E   ⚠️ (SS25: „keine Lösung" — FALSCH)
+4a+b ≡ 10, 10a+b ≡ 4 (mod 26). Subtraktion: 6a ≡ −6 ≡ 20 (mod 26).
+ggT(6,26)=2 und 2 | 20 → durch 2 teilen: **3a ≡ 10 (mod 13)**. 3⁻¹ ≡ 9 (mod 13) → a ≡ 9·10 = 90 ≡ **12 (mod 13)** → a ∈ {12, 25} (mod 26).
+Gültiger Schlüssel nur mit ggT(a,26)=1: a=12 ✗, **a=25 ✓**. b: 100+b ≡ 10 → **b = 14**.
+**→ (a,b) = (25, 14)**, d.h. f(x) = 25x+14 ≡ 14 − x (Spiegelung; daher E↔K, denn 4+10=14). ✓
+
 ---
 ### Tier-1-Bilanz (Bestehen = 50 Pkt)
-A1(12) + A2(14) + A4(16) + A5(10) + A9(18) ≈ **70 Pkt** → bestanden allein mit Tier 1.
+A1(12) + A2(14) + A4(16) + A5(10) + A8-RSA(18) ≈ **70 Pkt** → bestanden allein mit Tier 1.

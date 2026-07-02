@@ -25,7 +25,8 @@ Alle Lernmaterialien direkt vom Handy erreichbar. Lesezeichen setzen und loslege
 
 ## 🚀 Lernpläne & Strategie
 
-- ⭐ **[Lernplan AKTUELL](https://github.com/dreamz1e/WuK/blob/main/SS26/01_Lernplan_AKTUELL.md)** — aktueller „Vollgas"-Plan (~8 h/Woche)
+- 🏁 ⭐ **[Endspurt-Plan](https://github.com/dreamz1e/WuK/blob/main/SS26/03_Endspurt_Tagesplan.md)** — **AKTUELL:** letzte Woche 02.–08.07 (~3 h/Tag, nichts gestrichen)
+- **[Lernplan „Vollgas"](https://github.com/dreamz1e/WuK/blob/main/SS26/01_Lernplan_AKTUELL.md)** — Plan ab 13.06 (~8 h/Woche), Referenz
 - ✅ **[Tagesplan](https://github.com/dreamz1e/WuK/blob/main/SS26/02_Tagesplan.md)** — abhakbarer Tag-für-Tag-Plan (~45–90 min/Tag)
 - 🧭 **[Strategie](https://github.com/dreamz1e/WuK/blob/main/SS26/00_Strategie_WuK.md)** — die 9 Aufgabentypen, Triage, Klausurtaktik
 - 📋 **[SS26-Übersicht (README)](https://github.com/dreamz1e/WuK/blob/main/SS26/README.md)** — Gesamtüberblick & Reihenfolge

@@ -22,9 +22,10 @@
 - b) genau 4× Kopf: C(8,4)·(1/3)⁴·(2/3)⁴ = 70·16/6561 = **1120/6561**
 - c) mind. 2× Zahl = 1 − P(0 Z) − P(1 Z) = 1 − 1/6561 − 16/6561 = **6544/6561**
 
-## A5 — Fahrstuhl/Hypergeometrisch, 4 Personen, 10 Stockwerke (Grundraum 10⁴)
-- a) alle 4 im selben Stockwerk: 10·(1/10)⁴ = **1/1000**
-- b) hält 2×, je 2 Personen: C(10,2)·C(4,2)/10⁴ = 45·6/10000 = **27/1000**
+## A5 — Fahrstuhl, 4 Personen, **3** Stockwerke (Grundraum 3⁴ = 81)   ⚠️ (korrigiert 02.07.: vorher fälschlich mit 10 Stockwerken gerechnet, Teilaufgabe c fehlte)
+- a) alle 4 im selben Stockwerk: 3/81 = **1/27**
+- b) hält 2×, je 2 Personen: C(3,2)·[4!/(2!·2!)]/81 = 3·6/81 = 18/81 = **2/9**
+- c) erste Person allein: 3·2³/81 = 24/81 = **8/27** (ihr Stockwerk: 3 Wege, die anderen 3 je auf die 2 übrigen)
 
 ## A6 — Bayes
 P(krank)=10⁻⁵ · P(+|krank)=0,99 · P(+|gesund)=0,005:
@@ -37,7 +38,7 @@ Euklid: 582=4·123+90; 123=1·90+33; 90=2·33+24; 33=1·24+9; 24=2·9+6; 9=1·6+
 Rückwärts: 3 = (−15)·582 + 71·123. Da Gleichung „=6" → ×2: **x = −30, y = 142** (582·(−30)+123·142 = 6 ✓; allg. Lösung x = −30 + 41t, y = 142 − 194t).
 **c) =11 unlösbar:** ggT = 3, aber 3 ∤ 11 → keine ganzzahlige Lösung.
 
-## A8 — Affine Chiffre, E→K, K→E   ⚠️ (siehe 21SoSe A8)
+## A8 — Affine Chiffre, E→K, K→E   ⚠️ (ggT-Tücke! Diese Aufgabe gibt es nur hier — nicht in 21SoSe)
 4a+b≡10, 10a+b≡4 (mod 26) → 6a≡20 → 3a≡10 (mod 13) → a∈{12,25}. **Nur a=25 gültig** (ggT(25,26)=1), b=14.
 **→ (a,b) = (25, 14)**.  *(SS25 nannte {12,25} ohne Gültigkeitsprüfung.)*
 

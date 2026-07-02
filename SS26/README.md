@@ -9,8 +9,8 @@
 
 ## 🚀 Reihenfolge zum Loslegen
 1. **[`00_Strategie_WuK.md`](./00_Strategie_WuK.md)** — Warum & Was: die 9 Aufgabentypen, Triage, Klausurtaktik.
-2. **[`01_Lernplan_AKTUELL.md`](./01_Lernplan_AKTUELL.md)** — ⭐ **aktueller „Vollgas"-Plan** (Start 13.06, ~8 h/Woche). *(Der alte [`01_Lernplan_6Wochen.md`](./01_Lernplan_6Wochen.md) bleibt als Referenz.)*
-   - **[`02_Tagesplan.md`](./02_Tagesplan.md)** — ✅ **abhakbarer Tag-für-Tag-Plan** in kleinen Paketen (~45–90 min/Tag).
+2. **[`03_Endspurt_Tagesplan.md`](./03_Endspurt_Tagesplan.md)** — 🏁 ⭐ **AKTUELL: Endspurt-Plan 02.–08.07** (~3 h/Tag, nichts gestrichen). *(Vorher: [`01_Lernplan_AKTUELL.md`](./01_Lernplan_AKTUELL.md) „Vollgas" und [`01_Lernplan_6Wochen.md`](./01_Lernplan_6Wochen.md) — bleiben als Referenz.)*
+   - **[`02_Tagesplan.md`](./02_Tagesplan.md)** — ✅ abhakbarer Tag-für-Tag-Plan (bis 01.07; danach gilt der Endspurt-Plan).
 3. **[`Lernkarten/`](./Lernkarten/)** — 🎨 **interaktive Lern-HTMLs** (im Browser öffnen): [KOMB](./Lernkarten/Lernkarte_1_KOMB.html) · [WK](./Lernkarten/Lernkarte_2_WK.html) · [KRYPTO](./Lernkarten/Lernkarte_3_KRYPTO.html). Mit Schritt-für-Schritt-Rechenwegen, eigenen Rechnern (RSA, Bayes, Binomial …) und Mini-Quiz.
    - **[`Trainer/App.html`](./Trainer/App.html)** — 📱 **Übungs-App** zum Drillen unterwegs (Handy/PC, offline): Zufallsaufgaben mit Sofort-Feedback, Leitner-Wiederholung, Karteikarten, Mini-Klausur.
 4. **[`Uebungen/`](./Uebungen/)** — pro Woche ein **Übungsset** mit frischen Aufgaben + verifizierten Lösungen zum Selbsttest.
@@ -34,11 +34,11 @@ das allein reicht zum Bestehen mit Puffer.
 ## ⚠️ Korrigierte Fehler der SS25-Analyse (rechnerisch verifiziert)
 | Klausur/Aufgabe | SS25 (falsch) | verifiziert |
 |---|---|---|
-| 21SoSe A9 (RSA) | m = 87 | **m = 82** |
+| 21SoSe A8 (RSA) | m = 87 | **m = 82** |
 | WS0607 A9 (RSA) | z = 60 | **z = 25** |
 | WS0809 A9 (RSA) | z = 59 | **z = 68** |
 | 21SoSe A6c (Varianz) | E[X²] = 287/36 | **301/36** |
 | SoSe20 A7b | ggT(582,123) = 6 | **ggT = 3** |
-| 21SoSe A8 (Affine) | „keine Lösung" | **(a,b) = (25,14)** |
+| SoSe20 A8 (Affine) | „keine Lösung" | **(a,b) = (25,14)** |
 
 → Lehre: bei RSA **jeden Quadrierschritt mit dem TR prüfen**; bei Affine die **ggT-Tücke** beachten.

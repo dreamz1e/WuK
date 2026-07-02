@@ -2,7 +2,9 @@
 
 > **So nutzen:** Diese Vorlage **per Hand** auf **eine A4-Seite** übertragen (Pflicht laut Klausurregel).
 > Das Abschreiben ist Teil des Lernens. Tipp: 2 Spalten, klein & sauber schreiben, Reihenfolge = Klausur.
-> Passt erprobt auf eine Seite. Bei Platznot zuerst Block ⑥ kürzen.
+> **Merge 02.07.:** um die besten Blöcke des handschriftlichen WS-Spickers ergänzt
+> (Fahrstuhl, Urne, Min/Max, Euklid-Tableau, Fermat). Wird es eng: zuerst bei ⑥ die
+> stetige Zeile kürzen, dann ③ Urne — **nie** Fahrstuhl oder den Krypto-Block.
 
 ---
 
@@ -18,9 +20,20 @@
 - mit Wiederholung (Multimengen-Auswahl): **C(n+k−1, k)**
 
 ## ③ Laplace-Wahrscheinlichkeit
-- **P = günstige / mögliche**;  2 Würfel: 36, 3 Würfel/Würfe: 216; Fahrstuhl: Stockwerke^Personen
+- **P = günstige / mögliche**;  2 Würfel: 36, 3 Würfel/Würfe: 216
 - **Gegenereignis:** P(mind. ein …) = **1 − P(kein …)**
 - UND (unabh.): P(A∩B)=P(A)·P(B)   ·   ODER: P(A∪B)=P(A)+P(B)−P(A∩B)
+
+### ③b Fahrstuhl (n Pers., k Stockw.; Grundraum kⁿ) ⟵ 16–18 Pkt in modernen Klausuren!
+- hält **nur 1×**: k/kⁿ   ·   hält **n-mal** (alle einzeln): k·(k−1)·…·(k−n+1)/kⁿ
+- **A+B gemeinsam** (Rest egal): k·kⁿ⁻²/kⁿ = **1/k**   ·   **A allein**: k·(k−1)ⁿ⁻¹/kⁿ
+- **genau r Stopps** mit Verteilung n₁,…,nᵣ: **C(k,r) · M · n!/(n₁!·…·nᵣ!) / kⁿ**
+  M = Zuordnungen der Gruppengrößen auf die r Stockwerke (alle Größen gleich → M=1; z.B. Größen 1+3 → M=2)
+- Würfel-Ergebnisse ununterscheidbar („Stars & Bars"): **C(n+5, 5)** bei n Würfeln
+
+### ③c Urne (N Kugeln, r Treffer-Farbe, m gezogen)
+- ohne Zurücklegen (hypergeom.): **P(X=k) = C(r,k)·C(N−r,m−k)/C(N,m)** · mit Zurücklegen: Binomial mit p=r/N
+- **2 gleichfarbig** (ohne Zurückl.): **Σ cᵢ(cᵢ−1) / (N(N−1))**   ·   „mindestens" → Gegenereignis!
 
 ## ④ Binomialverteilung
 - **P(X=k) = C(n,k)·pᵏ·(1−p)ⁿ⁻ᵏ**
@@ -33,6 +46,7 @@
 
 ## ⑥ Zufallsvariable (Tier 3)
 - diskret: **E[X]=Σ k·P(X=k)**,  **Var=E[X²]−(E[X])²**,  σ=√Var
+- **Min/Max 2 Würfel:** P(Min=k)=**[(7−k)²−(6−k)²]/36** · P(Max=k)=**[k²−(k−1)²]/36** (n Würfel: Exponent n)
 - stetig: **C** aus **∫f dx = 1**;  E[X]=∫x·f dx;  E[X²]=∫x²·f dx;  P(a<X<b)=∫ₐᵇ f dx
 
 ---
@@ -40,6 +54,9 @@
 ## ⑦/⑧/⑨ KRYPTO-Werkzeugkasten (gemeinsame Basis!)
 **ggT & erw. Euklid:** ggT = letzter Rest ≠ 0. Rückwärts einsetzen → `a·x+b·y=ggT`.
 `a·x+b·y=c` lösbar ⇔ **ggT(a,b) | c**.
+**Euklid-Tableau** (schneller als Rückwärts-Einsetzen): Zeilen `a = q·b + r` untereinander;
+unterste Zeile **x=0, y=1**, dann hoch: **x = y_unten**, **y = x_unten − q·y_unten** → oben gilt a·x+b·y=ggT (bei d=e⁻¹ mod φ: **d = y (mod φ)**).
+**Kleiner Fermat** (p prim): **aᵖ ≡ a (mod p)** — Teilbarkeitsbeweise (z.B. a⁵−a durch 5: p=5 ✓).
 **φ-Funktion:**  φ(p)=p−1 ·  **φ(p·q)=(p−1)(q−1)** ·  **φ(p²)=p·(p−1)**  ⚠️ (z.B. φ(25)=20!)
 **Inverse a⁻¹ mod m:** erw. Euklid mit `a·x+m·y=1` → x mod m  (nur falls ggT(a,m)=1).
 **Euler-Theorem:** ggT(a,n)=1 ⇒ **aᵠ⁽ⁿ⁾ ≡ 1 (mod n)** ⇒ Exponent **mod φ(n)** reduzieren.
