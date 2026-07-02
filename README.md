@@ -37,6 +37,14 @@ Alle Lernmaterialien direkt vom Handy erreichbar. Lesezeichen setzen und loslege
 
 ## 📝 Übungen (pro Woche)
 
+**🆕 Frische Drillsets (Runde 2, 02.07.) — zum Festigen von #1–#5:**
+
+- 🏋️ **[Drillset 1 — Kombinatorik](https://github.com/dreamz1e/WuK/blob/main/SS26/Uebungen/Drillset_1_KOMB.md)** — Anordnungen, Auswahl, Multimengen (7 Aufgaben)
+- 🏋️ **[Drillset 2 — Wahrscheinlichkeit](https://github.com/dreamz1e/WuK/blob/main/SS26/Uebungen/Drillset_2_WK.md)** — Würfel, **Fahrstuhl**, Urne, Binomial (11 Aufgaben)
+- 🏋️ **[Drillset 3 — Bayes + Bonus ZV](https://github.com/dreamz1e/WuK/blob/main/SS26/Uebungen/Drillset_3_Bayes.md)** — alle Test-Varianten, Schachteln, Lieferanten (8 Aufgaben)
+
+**Original-Sets (Runde 1):**
+
 - **[Woche 1 — Kombinatorik](https://github.com/dreamz1e/WuK/blob/main/SS26/Uebungen/Woche1_KOMB.md)**
 - **[Woche 2 — Wahrscheinlichkeit](https://github.com/dreamz1e/WuK/blob/main/SS26/Uebungen/Woche2_WK1.md)**
 - **[Woche 3 — Bayes & Zufallsvariablen](https://github.com/dreamz1e/WuK/blob/main/SS26/Uebungen/Woche3_Bayes_ZV.md)**

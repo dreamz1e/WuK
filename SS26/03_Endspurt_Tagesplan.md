@@ -11,19 +11,25 @@ weil zwischen Verstehen und Anwenden keine Nacht mehr liegt.
 
 **Begleitend jeden Tag:** ~10 min **[Trainer](./Trainer/App.html)** (Drill/Wiederholung) — z.B. morgens oder in Pausen.
 
+**Festigung #1–#5 (bereits gelernt, warmhalten!):** die **frischen Drillsets Runde 2** —
+[Drillset 1 KOMB](./Uebungen/Drillset_1_KOMB.md) · [Drillset 2 WK (inkl. Fahrstuhl!)](./Uebungen/Drillset_2_WK.md) · [Drillset 3 Bayes](./Uebungen/Drillset_3_Bayes.md).
+Je 2–3 Aufgaben davon an den Drill-Tagen einstreuen oder am Di 07.07 zum Schwächen-Nachdrillen nutzen.
+
 ---
 
 ## Die 7 Tage
 
-| | Datum | Paket | ~Zeit |
-|---|---|---|---|
-| [ ] | **Do 02.07** 🟦🟧 | **#6 Zufallsvariable komplett:** Lernkarte 2, #6 (diskret + stetig) durcharbeiten → drillen: **21SoSe A6** (Min zweier Würfel — E[X], Var, σ!), **SS14 A6** (stetig) + ZV-Teil aus `[Woche3](./Uebungen/Woche3_Bayes_ZV.md)` → **Spicker ⑤⑥** übertragen | 2,5 h |
-| [ ] | **Fr 03.07** 🟦🟧 | **#7 Werkzeugkasten, Teil 1 — ggT & erw. Euklid:** Lernkarte 3 + Euklid-Rechner → drillen: **SoSe20 A7b** (582x+123y=6), **SS14 A7b**, **WS0809 A7b**. Ziel: das Euklid-Tableau sitzt blind | 2,5 h |
-| [ ] | **Sa 04.07** 🟦🟧 | **#7 Teil 2 — φ, Euler, schnelle Exponentiation:** Lernkarte 3 (⚠️ φ(p²)=p(p−1)!) → drillen: **21SoSe A7a** (8²⁴³ mod 25), **SoSe20 A7a**, **21SoSe A7b** (Teilbarkeit a⁵−a: Fermat!) + `[Woche4](./Uebungen/Woche4_Krypto_Werkzeugkasten.md)` · alle 4 Krypto-Rechner durchspielen → **Spicker ⑦** | 3 h |
-| [ ] | **So 05.07** 🟦🟧 | **#9 RSA komplett:** Lernkarte 3, RSA-Assistent (jeden Quadrierschritt mit TR prüfen!) → drillen: **SoSe20 A9** (=5), **WS0607 A9** (=25), **WS0809 A9** (=68), **21SoSe A8** (=82, inkl. e-Wahl über ggT(e,φ)=1) | 2,5 h |
-| [ ] | **Mo 06.07** 🟦🟧🧪 | **Härtester Tag.** Tagsüber **#8 Affine komplett:** Lernkarte 3, Affine-Löser (ggT-Tücke!) → drillen: **SoSe20 A8** (E↔K), **SS14 A8**, **WS0809 A8** + `[Woche5](./Uebungen/Woche5_RSA_Affine.md)` → **Spicker ⑧⑨** · Abends **🧪 1. Probeklausur: SoSe20** unter Zeit (120 min) + korrigieren mit `[Loesung_SoSe20](./Loesungen/Loesung_SoSe20.md)` | 5 h |
-| [ ] | **Di 07.07** 🧪🟧 | **🧪 2. Probeklausur: 21SoSe** unter Zeit + korrigieren → **Top-3-Schwächen** notieren und gezielt nachdrillen (Material: `[Woche6](./Uebungen/Woche6_Generalprobe.md)`) · optional **🧪 3. Probeklausur WS0809** für Tempo | 4 h |
-| [ ] | **Mi 08.07** 🟩 | **A4-Spicker final per Hand** schreiben (Vorlage: `[Spickzettel](./Spickzettel_A4_WuK.md)`) + je 1 Aufgabe #1/#5/#9 zum Warmhalten · **kein neuer Stoff** · Material packen (Spicker, TR, Ausweis, Stifte) · früh schlafen | 1,5 h |
+
+|     | Datum               | Paket                                                                                                                                                                                                                                                                                                                                                 | ~Zeit |
+| --- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| [x] | **Do 02.07** 🟦🟧   | **#6 Zufallsvariable komplett:** Lernkarte 2, #6 (diskret + stetig) durcharbeiten → drillen: **21SoSe A6** (Min zweier Würfel — E[X], Var, σ!), **SS14 A6** (stetig) + ZV-Teil aus `[Woche3](./Uebungen/Woche3_Bayes_ZV.md)` → **Spicker ⑤⑥** übertragen                                                                                              | 2,5 h |
+| [ ] | **Fr 03.07** 🟦🟧   | **#7 Werkzeugkasten, Teil 1 — ggT & erw. Euklid:** Lernkarte 3 + Euklid-Rechner → drillen: **SoSe20 A7b** (582x+123y=6), **SS14 A7b**, **WS0809 A7b**. Ziel: das Euklid-Tableau sitzt blind                                                                                                                                                           | 2,5 h |
+| [ ] | **Sa 04.07** 🟦🟧   | **#7 Teil 2 — φ, Euler, schnelle Exponentiation:** Lernkarte 3 (⚠️ φ(p²)=p(p−1)!) → drillen: **21SoSe A7a** (8²⁴³ mod 25), **SoSe20 A7a**, **21SoSe A7b** (Teilbarkeit a⁵−a: Fermat!) + `[Woche4](./Uebungen/Woche4_Krypto_Werkzeugkasten.md)` · alle 4 Krypto-Rechner durchspielen → **Spicker ⑦**                                                   | 3 h   |
+| [ ] | **So 05.07** 🟦🟧   | **#9 RSA komplett:** Lernkarte 3, RSA-Assistent (jeden Quadrierschritt mit TR prüfen!) → drillen: **SoSe20 A9** (=5), **WS0607 A9** (=25), **WS0809 A9** (=68), **21SoSe A8** (=82, inkl. e-Wahl über ggT(e,φ)=1)                                                                                                                                     | 2,5 h |
+| [ ] | **Mo 06.07** 🟦🟧🧪 | **Härtester Tag.** Tagsüber **#8 Affine komplett:** Lernkarte 3, Affine-Löser (ggT-Tücke!) → drillen: **SoSe20 A8** (E↔K), **SS14 A8**, **WS0809 A8** + `[Woche5](./Uebungen/Woche5_RSA_Affine.md)` → **Spicker ⑧⑨** · Abends **🧪 1. Probeklausur: SoSe20** unter Zeit (120 min) + korrigieren mit `[Loesung_SoSe20](./Loesungen/Loesung_SoSe20.md)` | 5 h   |
+| [ ] | **Di 07.07** 🧪🟧   | **🧪 2. Probeklausur: 21SoSe** unter Zeit + korrigieren → **Top-3-Schwächen** notieren und gezielt nachdrillen (Material: `[Woche6](./Uebungen/Woche6_Generalprobe.md)`) · optional **🧪 3. Probeklausur WS0809** für Tempo                                                                                                                           | 4 h   |
+| [ ] | **Mi 08.07** 🟩     | **A4-Spicker final per Hand** schreiben (Vorlage: `[Spickzettel](./Spickzettel_A4_WuK.md)`) + je 1 Aufgabe #1/#5/#9 zum Warmhalten · **kein neuer Stoff** · Material packen (Spicker, TR, Ausweis, Stifte) · früh schlafen                                                                                                                            | 1,5 h |
+
 
 ---
 
@@ -45,6 +51,7 @@ weil zwischen Verstehen und Anwenden keine Nacht mehr liegt.
 Es gibt keine Puffertage mehr. Falls doch etwas ausfällt, gilt weiterhin die Not-Reihenfolge aus dem Lernplan — **nie Tier 1 opfern**, kürzen in dieser Reihenfolge: **#6 → #8 → #3** (und die optionale 3. Probeklausur zuerst).
 
 ## Fortschritt
+
 - [ ] #6 ZV (02.07) · Spicker ⑤⑥
 - [ ] #7 Werkzeugkasten (03.–04.07) · Spicker ⑦
 - [ ] #9 RSA (05.07)
