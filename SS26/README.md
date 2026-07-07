@@ -22,7 +22,7 @@ Die Klausur ist eine **feste Vorlage aus 9 wiederkehrenden Aufgabentypen**. Behe
 die **5 Tier-1-Typen** (#1 Permutation, #2 Auswahl, #4 Binomial, #5 Bayes, #9 RSA) sicher —
 das allein reicht zum Bestehen mit Puffer.
 
-## 📝 Probeklausuren (Material im Ordner `../SS25/Probeklausuren/`)
+## 📝 Probeklausuren (Original-PDFs im Ordner `../SS25/Probeklausuren/`)
 | Klausur | Format | verifizierte Lösung |
 |---|---|---|
 | 21SoSe | modern, 100+ Pkt | [Loesung_21SoSe.md](./Loesungen/Loesung_21SoSe.md) |
@@ -30,6 +30,13 @@ das allein reicht zum Bestehen mit Puffer.
 | WS0607 | klassisch, 55+ Pkt | [Loesung_WS0607.md](./Loesungen/Loesung_WS0607.md) |
 | SS14 | klassisch, 55+ Pkt | [Loesung_SS14.md](./Loesungen/Loesung_SS14.md) |
 | WS0809 | klassisch, 55+ Pkt | [Loesung_WS0809.md](./Loesungen/Loesung_WS0809.md) |
+
+### 🧪 Neue Probeklausuren (02.07. erstellt — frische Aufgaben, gleiche Struktur)
+| Klausur | Besonderheit | verifizierte Lösung |
+|---|---|---|
+| [Probeklausur N1](./Probeklausuren/Probeklausur_N1.md) | Einstieg, SoSe20-Stil | [Loesung](./Loesungen/Loesung_Probeklausur_N1.md) |
+| [Probeklausur N2](./Probeklausuren/Probeklausur_N2.md) | 21SoSe-Stil: ZV Max, **ggT-Tücke**, **RSA-e-Wahl** | [Loesung](./Loesungen/Loesung_Probeklausur_N2.md) |
+| [Probeklausur N3](./Probeklausuren/Probeklausur_N3.md) | inkl. Fermat-Beweis + Affine-Entschlüsselung | [Loesung](./Loesungen/Loesung_Probeklausur_N3.md) |
 
 ## ⚠️ Korrigierte Fehler der SS25-Analyse (rechnerisch verifiziert)
 | Klausur/Aufgabe | SS25 (falsch) | verifiziert |

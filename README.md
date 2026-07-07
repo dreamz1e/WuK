@@ -54,6 +54,12 @@ Alle Lernmaterialien direkt vom Handy erreichbar. Lesezeichen setzen und loslege
 
 ---
 
+## 🧪 Neue Probeklausuren (frische Aufgaben, Klausur-Format, 02.07.)
+
+- **[Probeklausur N1](https://github.com/dreamz1e/WuK/blob/main/SS26/Probeklausuren/Probeklausur_N1.md)** · [Lösung](https://github.com/dreamz1e/WuK/blob/main/SS26/Loesungen/Loesung_Probeklausur_N1.md)
+- **[Probeklausur N2](https://github.com/dreamz1e/WuK/blob/main/SS26/Probeklausuren/Probeklausur_N2.md)** (ggT-Tücke + RSA-e-Wahl) · [Lösung](https://github.com/dreamz1e/WuK/blob/main/SS26/Loesungen/Loesung_Probeklausur_N2.md)
+- **[Probeklausur N3](https://github.com/dreamz1e/WuK/blob/main/SS26/Probeklausuren/Probeklausur_N3.md)** (Fermat-Beweis + Entschlüsseln) · [Lösung](https://github.com/dreamz1e/WuK/blob/main/SS26/Loesungen/Loesung_Probeklausur_N3.md)
+
 ## ✅ Lösungen (Probeklausuren)
 
 - **[21SoSe](https://github.com/dreamz1e/WuK/blob/main/SS26/Loesungen/Loesung_21SoSe.md)**

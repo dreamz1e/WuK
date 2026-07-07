@@ -3,8 +3,11 @@
 > **So nutzen:** Diese Vorlage **per Hand** auf **eine A4-Seite** übertragen (Pflicht laut Klausurregel).
 > Das Abschreiben ist Teil des Lernens. Tipp: 2 Spalten, klein & sauber schreiben, Reihenfolge = Klausur.
 > **Merge 02.07.:** um die besten Blöcke des handschriftlichen WS-Spickers ergänzt
-> (Fahrstuhl, Urne, Min/Max, Euklid-Tableau, Fermat). Wird es eng: zuerst bei ⑥ die
-> stetige Zeile kürzen, dann ③ Urne — **nie** Fahrstuhl oder den Krypto-Block.
+> (Fahrstuhl, Urne, Min/Max, Euklid-Tableau, Fermat). **03.07.:** Block ⑦ als Klausur-Fahrplan
+> umgebaut (was tun bei welcher Aufgabe) + 🧮 CASIO-Griffe — **regelkonform: keine Berechnungen,
+> nur Konzepte & Formeln in Variablen** (Zahlen höchstens als „z.B."-Gedächtnisanker).
+> Wird es beim Abschreiben eng: 🧮-Zeilen zuerst eindampfen (nur die Kürzel ÷R / GGT / (1+mk)/a
+> behalten), dann bei ⑥ die stetige Zeile, dann ③c Urne — **nie** Fahrstuhl oder den Krypto-Block kürzen.
 
 ---
 
@@ -51,26 +54,59 @@
 
 ---
 
-## ⑦/⑧/⑨ KRYPTO-Werkzeugkasten (gemeinsame Basis!)
-**ggT & erw. Euklid:** ggT = letzter Rest ≠ 0. Rückwärts einsetzen → `a·x+b·y=ggT`.
-`a·x+b·y=c` lösbar ⇔ **ggT(a,b) | c**.
-**Euklid-Tableau** (schneller als Rückwärts-Einsetzen): Zeilen `a = q·b + r` untereinander;
-unterste Zeile **x=0, y=1**, dann hoch: **x = y_unten**, **y = x_unten − q·y_unten** → oben gilt a·x+b·y=ggT (bei d=e⁻¹ mod φ: **d = y (mod φ)**).
-**Kleiner Fermat** (p prim): **aᵖ ≡ a (mod p)** — Teilbarkeitsbeweise (z.B. a⁵−a durch 5: p=5 ✓).
-**φ-Funktion:**  φ(p)=p−1 ·  **φ(p·q)=(p−1)(q−1)** ·  **φ(p²)=p·(p−1)**  ⚠️ (z.B. φ(25)=20!)
-**Inverse a⁻¹ mod m:** erw. Euklid mit `a·x+m·y=1` → x mod m  (nur falls ggT(a,m)=1).
-**Euler-Theorem:** ggT(a,n)=1 ⇒ **aᵠ⁽ⁿ⁾ ≡ 1 (mod n)** ⇒ Exponent **mod φ(n)** reduzieren.
-**Schnelle Exponentiation:** a², a⁴, a⁸ … durch wiederholtes Quadrieren — **jeden Schritt mit TR prüfen!**
+## ⑦ Werkzeugkasten — was tun bei welcher Aufgabe?
+**🧮 CASIO-Basics:** ÷R = Teilen mit Rest (CATALOG → Num. Berechn.), **Rest landet in Ans** ·
+GGT(a;b) ebenda · Primfaktoren: Zahl EXE → FORMAT → Primfaktorzerl. · negativer Rest → **+ Modul rechnen**
 
-### ⑨ RSA-Entschlüsselung (Rezept)
-1) n = p·q faktorisieren   2) φ = (p−1)(q−1)   3) **d = e⁻¹ mod φ** (erw. Euklid)
-4) **m = c^d mod n** (schnelle Exp.).  (Verschlüsseln: c = m^e mod n.)
+### ⑦a Aufgabentyp „Berechne aᵉ mod n" (Euler, schriftlich)
+1) **φ(n):** φ(p)=p−1 · φ(p·q)=(p−1)(q−1) · **φ(p²)=p·(p−1)** ⚠️ nicht (p−1)²! (z.B. φ(25)=20)
+   Mutterformel: **φ(n) = n·∏(1−1/p)** über die **verschiedenen** Primteiler p von n (Potenzen egal;
+   z.B. φ(36)=36·(1−½)(1−⅓)=12)  🧮 Primteiler: FORMAT → Primfaktorzerl.
+2) **ggT(a,n)=1 prüfen** → hinschreiben: „aᵠ⁽ⁿ⁾ ≡ 1 (mod n)" (Euler)
+3) **Exponent zerlegen:** e = q·φ + r  🧮 `e ÷R φ` liefert q und r
+4) **aᵉ = (aᵠ)^q · aʳ ≡ 1^q · aʳ = aʳ** → aʳ ausrechnen  🧮 `aʳ ÷R n` → Rest = Ergebnis
+5) nur falls r groß bleibt (typisch RSA-d): **Quadrier-Kette** 🧮 `a x² ÷R n`, dann `Ans x² ÷R n`, …
+   (= Reste von a², a⁴, a⁸, … — **jeden Rest notieren!**) · r als Summe von Zweierpotenzen
+   schreiben → zugehörige Reste multiplizieren, je `÷R n`
+
+### ⑦b Aufgabentyp „Finde x, y mit a·x + b·y = c" (erw. Euklid, alle Einzelschritte zeigen)
+1) **Euklid vorwärts:** jede Zeile `groß = q·klein + Rest`  🧮 pro Zeile `groß ÷R klein`
+2) **ggT = letzter Rest ≠ 0**  🧮 Kontrolle: GGT(a;b) · **Lösbar ⇔ ggT | c** —
+   sonst als Antwort hinschreiben: „keine Lösung, da ggT ∤ c" (fertig, Punkte!)
+3) **Rückwärts einsetzen:** ggT-Zeile nach dem ggT umstellen, dann wiederholt die **kleinste Zahl
+   rechts** durch ihre umgestellte Zeile ersetzen; Produkte als Bausteine **stehen lassen** (nicht ausrechnen)
+   ⚠️ Vorzeichen beim Ausklammern: **−(u − q·v) = −u + q·v**
+   🧮 nach jedem Schritt Gleichung eintippen → muss wieder den ggT ergeben (Fehler sofort gefunden)
+   *(Alternativ Tableau: Zeilen a=q·b+r; unten x=0, y=1; hoch: x=y_u, y=x_u−q·y_u)*
+4) **auf c skalieren:** beide Werte ×(c/ggT) → x, y  🧮 Probe: a·x+b·y = c?
+
+### ⑦c Aufgabentyp „Zeige: aᵖ−a ist durch p teilbar" (Beweis)
+**Kleiner Fermat** (p prim): **aᵖ ≡ a (mod p)** für jedes a ⇒ aᵖ−a ≡ 0 (mod p) ⇒ teilbar.
+
+### ⑦d Baustein Inverse a⁻¹ mod m (für ⑧+⑨; existiert nur falls ggT(a,m)=1)
+Definition: **a·a⁻¹ ≡ 1 (mod m)** — Multiplizieren mit a⁻¹ ersetzt das (verbotene) Teilen durch a.
+erw. Euklid mit `a·x+m·y=1` → **Inverse = x mod m**
+🧮 Schnellsuche: **(1+m·k)/a** für k=1,2,… — der erste ganzzahlige Wert **ist** a⁻¹ · Probe: `a·a⁻¹ ÷R m` → Rest 1
+
+### ⑨ RSA — idiotensicher, stur abarbeiten (Tier 1!)
+**0) Richtung klären:** Kryptogramm **c gegeben → entschlüsseln**, Schritte 1–5 ·
+nur m gegeben → Einzeiler **c = mᵉ mod n** (kein φ, kein d — nicht mehr rechnen als gefragt!)
+**1) n faktorisieren:** stur durch 2, 3, 5, 7, 11, 13 teilen → **n = p·q**  🧮 FORMAT → Primfaktorzerl.
+⚠️ „sieht prim aus" täuscht (z.B. 91 = 7·13)
+**2) φ = (p−1)·(q−1)**  ⚠️ bei n = p²: **φ = p·(p−1)** · φ ist **nie** n−1 und **nie** n!
+**2b) mehrere e-Kandidaten?** nur der mit **ggT(e, φ) = 1** ist gültig — andere haben keine Inverse, sofort streichen  🧮 GGT(e;φ)
+**3) d = e⁻¹ mod φ** → ⑦d  🧮 (1+φ·k)/e für k=1,2,… bis ganzzahlig = d · **Probe: e·d ÷R φ → Rest 1?** ✓
+⚠️ hier mit **φ** rechnen, nicht mit n!
+**4) m = cᵈ mod n** → Quadrier-Kette ⑦a5: Reste von c², c⁴, c⁸, … **alle aufschreiben** ·
+d als Summe von Zweierpotenzen zerlegen → zugehörige Reste multiplizieren, je 🧮 ÷R n
+⚠️ **jeden Quadrier-Rest einzeln mit TR prüfen** — 1 Fehler macht alles danach wertlos
+**5) End-Probe: mᵉ mod n = c?** ✓ → Ergebnis sicher. Formeln immer hinschreiben (Teilpunkte auch bei Zahlendreher!)
 
 ### ⑧ Affine Chiffre  f(x) = (a·x + b) mod 26   (A=0,B=1,…,Z=25)
 - 2 bekannte Paare → 2 Gleichungen → **subtrahieren** → `c·a ≡ d (mod 26)`.
 - ggT(c,26)=g: falls g>1 und g|d → **durch g teilen** (Modul wird 26/g), sonst keine Lösung.
 - danach **b** aus einer Gleichung.  ⚠️ Gültiger Schlüssel nur, wenn **ggT(a,26)=1**.
-- Entschlüsseln: x = a⁻¹·(y − b) mod 26.
+- Entschlüsseln: x = a⁻¹·(y − b) mod 26 (Inverse → ⑦d).  🧮 Probe: `(a·x+b) ÷R 26` für beide Paare!
 
 ---
 **Konstanten griffbereit:** 2³=8, 2⁴=16, 2⁵=32 · kleine Primzahlen: 2,3,5,7,11,13 · C(n,2)=n(n−1)/2

@@ -15,6 +15,7 @@
     --bg:#f3faf5; --card:#ffffff; --ink:#1e2230; --muted:#5b6376;
     --line:#dceae0; --ok:#10b981; --ok-soft:#ecfdf5;
     --warn:#f59e0b; --warn-soft:#fffbeb; --danger:#ef4444; --danger-soft:#fef2f2;
+    --casio:#0891b2; --casio-soft:#e0f2fe; --casio-dark:#0e7490;
     --code:#eef5ef; --shadow:0 1px 3px rgba(20,30,60,.06),0 8px 24px rgba(20,30,60,.06);
   }
   [data-theme="dark"]{
@@ -22,6 +23,7 @@
     --bg:#0f1117; --card:#181b25; --ink:#e7e9f0; --muted:#9aa1b4;
     --line:#272b3a; --ok:#34d399; --ok-soft:#0d2620;
     --warn:#fbbf24; --warn-soft:#2a2310; --danger:#f87171; --danger-soft:#2a1517;
+    --casio:#22d3ee; --casio-soft:#0b2532; --casio-dark:#67e8f9;
     --code:#11141d; --shadow:0 1px 3px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.4);
   }
   *{box-sizing:border-box}
@@ -68,6 +70,9 @@
   .box.warn .bt{color:var(--warn)}
   .box.tip{background:var(--ok-soft); border-color:color-mix(in srgb,var(--ok) 40%,transparent)}
   .box.tip .bt{color:var(--ok)}
+  .box.casio{background:var(--casio-soft); border-color:color-mix(in srgb,var(--casio) 45%,transparent)}
+  .box.casio .bt{color:var(--casio-dark)}
+  .box.casio kbd{background:var(--card); border:1px solid color-mix(in srgb,var(--casio) 40%,transparent); color:var(--casio-dark); font-weight:700}
   .formula{background:var(--code); border:1px dashed var(--line); border-radius:12px; padding:1rem 1.2rem; margin:1rem 0; overflow-x:auto}
   .legend{font-size:.86rem; color:var(--muted); margin-top:.5rem}
   .legend code{background:var(--accent-soft); color:var(--accent-dark); padding:.05rem .35rem; border-radius:5px; font-weight:700}
@@ -121,9 +126,11 @@
     <div class="top-spacer"></div>
     <nav class="tnav">
       <a href="#start">Start</a>
+      <a href="#basics">Modulo-Basics</a>
       <a href="#werkzeug">#7 Werkzeugkasten</a>
       <a href="#affine">#8 Affine</a>
       <a href="#rsa">#9 RSA</a>
+      <a href="#casio">CASIO</a>
       <a href="#quiz">Quiz</a>
       <a href="#spicker">Spicker</a>
     </nav>
@@ -133,26 +140,105 @@
 
 <div class="wrap">
   <div class="hero" id="start">
-    <span class="kicker">Block KRYPTO · Aufgabentypen #7 · #8 · #9</span>
+    <span class="kicker">Block KRYPTO · Aufgabentypen #7 · #8 · #9 · kein Vorwissen nötig</span>
     <h1>Kryptographie:<br>Ein Werkzeugkasten, drei Aufgaben</h1>
-    <p><b>Der größte Hebel der ganzen Klausur.</b> Modulo-Rechnen, ggT, erweiterter Euklid, φ-Funktion und Euler-Theorem lernst du <b>einmal</b> — und schaltest damit Zahlentheorie (#7), Affine Chiffre (#8) <b>und</b> RSA (#9) frei. Zusammen ≈ 30–40 Punkte.</p>
+    <p><b>Der größte Hebel der ganzen Klausur — und komplett von null erklärt.</b> Du lernst hier
+    <b>eine</b> Sache wirklich: Rechnen „im Kreis" (Modulo). Alles andere — ggT, erweiterter Euklid,
+    φ-Funktion, Euler-Theorem — sind nur vier Handgriffe darauf. Damit schaltest du Zahlentheorie (#7),
+    Affine Chiffre (#8) <b>und</b> RSA (#9) frei: zusammen ≈ 30–40 Punkte.</p>
     <div class="pills">
-      <span class="pill">⏱️ Block 26.06.–05.07</span>
+      <span class="pill">⏱️ Endspurt: <b>Fr 03. – Mo 06.07</b></span>
       <span class="pill">🎯 #9 RSA = <b>Tier 1</b></span>
+      <span class="pill">🧮 mit <b>CASIO fx-991DE CW</b>-Tipps</span>
       <span class="pill">⚠️ jeden Quadrierschritt mit TR prüfen!</span>
     </div>
   </div>
 
+  <!-- ============ MODULO-BASICS ============ -->
+  <section id="basics">
+    <div class="sec-head"><div class="sec-num" style="background:#0891b2;box-shadow:0 6px 16px rgba(8,145,178,.35)">0</div>
+      <div><h2>Modulo verstehen — die Uhr</h2><div class="sub">5 Minuten, dann kannst du alles Weitere lesen</div></div></div>
+
+    <div class="card">
+      <h3>Was heißt „mod"?</h3>
+      <div class="box intuition"><div class="bt">💡 Die Uhr-Analogie</div>
+        Es ist 9 Uhr. Was ist in 5 Stunden? Nicht „14 Uhr" auf dem Ziffernblatt, sondern <b>2 Uhr</b> —
+        die Uhr <b>läuft im Kreis</b> und fängt nach 12 wieder bei 0 an. Genau das ist Modulo-Rechnen:
+        <span class="mono">14 mod 12 = 2</span>. In der Kryptographie ist die „Uhr" nur größer:
+        26 Stunden (Alphabet) oder n Stunden (RSA).</div>
+
+      <p><b>„a mod n" = der Rest, wenn man a durch n teilt.</b> Mehr ist es nicht:</p>
+      <div class="formula" data-tex="17 \bmod 5 = 2 \quad\text{denn}\quad 17 = 3\cdot 5 + 2"></div>
+      <p>Die Schreibweise <span data-tex="17 \equiv 2 \pmod 5"></span> (gesprochen: „17 ist <b>kongruent</b> 2 modulo 5")
+      heißt nur: <b>17 und 2 lassen beim Teilen durch 5 denselben Rest.</b> Das Zeichen ≡ ist ein „= für Reste".</p>
+
+      <h4>Die zwei Regeln, die alles tragen</h4>
+      <table>
+        <tr><th>Regel</th><th>Bedeutung</th><th>Beispiel</th></tr>
+        <tr><td><b>1. Zwischendurch Rest nehmen ist erlaubt</b></td>
+          <td>Bei + und · darfst du <b>jederzeit</b> jede Zahl durch ihren Rest ersetzen. So bleiben Zahlen klein!</td>
+          <td class="mono">27·31 mod 5 = 2·1 = 2 ✓<br>(statt 837 auszurechnen)</td></tr>
+        <tr><td><b>2. Negativ? Einfach n addieren</b></td>
+          <td>Reste sind immer 0 … n−1. Kommt etwas Negatives raus: so oft +n, bis es passt.</td>
+          <td class="mono">−6 mod 26 = −6+26 = 20</td></tr>
+      </table>
+      <p class="legend">Regel 1 ist der Grund, warum „8²⁴³ mod 25" überhaupt lösbar ist, ohne dass der
+      Taschenrechner explodiert — wir rechnen nie mit der Riesenzahl, sondern immer nur mit Resten.</p>
+
+      <div class="box casio"><div class="bt">🧮 CASIO fx-991DE CW: Rest berechnen</div>
+        <b>Weg 1 — die ÷R-Funktion (Division mit Rest):</b> In der App <b>Rechnen</b>:
+        <kbd>17</kbd> <kbd>CATALOG</kbd> → <i>Numerische Berechn.</i> → <b>÷R</b> → <kbd>5</kbd> <kbd>EXE</kbd>
+        → Anzeige: <span class="mono">Quotient 3, Rest 2</span>. 💡 <b>Der Rest landet in <kbd>Ans</kbd></b> —
+        damit kannst du Ketten rechnen (wichtig bei RSA, s.u.).<br>
+        <b>Weg 2 — geht auf jedem Rechner:</b> <span class="mono">17 ÷ 5 = 3,4</span> → Vorkomma-Anteil merken (3) →
+        <span class="mono">17 − 3×5 = 2</span>.<br>
+        <span class="hint">Menü-Namen können je nach Firmware/Sprache leicht abweichen — einmal im CATALOG durchscrollen, dann sitzt es.</span></div>
+    </div>
+  </section>
+
   <!-- ============ #7 WERKZEUGKASTEN ============ -->
   <section id="werkzeug">
     <div class="sec-head"><div class="sec-num">7</div>
-      <div><h2>Der Modulo-Werkzeugkasten</h2><div class="sub">ggT · erw. Euklid · φ · Euler · schnelle Exponentiation</div></div></div>
+      <div><h2>Der Modulo-Werkzeugkasten</h2><div class="sub">ggT · erw. Euklid · Inverse · φ · Euler · schnelle Exponentiation</div></div></div>
 
     <div class="card">
-      <h3>① ggT &amp; erweiterter Euklid</h3>
-      <div class="box intuition"><div class="bt">💡 Intuition</div>
-        Der <b>ggT</b> ist der letzte Rest ≠ 0 im Euklid-Algorithmus (fortlaufend „teile mit Rest“). Der <b>erweiterte</b> Euklid liefert zusätzlich x, y mit <span data-tex="a\cdot x + b\cdot y = \gcd(a,b)"></span> — die Basis für modulare Inverse.</div>
-      <div class="legend"><b>Lösbarkeit:</b> <span data-tex="a x + b y = c"></span> hat ganzzahlige Lösungen <span data-tex="\iff \gcd(a,b)\,\mid\,c"></span> (ggT teilt c).</div>
+      <h3>① ggT &amp; Euklid-Algorithmus</h3>
+      <div class="box intuition"><div class="bt">💡 Was ist der ggT?</div>
+        Der <b>größte gemeinsame Teiler</b> zweier Zahlen — die größte Zahl, die beide ohne Rest teilt.
+        ggT(12, 18) = 6. Statt Teiler zu raten, gibt es ein Fließband-Verfahren: <b>immer wieder „teilen mit Rest",
+        bis der Rest 0 ist.</b> Der ggT ist dann der <b>letzte Rest ≠ 0</b>.</div>
+
+      <h4>Mini-Beispiel zum Warmwerden: ggT(48, 18)</h4>
+      <div class="formula"><span class="mono">
+        48 = 2·18 + <b>12</b> &nbsp;→&nbsp; 18 = 1·12 + <b>6</b> &nbsp;→&nbsp; 12 = 2·6 + <b>0</b> &nbsp;&nbsp;⇒&nbsp; ggT = <b>6</b>
+      </span></div>
+      <p class="legend">Muster jeder Zeile: <code>größere = q·kleinere + Rest</code>. In der nächsten Zeile rücken
+      „kleinere" und „Rest" eine Position nach links. Rest 0 → Stopp, ggT = letzter Rest davor.</p>
+
+      <h3 style="margin-top:1.6rem">② Erweiterter Euklid — und wozu er gut ist</h3>
+      <div class="box intuition"><div class="bt">💡 Warum „erweitert"?</div>
+        Der normale Euklid sagt dir nur den ggT. Der erweiterte läuft denselben Weg <b>rückwärts</b> und
+        findet zusätzlich zwei ganze Zahlen x, y mit <span data-tex="a\cdot x + b\cdot y = \gcd(a,b)"></span>.
+        Klingt unspektakulär — ist aber <b>das</b> Werkzeug, mit dem man modulo „teilen" kann (Inverse, s. ④).
+        In der Klausur ist es außerdem eine eigene Aufgabe wert.</div>
+      <div class="legend"><b>Lösbarkeits-Check (wird oft direkt gefragt):</b> <span data-tex="a x + b y = c"></span>
+      hat ganzzahlige Lösungen <span data-tex="\iff \gcd(a,b)\,\mid\,c"></span> („ggT teilt c"). Wenn nicht → <b>„keine Lösung" ist die Antwort</b>.</div>
+
+      <h4>Mini-Beispiel: 48x + 18y = 6</h4>
+      <div class="formula"><span class="mono">
+        rückwärts: 6 = 18 − 1·12 &nbsp;und&nbsp; 12 = 48 − 2·18<br>
+        einsetzen: 6 = 18 − 1·(48 − 2·18) = <b>3</b>·18 <b>− 1</b>·48 &nbsp;⇒&nbsp; x = −1, y = 3 ✓
+      </span></div>
+
+      <div class="box intuition"><div class="bt">💡 Woher kommen die Zahlen? Aus genau zwei Quellen — nie erfunden!</div>
+        <b>1. Das „Ersatzteillager":</b> jede Euklid-Zeile <span class="mono">groß = q·klein + Rest</span> wird nach ihrem
+        Rest umgestellt: <span class="mono">Rest = groß − q·klein</span>. Damit hat <b>jeder Rest genau ein Ersatzteil</b>,
+        das ihn durch die zwei nächstgrößeren Zahlen ausdrückt.<br>
+        <b>2. Ausmultiplizieren + Einsammeln:</b> alle Koeffizienten (die Zahlen <i>vor</i> den Bausteinen) entstehen nur
+        durch stumpfes Ausklammern und Zusammenfassen.<br>
+        <b>Der Motor:</b> starte mit der ggT-Zeile und ersetze in jedem Schritt <b>die kleinste Zahl rechts</b> durch ihr
+        Ersatzteil. Rechts stehen dadurch immer genau <b>zwei benachbarte Zahlen der Euklid-Kette</b> — du kletterst die
+        Kette hoch, bis nur noch a und b dastehen.</div>
 
       <h4>📝 Echte Klausuraufgabe — SoSe20 A7b <span class="tag">verifiziert</span></h4>
       <p>Löse <span data-tex="582x + 123y = 6"></span>.</p>
@@ -172,6 +258,51 @@
         <span class="progress-txt" id="prog-steps-euk"></span>
       </div>
 
+      <h4>🔍 Das Rückwärts-Einsetzen in Zeitlupe — jede Zahl erklärt</h4>
+      <p>Erst das <b>Ersatzteillager</b>: alle Euklid-Zeilen von oben nach ihrem Rest umgestellt:</p>
+      <div class="formula"><span class="mono" style="font-size:.85rem">
+        <b>90</b> = 582 − 4·123 &nbsp;·&nbsp; <b>33</b> = 123 − 1·90 &nbsp;·&nbsp; <b>24</b> = 90 − 2·33 &nbsp;·&nbsp;
+        <b>9</b> = 33 − 1·24 &nbsp;·&nbsp; <b>6</b> = 24 − 2·9 &nbsp;·&nbsp; <b>3</b> = 9 − 1·6
+      </span></div>
+      <p class="legend">Jetzt klettern wir die Kette hoch. Pro Schritt: <b>kleinste Zahl rechts ersetzen</b> →
+      ausklammern → gleiche Bausteine einsammeln → <b>mit dem TR kontrollieren</b>, dass immer noch 3 rauskommt.</p>
+      <div class="steps" id="steps-back">
+        <div class="step"><div class="lbl">Start: die ggT-Zeile</div>
+          <span class="mono">3 = <b>9</b> − 1·<b>6</b></span> &nbsp;<span class="hint">(rechts: die zwei letzten Reste 9 und 6)</span></div>
+        <div class="step"><div class="lbl">6 ersetzen (Ersatzteil: 6 = 24 − 2·9)</div>
+          <span class="mono">3 = 9 − 1·(24 − 2·9) = 9 − 24 <b>+ 2·9</b> = <b>3·9 − 1·24</b></span> &nbsp;<span class="hint">Kontrolle: 27 − 24 = 3 ✓</span></div>
+        <div class="step"><div class="lbl">9 ersetzen (9 = 33 − 1·24)</div>
+          <span class="mono">3 = 3·(33 − 1·24) − 1·24 = 3·33 − 3·24 − 1·24 = <b>3·33 − 4·24</b></span> &nbsp;<span class="hint">Kontrolle: 99 − 96 = 3 ✓</span></div>
+        <div class="step"><div class="lbl">24 ersetzen (24 = 90 − 2·33)</div>
+          <span class="mono">3 = 3·33 − 4·(90 − 2·33) = 3·33 − 4·90 <b>+ 8·33</b> = <b>11·33 − 4·90</b></span> &nbsp;<span class="hint">Kontrolle: 363 − 360 = 3 ✓</span></div>
+        <div class="step"><div class="lbl">33 ersetzen (33 = 123 − 1·90)</div>
+          <span class="mono">3 = 11·(123 − 1·90) − 4·90 = 11·123 − 11·90 − 4·90 = <b>11·123 − 15·90</b></span> &nbsp;<span class="hint">Kontrolle: 1353 − 1350 = 3 ✓</span></div>
+        <div class="step"><div class="lbl">90 ersetzen (90 = 582 − 4·123) — letzter Schritt!</div>
+          <span class="mono">3 = 11·123 − 15·(582 − 4·123) = 11·123 − 15·582 <b>+ 60·123</b> = <b>71·123 − 15·582</b></span> &nbsp;<span class="hint">Kontrolle: 8733 − 8730 = 3 ✓</span></div>
+        <div class="step"><div class="lbl">Ablesen &amp; skalieren</div>
+          <span class="mono">3 = (−15)·582 + 71·123 ⇒ x = −15, y = 71.</span>
+          Aufgabe will „= 6" → alles ×2: <b>x = −30, y = 142</b> ✓</div>
+      </div>
+      <div class="step-ctrl">
+        <button class="btn" data-steps="steps-back" data-act="next">Nächster Schritt ▸</button>
+        <button class="btn ghost" data-steps="steps-back" data-act="all">Alle</button>
+        <button class="btn ghost" data-steps="steps-back" data-act="reset">↺</button>
+        <span class="progress-txt" id="prog-steps-back"></span>
+      </div>
+      <div class="box warn"><div class="bt">⚠️ Die 3 Stolperfallen beim Rückwärts-Einsetzen</div>
+        <b>1. Vorzeichen:</b> −1·(24 − 2·9) = −24 <b>+</b> 2·9 — Minus mal Minus! Der häufigste Fehler.<br>
+        <b>2. Produkte stehen lassen:</b> „3·9" bleibt „3·9" (nicht 27 ausrechnen!) — sonst verlierst du die Bausteine,
+        die du im nächsten Schritt ersetzen musst.<br>
+        <b>3. Nach jedem Schritt kontrollieren:</b> Gleichung in den TR tippen (11×33 − 4×90 = 3?). Kommt nicht der ggT
+        raus, war es genau dieser Schritt — Fehler sofort gefunden statt am Ende gesucht.</div>
+
+      <div class="box casio"><div class="bt">🧮 CASIO: Euklid halb-automatisch + ggT-Kontrolle</div>
+        <b>Jede Euklid-Zeile ist ein ÷R:</b> <span class="mono">582 ÷R 123 → q=4, Rest 90</span>, dann
+        <span class="mono">123 ÷R 90 → q=1, Rest 33</span> … Du schreibst nur ab, was der Rechner sagt.<br>
+        <b>Ergebnis-Kontrolle in 3 Sekunden:</b> <kbd>CATALOG</kbd> → <i>Numerische Berechn.</i> → <b>GGT</b> →
+        <span class="mono">GGT(582;123) = 3</span>. Stimmt dein letzter Rest nicht damit überein, hast du dich vertippt.<br>
+        <span class="hint">⚠️ Die Klausur verlangt „alle Einzelschritte" — der TR liefert die Zahlen, aber die Euklid-Zeilen müssen aufs Papier!</span></div>
+
       <h4>🧮 Erweiterter-Euklid-Rechner</h4>
       <div class="calc">
         <div class="row">
@@ -184,16 +315,77 @@
     </div>
 
     <div class="card">
-      <h3>② φ-Funktion (Eulersche Phi)</h3>
-      <div class="legend">φ(n) = Anzahl der zu n teilerfremden Zahlen unter n. Du brauchst nur drei Fälle:</div>
+      <h3>③ φ-Funktion (Eulersche Phi)</h3>
+      <div class="box intuition"><div class="bt">💡 Was zählt φ?</div>
+        <span data-tex="\varphi(n)"></span> zählt, wie viele Zahlen von 1 bis n <b>teilerfremd</b> zu n sind
+        (also ggT = 1 mit n haben). Beispiel von Hand: φ(10) — teilerfremd zu 10 sind
+        <span class="mono">{1, 3, 7, 9}</span> → <b>φ(10) = 4</b>. Warum das wichtig ist, zeigt gleich das
+        Euler-Theorem: φ(n) ist die „Rundenlänge" der Potenzen-Uhr.</div>
+      <p>Aufzählen musst du nie — in der Klausur kommen nur drei Fälle vor:</p>
       <div class="formula" data-tex="\varphi(p)=p-1\qquad \varphi(p\cdot q)=(p-1)(q-1)\qquad \boxed{\varphi(p^2)=p\,(p-1)}"></div>
+      <p class="legend">(p, q = Primzahlen. Kontrolle am Beispiel: φ(10) = φ(2·5) = 1·4 = 4 ✓)</p>
+      <div class="box intuition"><div class="bt">💡 Woher kommen die drei Formeln? Die „Mutterformel" (Aussieben)</div>
+        Teilerfremd zu n heißt: durch <b>keinen Primteiler</b> von n teilbar. Also siebt man aus:
+        der „nicht durch p"-Filter lässt den Anteil <span data-tex="(1-\tfrac1p)"></span> überleben, und weil sich das
+        Muster alle p·q·… Zahlen wiederholt, darf man die Anteile <b>multiplizieren</b>:
+        <span data-tex="\varphi(n)=n\cdot\textstyle\prod_{p\mid n}(1-\tfrac1p)"></span> (nur <b>verschiedene</b> Primteiler — Potenzen brauchen keinen eigenen Filter!).<br>
+        Beispiel: <span class="mono">φ(36) = 36·(1−1/2)(1−1/3) = 36·(1/2)·(2/3) = 12</span> — ausmultipliziert ist das genau
+        die Siebrechnung 36 − 18 − 12 + 6 (Vielfache von 2 raus, von 3 raus, doppelt gestrichene Vielfache von 6 wieder rein).<br>
+        Alle drei Klausur-Formeln fallen daraus heraus: <span class="mono">φ(p²) = p²·(1−1/p) = p(p−1)</span> —
+        deshalb φ(25)=20 und <b>nicht</b> (p−1)²=16: es gibt nur <b>einen</b> Filter (die 5), nicht zwei.</div>
       <div class="box warn"><div class="bt">⚠️ Die berüchtigtste Falle</div>
         <span data-tex="\varphi(25)=\varphi(5^2)=5\cdot 4 = 20"></span> — <b>nicht</b> 16! Bei Primzahl-Quadraten gilt <span data-tex="\varphi(p^2)=p(p-1)"></span>, nicht <span data-tex="(p-1)^2"></span>. Dieser Fehler hat in der alten Lösung ein komplettes RSA-Ergebnis ruiniert.</div>
+      <div class="box casio"><div class="bt">🧮 CASIO: Primfaktoren finden (für φ brauchst du p und q!)</div>
+        Zahl eintippen, <kbd>EXE</kbd>, dann <kbd>FORMAT</kbd> → <b>Primfaktorzerlegung</b>:
+        <span class="mono">91 → 7×13</span>, <span class="mono">143 → 11×13</span>. Sekundenschnell — kein Probieren.
+        <span class="hint">(Funktioniert auf ganzzahlige Ergebnisse. Vorgänger fx-991DE X: <kbd>SHIFT</kbd>+<kbd>FACT</kbd>.)</span></div>
 
-      <h3>③ Euler-Theorem &amp; schnelle Exponentiation</h3>
-      <div class="box intuition"><div class="bt">💡 Intuition</div>
-        Riesige Potenzen mod n werden zahm: Ist <span data-tex="\gcd(a,n)=1"></span>, so <span data-tex="a^{\varphi(n)}\equiv 1 \pmod n"></span> — du darfst den <b>Exponenten mod φ(n) reduzieren</b>. Der Rest wird per <b>Quadrieren</b> berechnet.</div>
+      <h3 style="margin-top:1.6rem">④ Modulare Inverse — „Teilen" im Kreis</h3>
+      <div class="box intuition"><div class="bt">💡 Division gibt es nicht — Inverse ist der Ersatz</div>
+        Modulo darfst du <b>nicht einfach teilen</b> („durch 3" ist mod 7 nicht definiert). Der Ersatz:
+        die <b>Inverse</b> <span data-tex="a^{-1}"></span> ist die Zahl, mit der <b>Multiplizieren wie Teilen wirkt</b>:
+        <span data-tex="a\cdot a^{-1}\equiv 1 \pmod m"></span>. Beispiel: <span class="mono">3⁻¹ mod 7 = 5</span>,
+        denn 3·5 = 15 ≡ 1 (mod 7). Statt „durch 3 teilen" rechnest du „mal 5".
+        <b>Existiert nur, wenn ggT(a, m) = 1.</b></div>
+      <p><b>Zwei Wege, die Inverse zu finden:</b></p>
+      <table>
+        <tr><th>Weg</th><th>Wie</th><th>Wann</th></tr>
+        <tr><td><b>Erw. Euklid</b> (der offizielle)</td><td><span data-tex="a x + m y = 1"></span> lösen → Inverse = x mod m</td><td>wenn der Rechenweg gefordert ist</td></tr>
+        <tr><td><b>Durchprobier-Formel</b> (der schnelle)</td><td>teste <span data-tex="k=0,1,2,\dots"></span>: ist <span data-tex="\tfrac{1+k\cdot m}{a}"></span> ganzzahlig? → das ist die Inverse</td><td>zum Finden &amp; Kontrollieren mit dem TR</td></tr>
+      </table>
+      <div class="box casio"><div class="bt">🧮 CASIO: Inverse per Durchprobier-Formel</div>
+        Gesucht z.B. <b>17⁻¹ mod 72</b> (RSA-Schritt „d berechnen"): tippe
+        <span class="mono">(1 + 72k) ÷ 17</span> für k = 1, 2, 3, …<br>
+        <span class="mono">k=1: 73/17 = 4,29… ✗ · k=2: 8,53 ✗ · k=3: 12,76 ✗ · k=4: 289/17 = <b>17</b> ✓</span>
+        → d = 17. Mit <kbd>◀</kbd> (Zeile editieren) änderst du nur das k — 20 Sekunden für alle Versuche.<br>
+        <b>Probe immer:</b> <span class="mono">17×17 ÷R 72 → Rest 1</span> ✓
+        <span class="hint">Im Heft trotzdem den erw. Euklid notieren, wenn die Aufgabe „mit erweitertem Euklid" sagt — die Formel ist dein Kontroll-Netz.</span></div>
+
+      <h4>🧮 Modulare Inverse <span data-tex="(a^{-1}\bmod m)"></span></h4>
+      <div class="calc">
+        <div class="row">
+          <label>a <input type="number" id="iA" value="17"></label>
+          <label>m <input type="number" id="iM" value="72"></label>
+          <button class="btn" id="iGo">Inverse</button>
+        </div>
+        <div class="calc-out" id="iOut"></div>
+        <p class="hint">Existiert nur, wenn ggT(a,m)=1. Kernschritt für d in RSA und für die affine Entschlüsselung.</p>
+      </div>
+
+      <h3 style="margin-top:1.6rem">⑤ Euler-Theorem &amp; schnelle Exponentiation</h3>
+      <div class="box intuition"><div class="bt">💡 Potenzen laufen im Kreis</div>
+        Rechne mal die Potenzen von 3 mod 10 aus: <span class="mono">3, 9, 27→7, 81→1</span>, dann wieder
+        <span class="mono">3, 9, 7, 1, …</span> — nach <b>4 Schritten</b> ist alles wieder beim Alten. Und 4 ist genau
+        <b>φ(10)</b>! Das ist das <b>Euler-Theorem</b>: wenn ggT(a, n) = 1, ist <span data-tex="a^{\varphi(n)}\equiv 1"></span> —
+        die Potenzen-Uhr hat Rundenlänge φ(n). <b>Folge:</b> vom Exponenten zählt nur der Rest mod φ(n).<br>
+        Beispiel: <span class="mono">3⁹⁹ mod 10</span>: 99 mod 4 = 3 → <span class="mono">3³ = 27 ≡ 7</span>. Fertig.</div>
       <div class="formula" data-tex="\gcd(a,n)=1 \;\Rightarrow\; a^{\varphi(n)}\equiv 1 \pmod n \;\Rightarrow\; a^{e}\equiv a^{\,e \bmod \varphi(n)} \pmod n"></div>
+
+      <div class="box intuition"><div class="bt">💡 Schnelle Exponentiation: Quadrieren statt Schuften</div>
+        Bleibt z.B. <span class="mono">a¹⁷</span> übrig — 17 Multiplikationen? Nein: <b>Quadrieren verdoppelt den
+        Exponenten.</b> Aus a wird a², a⁴, a⁸, a¹⁶ in nur 4 Schritten. Dann setzt du den Exponenten aus diesen
+        Bausteinen zusammen: 17 = 16 + 1 → <span class="mono">a¹⁷ = a¹⁶ · a¹</span>.
+        <b>Nach jedem Schritt sofort mod n nehmen</b> (Regel 1!), damit die Zahlen klein bleiben.</div>
 
       <h4>📝 Echte Klausuraufgabe — 21SoSe A7a <span class="tag">verifiziert</span></h4>
       <p>Berechne <span data-tex="8^{243} \bmod 25"></span>.</p>
@@ -209,6 +401,31 @@
         <span class="progress-txt" id="prog-steps-eul"></span>
       </div>
 
+      <div class="box tip"><div class="bt">🎯 Bonus-Wissen: „Kleiner Fermat" für Teilbarkeits-Beweise</div>
+        Spezialfall des Euler-Theorems für Primzahl p: <span data-tex="a^{p}\equiv a \pmod p"></span> für <b>jedes</b> a.
+        Damit beweist du Aufgaben wie „a⁵ − a ist durch 5 teilbar" (21SoSe A7b) in zwei Zeilen:
+        Fermat mit p=5 sagt a⁵ ≡ a (mod 5) ⇒ a⁵ − a ≡ 0 ⇒ teilbar. ✓</div>
+
+      <div class="box casio"><div class="bt">🧮 CASIO: Riesenpotenzen — zwei Fälle, zwei Griffe</div>
+        <b>Fall A — Euler hilft (typisch #7, Beispiel 8²⁴³ mod 25):</b> erst den Exponenten schrumpfen,
+        dann ist fast nichts mehr zu rechnen:<br>
+        <span class="mono">① 243 ÷R 20 <kbd>EXE</kbd> → q 12, Rest <b>3</b></span> — das ist die Zerlegung
+        243 = 20·12 + 3, also 8²⁴³ = (8²⁰)¹²·8³ ≡ <b>1¹²</b>·8³ = 8³ (der Quotient verdampft zur 1).<br>
+        <span class="mono">② 8³ ÷R 25 <kbd>EXE</kbd> → q 20, Rest <b>12</b></span> ✓ fertig — <b>keine Kette nötig</b>,
+        weil der Rest-Exponent (3) winzig ist.<br><br>
+        <b>Fall B — Euler hilft nicht (typisch #9 RSA, Beispiel 10¹⁷ mod 91):</b> der Exponent 17 ist
+        <b>schon kleiner als φ = 72</b>, da gibt es nichts zu schrumpfen. Jetzt übernimmt die
+        <b>Quadrier-Kette</b> — sie funktioniert, weil ÷R den <b>Rest in Ans legt</b>:<br>
+        <span class="mono">10 x² ÷R 91 <kbd>EXE</kbd> → <b>9</b> &nbsp;·&nbsp; Ans x² ÷R 91 <kbd>EXE</kbd> → <b>81</b> &nbsp;·&nbsp; Ans x² ÷R 91 <kbd>EXE</kbd> → <b>9</b> &nbsp;·&nbsp; Ans x² ÷R 91 <kbd>EXE</kbd> → <b>81</b></span><br>
+        (= die Heft-Zeilen 10²≡9, 10⁴≡81, 10⁸≡9, 10¹⁶≡81) · zusammensetzen: 17 = 16+1 →
+        <span class="mono">81×10 ÷R 91 → Rest <b>82</b></span>.<br><br>
+        <b>Warum darf ich den <i>Rest</i> quadrieren statt der echten Zahl?</b> Regel 1 der Basics:
+        <span class="mono">10⁴ = (10²)² = (91+9)² = 91² + 2·9·91 + 9²</span> — die ersten zwei Summanden sind
+        <b>Vielfache von 91 (volle Runden auf der Uhr)</b> und fallen für den Rest weg. Übrig bleibt 9² = 81.
+        Größte Zahl im Rechner: 90² = 8100 statt 10¹⁶.<br>
+        <b>Faustregel:</b> ① erst Exponent ÷R φ(n) · ② Rest-Exponent winzig → direkt potenzieren ·
+        ③ Rest-Exponent noch groß (RSA-d) → Quadrier-Kette.</div>
+
       <h4>🧮 Schnelle-Exponentiation-Rechner <span data-tex="(a^e \bmod n)"></span></h4>
       <div class="calc">
         <div class="row">
@@ -220,17 +437,6 @@
         <div class="calc-out" id="pOut"></div>
         <p class="hint">Zeigt die Quadrier-Schritte — genau die, die du in der Klausur mit dem TR prüfst.</p>
       </div>
-
-      <h4>🧮 Modulare Inverse <span data-tex="(a^{-1}\bmod m)"></span></h4>
-      <div class="calc">
-        <div class="row">
-          <label>a <input type="number" id="iA" value="17"></label>
-          <label>m <input type="number" id="iM" value="72"></label>
-          <button class="btn" id="iGo">Inverse</button>
-        </div>
-        <div class="calc-out" id="iOut"></div>
-        <p class="hint">Existiert nur, wenn ggT(a,m)=1. Kernschritt für d in RSA und für die affine Entschlüsselung.</p>
-      </div>
     </div>
   </section>
 
@@ -239,9 +445,17 @@
     <div class="sec-head"><div class="sec-num">8</div>
       <div><h2>Affine Chiffre</h2><div class="sub">f(x) = (a·x + b) mod 26</div></div></div>
     <div class="card">
-      <div class="box intuition"><div class="bt">💡 Intuition</div>
-        Jeder Buchstabe → Zahl (A=0, …, Z=25), dann <span data-tex="f(x)=(a x+b)\bmod 26"></span>. Aus <b>zwei</b> bekannten Klartext→Geheim-Paaren bekommst du zwei Gleichungen und löst nach a und b.</div>
+      <div class="box intuition"><div class="bt">💡 Was passiert hier eigentlich?</div>
+        Eine Geheimschrift in drei Schritten: <b>Buchstabe → Zahl</b> (A=0, …, Z=25), dann
+        <b>„mal a, plus b"</b>, dann <b>im 26er-Kreis</b> den Rest nehmen und zurück in einen Buchstaben.
+        Beispiel mit a=3, b=1: H ist 7 → 3·7+1 = 22 → <b>W</b>. Der „Schlüssel" ist das Zahlenpaar (a, b) —
+        und Klausuraufgabe ist fast immer: <b>aus zwei bekannten Buchstaben-Paaren (a, b) rekonstruieren.</b></div>
       <div class="alpha">A0 B1 C2 D3 E4 F5 G6 H7 I8 J9 K10 L11 M12 N13 O14 P15 Q16 R17 S18 T19 U20 V21 W22 X23 Y24 Z25</div>
+      <div class="box intuition"><div class="bt">💡 Warum muss ggT(a, 26) = 1 sein?</div>
+        Damit man <b>eindeutig entschlüsseln</b> kann, müssen 26 Buchstaben auf 26 <b>verschiedene</b>
+        Geheimbuchstaben landen. Teilt sich a einen Faktor mit 26, kollidieren welche — Beispiel a=13:
+        A(0) → b und C(2) → 26+b ≡ b landen auf <b>demselben</b> Buchstaben. Nicht mehr unterscheidbar → kein gültiger Schlüssel.
+        Deshalb am Ende immer prüfen: <b>ggT(a, 26) = 1?</b></div>
 
       <h4>Das Rezept</h4>
       <table>
@@ -252,15 +466,15 @@
         <tr><td>4</td><td><b>Gültigkeit prüfen:</b> nur <span data-tex="\gcd(a,26)=1"></span> ist ein echter Schlüssel</td></tr>
       </table>
       <div class="box warn"><div class="bt">⚠️ Die ggT-Tücke (kostet die meisten Punkte)</div>
-        Taucht z.B. <span data-tex="6a\equiv 20 \pmod{26}"></span> auf und <span data-tex="\gcd(6,26)=2"></span>: <b>nicht</b> „keine Lösung“! Wenn 2 die rechte Seite teilt, <b>durch 2 teilen</b> → <span data-tex="3a\equiv 10\pmod{13}"></span>. Das gibt <b>mehrere</b> a-Kandidaten — gültig ist nur der mit <span data-tex="\gcd(a,26)=1"></span>.</div>
+        Taucht z.B. <span data-tex="6a\equiv 20 \pmod{26}"></span> auf und <span data-tex="\gcd(6,26)=2"></span>: <b>nicht</b> „keine Lösung“! Wenn 2 die rechte Seite teilt, <b>durch 2 teilen</b> — <b>auch den Modul!</b> → <span data-tex="3a\equiv 10\pmod{13}"></span>. Das gibt <b>mehrere</b> a-Kandidaten (hier: a und a+13) — gültig ist nur der mit <span data-tex="\gcd(a,26)=1"></span>.</div>
 
       <h4>📝 Echte Klausuraufgabe — SoSe20 A8 <span class="tag">verifiziert</span></h4>
       <p>E→K und K→E, also <span data-tex="f(4)=10"></span> und <span data-tex="f(10)=4"></span>.</p>
       <div class="steps" id="steps-aff">
         <div class="step"><div class="lbl">Gleichungen</div> <span data-tex="4a+b\equiv 10,\quad 10a+b\equiv 4 \pmod{26}"></span></div>
-        <div class="step"><div class="lbl">Subtrahieren</div> <span data-tex="6a\equiv -6\equiv 20\pmod{26}"></span></div>
+        <div class="step"><div class="lbl">Subtrahieren</div> <span data-tex="6a\equiv -6\equiv 20\pmod{26}"></span> <span class="hint">(−6 negativ → +26, Basics-Regel 2!)</span></div>
         <div class="step"><div class="lbl">ggT-Tücke</div> <span data-tex="\gcd(6,26)=2,\ 2\mid 20 \Rightarrow 3a\equiv 10\pmod{13}"></span></div>
-        <div class="step"><div class="lbl">a lösen</div> <span data-tex="3^{-1}\equiv 9\ (13)\Rightarrow a\equiv 90\equiv 12\ (13)\Rightarrow a\in\{12,25\}\ (26)"></span></div>
+        <div class="step"><div class="lbl">a lösen (mit Inverse!)</div> <span data-tex="3^{-1}\equiv 9\ (13)\Rightarrow a\equiv 90\equiv 12\ (13)\Rightarrow a\in\{12,25\}\ (26)"></span></div>
         <div class="step"><div class="lbl">gültigen Schlüssel wählen</div> <span data-tex="\gcd(12,26)=2"></span> ✗, <span data-tex="\gcd(25,26)=1"></span> ✓ → <b>a = 25</b></div>
         <div class="step"><div class="lbl">b bestimmen</div> <span data-tex="100+b\equiv 10 \Rightarrow b=14"></span> → <b>(a,b) = (25, 14)</b></div>
       </div>
@@ -270,6 +484,14 @@
         <button class="btn ghost" data-steps="steps-aff" data-act="reset">↺</button>
         <span class="progress-txt" id="prog-steps-aff"></span>
       </div>
+
+      <div class="box casio"><div class="bt">🧮 CASIO: Affine-Helfer</div>
+        <b>Kandidaten prüfen &amp; Probe:</b> jede Verschlüsselung ist ein ÷R:
+        <span class="mono">(25×4 + 14) ÷R 26 → Rest 10 = K ✓</span> und <span class="mono">(25×10 + 14) ÷R 26 → Rest 4 = E ✓</span>
+        — 10 Sekunden, und du weißt, dass (a, b) stimmt.<br>
+        <b>Inverse für Schritt „a lösen":</b> 3⁻¹ mod 13 per Durchprobier-Formel: <span class="mono">(1+13k)÷3</span>:
+        k=2 → 27/3 = <b>9</b> ✓.<br>
+        <b>Schlüssel-Gültigkeit:</b> <span class="mono">GGT(a;26)</span> muss 1 sein.</div>
 
       <h4>🧮 Affine-Löser (aus 2 Buchstabenpaaren)</h4>
       <div class="calc">
@@ -283,6 +505,7 @@
         <div class="calc-out" id="afOut"></div>
         <p class="hint">Buchstaben (A–Z) oder Zahlen 0–25. Findet alle a-Kandidaten und markiert den gültigen Schlüssel.</p>
       </div>
+      <p class="legend"><b>Entschlüsseln</b> (falls gefragt): nach x umstellen → <span data-tex="x = a^{-1}\,(y-b) \bmod 26"></span> — wieder die Inverse, weil „teilen durch a" verboten ist.</p>
     </div>
   </section>
 
@@ -291,24 +514,82 @@
     <div class="sec-head"><div class="sec-num">9</div>
       <div><h2>RSA-Entschlüsselung</h2><div class="sub">n → φ → d → c^d · die zuverlässigste Krypto-Aufgabe</div></div></div>
     <div class="card">
-      <div class="box intuition"><div class="bt">💡 Intuition</div>
-        Verschlüsseln: <span data-tex="c=m^e\bmod n"></span>. Zum Entschlüsseln brauchst du den geheimen Exponenten <b>d</b> — und den findest du nur, wenn du n in seine zwei Primfaktoren zerlegst (das ist die „Falltür“).</div>
-      <h4>Das 4-Schritt-Rezept</h4>
-      <table>
-        <tr><th>#</th><th>Schritt</th><th>Werkzeug</th></tr>
-        <tr><td>1</td><td><span data-tex="n=p\cdot q"></span> faktorisieren</td><td>kleine Primzahlen probieren</td></tr>
-        <tr><td>2</td><td><span data-tex="\varphi=(p-1)(q-1)"></span></td><td>φ-Funktion</td></tr>
-        <tr><td>3</td><td><span data-tex="d=e^{-1}\bmod \varphi"></span></td><td>erw. Euklid (Inverse)</td></tr>
-        <tr><td>4</td><td><span data-tex="m=c^{d}\bmod n"></span></td><td>schnelle Exponentiation ⚠️</td></tr>
-      </table>
+      <h3>Erst verstehen: Worum geht es hier überhaupt?</h3>
+      <div class="box intuition"><div class="bt">💡 Die Idee in einem Bild: das offene Vorhängeschloss</div>
+        Der Empfänger hängt sein <b>offenes Schloss</b> für alle sichtbar aus — das ist der öffentliche Schlüssel
+        <b>(n, e)</b>. Jeder kann eine Nachricht m damit „zuschnappen": <span data-tex="c=m^e\bmod n"></span>.
+        Aber <b>aufschließen</b> kann nur, wer den passenden Schlüssel <b>d</b> hat. Und d bekommt man nur,
+        wenn man n in seine zwei Primfaktoren p·q zerlegen kann — bei echten 600-stelligen n unmöglich,
+        bei Klausur-n wie 91 in Sekunden. <b>Du spielst in der Klausur den Codeknacker.</b></div>
 
-      <h4>📝 Echte Klausuraufgabe — SoSe20 A9 <span class="tag">verifiziert</span></h4>
-      <p>n = 35, e = 5, Geheimtext c = 10. Gesucht: Klartext m.</p>
+      <h4>Die Vokabeln — wer ist wer? (die halbe Miete!)</h4>
+      <table>
+        <tr><th>Zeichen</th><th>Name</th><th>Was es ist</th><th>Wer es kennt</th></tr>
+        <tr><td class="mono"><b>m</b></td><td>Klartext</td><td>die geheime Nachricht, <b>als Zahl</b> geschrieben — das, was du suchst</td><td>🔒 geheim (dein Ziel!)</td></tr>
+        <tr><td class="mono"><b>c</b></td><td>Geheimtext / Kryptogramm</td><td>die verschlüsselte Zahl — steht in der Aufgabe („abgefangen")</td><td>🌍 öffentlich</td></tr>
+        <tr><td class="mono"><b>n</b></td><td>Modul</td><td>die Größe der „Uhr", auf der gerechnet wird. Trick: n = p·q</td><td>🌍 öffentlich</td></tr>
+        <tr><td class="mono"><b>e</b></td><td>öffentl. Exponent</td><td>„Zuschnapp-Zahl": verschlüsseln = hoch e nehmen</td><td>🌍 öffentlich</td></tr>
+        <tr><td class="mono"><b>p, q</b></td><td>Primfaktoren von n</td><td>die „Falltür" — findest du durch Faktorisieren von n</td><td>🔒 geheim</td></tr>
+        <tr><td class="mono"><b>φ(n)</b></td><td>Phi</td><td>= (p−1)(q−1) — die Rundenlänge der Potenzen-Uhr (Euler, ⑤)</td><td>🔒 geheim (braucht p, q!)</td></tr>
+        <tr><td class="mono"><b>d</b></td><td>privater Exponent</td><td>„Aufschließ-Zahl": entschlüsseln = hoch d nehmen. d = e⁻¹ mod φ</td><td>🔒 geheim</td></tr>
+      </table>
+      <p class="legend">Beide Richtungen sind <b>nur Potenzieren im Kreis</b>: verschlüsseln <code>c = mᵉ mod n</code>,
+      entschlüsseln <code>m = cᵈ mod n</code>. Es gibt keine Magie — nur die Werkzeuge aus #7.</p>
+
+      <div class="box intuition"><div class="bt">💡 Warum schließt d wirklich auf? (2 Zeilen, dann macht alles Sinn)</div>
+        Entschlüsseln heißt: <span data-tex="(m^e)^d = m^{e\cdot d}"></span>. Und d wurde <b>genau so gebaut</b>, dass
+        <span data-tex="e\cdot d \equiv 1 \pmod{\varphi(n)}"></span>, also <span data-tex="e\cdot d = k\cdot\varphi(n) + 1"></span>.
+        Mit dem Euler-Theorem (⑤: <span data-tex="m^{\varphi(n)}\equiv 1"></span>) folgt:
+        <span data-tex="m^{e d} = (m^{\varphi})^{k}\cdot m \equiv 1^{k}\cdot m = m"></span> — die Nachricht ist wieder da! ✓<br>
+        <b>In einem Satz:</b> e dreht die Potenzen-Uhr vor, d dreht sie exakt wieder zurück — und die
+        „Rückdreh-Zahl" d kann nur berechnen, wer φ(n) kennt. φ(n) braucht p und q. Deshalb ist Faktorisieren
+        immer dein erster Schritt.</div>
+    </div>
+
+    <div class="card">
+      <h3>Dann rechnen: Das 4-Schritt-Rezept (immer identisch!)</h3>
+      <table>
+        <tr><th>#</th><th>Schritt</th><th>Warum?</th><th>Werkzeug aus #7</th></tr>
+        <tr><td>1</td><td><span data-tex="n=p\cdot q"></span> faktorisieren</td><td>ohne p, q kein φ</td><td>kleine Primzahlen probieren (oder CASIO: FORMAT → Primfaktorzerlegung)</td></tr>
+        <tr><td>2</td><td><span data-tex="\varphi=(p-1)(q-1)"></span></td><td>Rundenlänge der Potenzen-Uhr</td><td>φ-Funktion (③)</td></tr>
+        <tr><td>3</td><td><span data-tex="d=e^{-1}\bmod \varphi"></span></td><td>die „Rückdreh-Zahl" bauen</td><td>Inverse (④) — erw. Euklid oder Durchprobier-Formel</td></tr>
+        <tr><td>4</td><td><span data-tex="m=c^{d}\bmod n"></span></td><td>aufschließen</td><td>schnelle Exponentiation (⑤) ⚠️</td></tr>
+      </table>
+      <div class="box warn"><div class="bt">⚠️ Der häufigste Denkfehler von Einsteigern: die zwei Uhren verwechseln</div>
+        Es laufen <b>zwei verschiedene Uhren</b> mit: <b>Zahlen</b> (Basen, Zwischenergebnisse) leben auf der
+        <b>n-Uhr</b> → immer „mod n". <b>Exponenten</b> leben auf der <b>φ-Uhr</b> → dürfen nur „mod φ(n)"
+        verkleinert werden, <b>niemals mod n</b>! (Deshalb rechnet Schritt 3 mit φ = 24, nicht mit n = 35.)</div>
+      <p class="legend">Manchmal gibt die Aufgabe <b>mehrere e-Kandidaten</b> vor (21SoSe A8: e ∈ {12, 15, 17} — komplettes Beispiel unten).
+      Dann zuerst: welcher hat <b>ggT(e, φ) = 1</b>? Nur der ist gültig — die anderen haben keine Inverse.</p>
+
+      <h4>📝 Echte Klausuraufgabe in Zeitlupe — SoSe20 A9 <span class="tag">verifiziert</span></h4>
+      <p>„Sie fangen das Kryptogramm <b>c = 10</b> ab. Der öffentliche Schlüssel des Empfängers ist
+      <b>e = 5</b> und <b>n = 35</b>. Wie lautet die Klarnachricht?" — Jeder Schritt einzeln, mit Begründung:</p>
       <div class="steps" id="steps-rsa">
-        <div class="step"><div class="lbl">1) faktorisieren</div> <span data-tex="35 = 5\cdot 7"></span></div>
-        <div class="step"><div class="lbl">2) φ</div> <span data-tex="\varphi = 4\cdot 6 = 24"></span></div>
-        <div class="step"><div class="lbl">3) d = e⁻¹ mod φ</div> <span data-tex="5\cdot 5 = 25\equiv 1\pmod{24} \Rightarrow d = 5"></span></div>
-        <div class="step"><div class="lbl">4) m = c^d mod n</div> <span data-tex="10^2\equiv 30,\ 10^4\equiv 30^2=900\equiv 25,\ 10^5\equiv 25\cdot 10=250\equiv \mathbf{5}\pmod{35}"></span></div>
+        <div class="step"><div class="lbl">0) Sortieren: Was habe ich, was will ich?</div>
+          Gegeben: n = 35, e = 5, c = 10. Gesucht: <b>m</b>. Dafür brauche ich <span data-tex="m = c^d \bmod n"></span> —
+          aber <b>d kenne ich noch nicht</b>. Also: das 4-Schritt-Rezept von oben abarbeiten.</div>
+        <div class="step"><div class="lbl">1) n faktorisieren</div>
+          Kleine Primzahlen durchprobieren: 35/2 ✗ · 35/3 ✗ · 35/5 = 7 ✓ →
+          <span data-tex="35 = 5\cdot 7"></span> &nbsp;<span class="hint">(also p = 5, q = 7 — die „Falltür" ist offen)</span></div>
+        <div class="step"><div class="lbl">2) φ berechnen</div>
+          <span data-tex="\varphi = (p-1)(q-1) = 4\cdot 6 = 24"></span>
+          &nbsp;<span class="hint">(NICHT n−1 = 34 und NICHT n = 35 — φ ist eine eigene Zahl!)</span></div>
+        <div class="step"><div class="lbl">3) d finden: die Zahl mit 5·d ≡ 1 (mod 24)</div>
+          Durchprobier-Formel <span class="mono">(1 + 24k)/5</span>: k=1 → 25/5 = <b>5</b> ✓ ganzzahlig →
+          <span data-tex="d = 5"></span>. &nbsp;<b>Probe:</b> 5·5 = 25 = 1·24 + 1 ≡ 1 ✓
+          <span class="hint">(Verlangt die Aufgabe „mit erw. Euklid": 5x + 24y = 1 lösen → x = 5)</span></div>
+        <div class="step"><div class="lbl">4a) Jetzt aufschließen: m = 10⁵ mod 35 — erst quadrieren</div>
+          <span class="mono">10² = 100 = 2·35 + <b>30</b></span> → 10² ≡ 30 &nbsp;<span class="hint">(TR: 100 ÷R 35)</span></div>
+        <div class="step"><div class="lbl">4b) Weiterquadrieren — mit dem REST, nicht der echten Zahl</div>
+          <span class="mono">10⁴ = (10²)² ≡ 30² = 900 = 25·35 + <b>25</b></span> → 10⁴ ≡ 25
+          &nbsp;<span class="hint">(Regel 1 der Basics: Rest quadrieren ist erlaubt — TR prüfen!)</span></div>
+        <div class="step"><div class="lbl">4c) Zusammensetzen: 5 = 4 + 1</div>
+          <span class="mono">10⁵ = 10⁴·10¹ ≡ 25·10 = 250 = 7·35 + <b>5</b></span> →
+          <span data-tex="m = \mathbf{5}"></span></div>
+        <div class="step"><div class="lbl">5) End-Probe (Gold wert): zurück verschlüsseln</div>
+          <span data-tex="m^e = 5^5 = 3125 = 89\cdot 35 + 10 \equiv 10 = c"></span> ✓ —
+          die Antwort <b>m = 5</b> ist sicher richtig.</div>
       </div>
       <div class="step-ctrl">
         <button class="btn" data-steps="steps-rsa" data-act="next">Nächster Schritt ▸</button>
@@ -319,6 +600,72 @@
 
       <div class="box warn"><div class="bt">⚠️ Falle: Quadrierschritte</div>
         Bei der schnellen Exponentiation jeden Schritt <b>mit dem TR nachrechnen</b>. In der alten Lösung wurde <span data-tex="10^8\bmod 91"></span> als 20 statt korrekt <b>9</b> gerechnet → RSA-Ergebnis komplett falsch. Ein Quadrierfehler ruiniert alles danach.</div>
+
+      <h4>❓ Die typischen Einsteiger-Fragen (aufklappen)</h4>
+      <details><summary>Woher bekomme ich p und q?</summary>
+        <p>Einfach kleine Primzahlen der Reihe nach als Teiler probieren: <b>2, 3, 5, 7, 11, 13</b>.
+        Klausur-n sind klein (35, 77, 91, 143 …). Achtung: <b>91 sieht prim aus, ist es aber nicht</b> — 91 = 7·13.
+        Deshalb systematisch teilen statt raten (oder CASIO: <kbd>FORMAT</kbd> → Primfaktorzerlegung).</p></details>
+      <details><summary>Was, wenn n ein Primzahl-Quadrat ist (z.B. n = 25)?</summary>
+        <p>Dann gilt die Sonderformel <b>φ(p²) = p·(p−1)</b>, also φ(25) = 5·4 = <b>20</b> — nicht (p−1)² = 16!
+        Das ist die berüchtigtste Falle der ganzen Klausur (siehe ③). Alles andere am Rezept bleibt gleich.</p></details>
+      <details><summary>Darf ich den Exponenten mod n verkleinern?</summary>
+        <p><b>Nein — niemals.</b> Exponenten leben auf der φ-Uhr (nur „mod φ(n)" reduzieren, Euler ⑤),
+        Zahlen leben auf der n-Uhr („mod n"). Bei Schritt 4 ist d meist schon kleiner als φ —
+        dann gibt es nichts zu reduzieren, und die Quadrier-Kette übernimmt.</p></details>
+      <details><summary>Woran erkenne ich: verschlüsseln oder entschlüsseln?</summary>
+        <p>Steht in der Aufgabe ein <b>abgefangenes Kryptogramm c</b> → du sollst <b>entschlüsseln</b>:
+        voller 4-Schritt-Weg bis m = cᵈ mod n. Ist dagegen die <b>Nachricht m</b> gegeben und c gesucht →
+        nur <b>ein</b> Rechenschritt: c = mᵉ mod n (kein d, kein φ nötig!).</p></details>
+      <details><summary>Warum kann ich das knacken, echte Banken-Verschlüsselung aber nicht?</summary>
+        <p>Der einzige Unterschied ist die <b>Größe von n</b>. Dein Rezept scheitert bei echtem RSA an
+        Schritt 1: eine 600-stellige Zahl faktorisiert kein Computer der Welt in vernünftiger Zeit.
+        In der Klausur ist n zweistellig — Faktorisieren dauert Sekunden. Gleiche Mathematik, anderes Kaliber.</p></details>
+    </div>
+
+    <div class="card">
+      <h3>Die Klausur-Variante mit e-Auswahl — komplett durchgerechnet</h3>
+      <p>Moderne Klausuren geben gern <b>mehrere e-Kandidaten</b> vor. Neu ist nur der Vorab-Check —
+      danach läuft das normale Rezept.</p>
+
+      <h4>📝 Echte Klausuraufgabe — 21SoSe A8 <span class="tag">verifiziert</span></h4>
+      <p>„Öffentlicher Schlüssel: n = 91 und e ∈ {12, 15, 17} (nur einer ist gültig). Abgefangen: c = 10.
+      Bestimmen Sie e, d und die Klarnachricht m."</p>
+      <div class="steps" id="steps-rsa2">
+        <div class="step"><div class="lbl">1) n faktorisieren</div>
+          91/7 = 13 ✓ → <span data-tex="91 = 7\cdot 13"></span> <span class="hint">(91 sieht prim aus — ist es nicht!)</span></div>
+        <div class="step"><div class="lbl">2) φ berechnen</div>
+          <span data-tex="\varphi = 6\cdot 12 = 72"></span></div>
+        <div class="step"><div class="lbl">2b) Den gültigen e finden: ggT(e, φ) = 1?</div>
+          <span class="mono">ggT(12, 72) = 12 ✗ · ggT(15, 72) = 3 ✗ · ggT(17, 72) = 1 ✓</span> → <b>e = 17</b>
+          <span class="hint">(die anderen haben keine Inverse — mit ihnen gäbe es kein d)</span></div>
+        <div class="step"><div class="lbl">3) d = 17⁻¹ mod 72</div>
+          <span class="mono">(1 + 72k)/17</span>: k=1: 4,29 ✗ · k=2: 8,53 ✗ · k=3: 12,76 ✗ · k=4: 289/17 = <b>17</b> ✓ →
+          <span data-tex="d = 17"></span>. <b>Probe:</b> 17·17 = 289 = 4·72 + 1 ✓</div>
+        <div class="step"><div class="lbl">4a) Quadrier-Kette für 10¹⁷ mod 91 — jeden Schritt mit TR!</div>
+          <span class="mono">10² = 100 ≡ <b>9</b> · 10⁴ ≡ 9² = 81 ≡ <b>81</b> · 10⁸ ≡ 81² = 6561 = 72·91+9 ≡ <b>9</b> · 10¹⁶ ≡ 9² ≡ <b>81</b></span>
+          <span class="hint">(genau hier stand in der alten Lösung „20" statt 9 — und alles danach war falsch)</span></div>
+        <div class="step"><div class="lbl">4b) Zusammensetzen: 17 = 16 + 1</div>
+          <span class="mono">10¹⁷ = 10¹⁶·10 ≡ 81·10 = 810 = 8·91 + <b>82</b></span> → <span data-tex="m = \mathbf{82}"></span></div>
+        <div class="step"><div class="lbl">5) End-Probe</div>
+          82¹⁷ mod 91 per ÷R-Kette → <b>10 = c</b> ✓ — fertig, m = 82.</div>
+      </div>
+      <div class="step-ctrl">
+        <button class="btn" data-steps="steps-rsa2" data-act="next">Nächster Schritt ▸</button>
+        <button class="btn ghost" data-steps="steps-rsa2" data-act="all">Alle</button>
+        <button class="btn ghost" data-steps="steps-rsa2" data-act="reset">↺</button>
+        <span class="progress-txt" id="prog-steps-rsa2"></span>
+      </div>
+
+      <div class="box casio"><div class="bt">🧮 CASIO: RSA komplett in 4 TR-Griffen (Beispiel n=91, e=17, c=10)</div>
+        <b>1)</b> <span class="mono">91</span> <kbd>EXE</kbd> <kbd>FORMAT</kbd> → Primfaktorzerlegung → <span class="mono">7×13</span><br>
+        <b>2)</b> <span class="mono">6×12 = 72</span> (im Kopf/TR) — ⚠️ bei n = p² gilt φ = p(p−1)!<br>
+        <b>3)</b> d suchen: <span class="mono">(1+72k)÷17</span> für k=1,2,… → k=4: <span class="mono">289/17 = 17</span> → d=17.
+        Probe: <span class="mono">17×17 ÷R 72 → Rest 1</span> ✓<br>
+        <b>4)</b> ÷R-Kette: <span class="mono">10x² ÷R 91→9 · Ansx² ÷R 91→81 · Ansx² ÷R 91→9 · Ansx² ÷R 91→81</span>
+        (= 10², 10⁴, 10⁸, 10¹⁶), dann <span class="mono">81×10 ÷R 91 → Rest <b>82</b></span> (10¹⁷ = 10¹⁶·10) → m = 82.<br>
+        <b>End-Kontrolle (Gold wert!):</b> verschlüssle zurück — m<sup>e</sup> mod n muss wieder c geben:
+        ÷R-Kette für <span class="mono">82¹⁷ mod 91 → 10 = c</span> ✓</div>
 
       <h4>🧮 RSA-Entschlüsselungs-Assistent</h4>
       <div class="calc">
@@ -331,6 +678,30 @@
         <div class="calc-out" id="rOut"></div>
         <p class="hint">Faktorisiert n, rechnet φ, d und m — Schritt für Schritt. Probier auch <kbd>n=77, e=43, c=60</kbd> (→ 25) oder <kbd>n=77, e=11, c=24</kbd> (→ 68).</p>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ CASIO-SPICKZETTEL ============ -->
+  <section id="casio">
+    <div class="sec-head"><div class="sec-num" style="background:var(--casio);box-shadow:0 6px 16px rgba(8,145,178,.35)">🧮</div>
+      <div><h2>CASIO fx-991DE CW — Krypto-Spickzettel</h2><div class="sub">alle Griffe auf einen Blick</div></div></div>
+    <div class="card">
+      <table>
+        <tr><th>Was</th><th>Wie</th><th>Beispiel</th></tr>
+        <tr><td><b>Rest (mod)</b></td><td><kbd>CATALOG</kbd> → Numerische Berechn. → <b>÷R</b> — Rest landet in <kbd>Ans</kbd></td><td class="mono">512 ÷R 25 → q 20, R 12</td></tr>
+        <tr><td><b>ggT</b></td><td><kbd>CATALOG</kbd> → Numerische Berechn. → <b>GGT</b></td><td class="mono">GGT(582;123) = 3</td></tr>
+        <tr><td><b>Primfaktoren</b></td><td>Zahl <kbd>EXE</kbd>, dann <kbd>FORMAT</kbd> → <b>Primfaktorzerlegung</b></td><td class="mono">91 → 7×13</td></tr>
+        <tr><td><b>Inverse a⁻¹ mod m</b></td><td><span class="mono">(1+m·k)÷a</span> für k=1,2,… bis ganzzahlig</td><td class="mono">(1+72·4)÷17 = 17</td></tr>
+        <tr><td><b>Riesenpotenz a^e mod n</b></td><td>÷R-Kette: <span class="mono">a x² ÷R n</span>, dann <span class="mono">Ans x² ÷R n</span>, …</td><td class="mono">10²→9, 10⁴→81, 10⁸→9 (mod 91)</td></tr>
+        <tr><td><b>Exponent zerlegen</b></td><td><span class="mono">e ÷R φ</span> → e = q·φ + Rest</td><td class="mono">243 ÷R 20 → 12, R 3</td></tr>
+        <tr><td><b>Negativer Rest</b></td><td>einfach + Modul rechnen</td><td class="mono">−6 + 26 = 20</td></tr>
+      </table>
+      <div class="box warn"><div class="bt">⚠️ TR ≠ Rechenweg</div>
+        Die Klausur fordert oft „schriftlich" / „alle Einzelschritte darstellen" — <b>Punkte gibt es für den Weg
+        auf dem Papier.</b> Der CASIO ist dein Zahlen-Lieferant und dein Kontroll-Netz: jede Euklid-Zeile,
+        jeden Quadrier-Schritt sofort gegenprüfen. Falsch abgetippt ist schnell — deshalb: <b>Probe am Ende</b>
+        (RSA: m<sup>e</sup> mod n = c? · Affine: beide Paare einsetzen · Euklid: GGT()-Check).</div>
+      <p class="hint">Menü-Bezeichnungen können je nach Firmware/Sprache minimal abweichen (z.B. „Numerische Berechn." / „Zahlenberechnungen"). Die Funktionen ÷R, GGT und die Primfaktorzerlegung findest du in jedem Fall über <kbd>CATALOG</kbd> bzw. <kbd>FORMAT</kbd>. Beim Vorgänger fx-991DE X: ÷R via <kbd>ALPHA</kbd>-Tastenbelegung, FACT via <kbd>SHIFT</kbd>+<kbd>°'"</kbd>.</p>
     </div>
   </section>
 
@@ -347,17 +718,20 @@
       <div><h2>Auf den Spicker</h2><div class="sub">Block ⑦–⑨ · der gemeinsame Werkzeugkasten</div></div></div>
     <div class="card">
       <div class="box tip"><div class="bt">⑦ Werkzeugkasten</div>
+        <b>mod</b> = Rest; negativ → +Modul; bei +/· jederzeit Rest nehmen<br>
         <b>ggT</b> = letzter Rest ≠ 0; rückwärts → ax+by=ggT · lösbar ⇔ ggT | c<br>
         <b>φ:</b> φ(p)=p−1 · φ(pq)=(p−1)(q−1) · <b>φ(p²)=p(p−1)</b> ⚠️ (φ(25)=20)<br>
-        <b>Euler:</b> ggT(a,n)=1 ⇒ a^φ(n)≡1 ⇒ Exponent <b>mod φ(n)</b> reduzieren<br>
-        <b>Inverse:</b> erw. Euklid mit a·x+m·y=1 → x mod m · <b>schnelle Exp.:</b> a², a⁴, a⁸ … (TR prüfen!)</div>
+        <b>Euler:</b> ggT(a,n)=1 ⇒ a^φ(n)≡1 ⇒ Exponent <b>mod φ(n)</b> reduzieren · <b>Fermat:</b> aᵖ≡a (mod p)<br>
+        <b>Inverse:</b> a·a⁻¹≡1; erw. Euklid <i>oder</i> (1+mk)/a durchprobieren · <b>schnelle Exp.:</b> a², a⁴, a⁸ … (TR prüfen!)</div>
       <div class="box tip"><div class="bt">⑧ Affine f(x)=(a·x+b) mod 26</div>
         2 Paare → 2 Gleichungen → subtrahieren → c·a ≡ d (mod 26)<br>
-        ggT(c,26)=g: falls g | d → durch g teilen (Modul 26/g) · gültig nur ggT(a,26)=1<br>
+        ggT(c,26)=g: falls g | d → durch g teilen (Modul wird 26/g!) · gültig nur ggT(a,26)=1<br>
         Entschlüsseln: x = a⁻¹·(y − b) mod 26</div>
-      <div class="box tip"><div class="bt">⑨ RSA-Entschlüsselung</div>
-        1) n=p·q · 2) φ=(p−1)(q−1) · 3) d=e⁻¹ mod φ · 4) m=c^d mod n<br>
-        Verschlüsseln: c = m^e mod n</div>
+      <div class="box tip"><div class="bt">⑨ RSA — stur abarbeiten</div>
+        <b>0)</b> c gegeben → entschlüsseln (1–5) · nur m gegeben → Einzeiler c = mᵉ mod n, fertig<br>
+        <b>1)</b> n = p·q (stur durch 2,3,5,7,11,13 teilen; ⚠️ 91=7·13!) · <b>2)</b> φ=(p−1)(q−1), bei p²: p(p−1) — nie n−1!<br>
+        <b>2b)</b> mehrere e? nur ggT(e,φ)=1 gültig · <b>3)</b> d = e⁻¹ <b>mod φ</b> (nicht mod n!) · Probe e·d ≡ 1 (φ)<br>
+        <b>4)</b> m = cᵈ mod n: Quadrier-Kette, jeden Rest mit TR prüfen · <b>5)</b> End-Probe mᵉ mod n = c? ✓</div>
       <p class="hint">📌 Geschafft — alle 3 Lernkarten durch! Jetzt: Probeklausuren rechnen (SoSe20 → 21SoSe) und Spicker per Hand schreiben.</p>
     </div>
   </section>
@@ -390,7 +764,7 @@ document.querySelectorAll('[data-steps]').forEach(btn=>{btn.onclick=()=>{
   if(btn.dataset.act==='all')s.forEach(x=>x.classList.add('shown'));
   if(btn.dataset.act==='reset')s.forEach(x=>x.classList.remove('shown'));
   updateProg(id);};});
-['steps-euk','steps-eul','steps-aff','steps-rsa'].forEach(updateProg);
+['steps-euk','steps-back','steps-eul','steps-aff','steps-rsa','steps-rsa2'].forEach(updateProg);
 
 /* ---- number theory ---- */
 function mod(a,m){ return ((a%m)+m)%m; }
@@ -435,7 +809,7 @@ document.getElementById('iGo').onclick=()=>{
   const inv=modinv(a,m);
   if(inv===null) out.innerHTML=`<div class="line" style="color:var(--danger);font-weight:700">Keine Inverse — ggT(${a}, ${m}) = ${gcd(a,m)} ≠ 1.</div>`;
   else out.innerHTML=`<div class="line">${a}⁻¹ mod ${m} = <span class="res">${inv}</span></div>
-    <div class="hint mono">Probe: ${a}·${inv} = ${a*inv} ≡ ${mod(a*inv,m)} (mod ${m}) ✓</div>`;
+    <div class="hint mono">Probe: ${a}·${inv} = ${a*inv} ≡ ${mod(a*inv,m)} (mod ${m}) ✓ · Durchprobier-Formel: (1+${m}k)/${a} wird ganzzahlig bei k=${(a*inv-1)/m}</div>`;
 };
 ['iA','iM'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('iGo').click();}));
 
@@ -474,14 +848,14 @@ document.getElementById('rGo').onclick=()=>{
   if(isNaN(n)||isNaN(e)||isNaN(c)||n<4){out.innerHTML='<span class="hint">n, e und c eingeben (n ≥ 4).</span>';return;}
   const f=factor(n);
   if(!f){out.innerHTML=`<div class="line" style="color:var(--danger)">n = ${n} ist prim oder nicht in 2 Faktoren zerlegbar — kein gültiges RSA-n.</div>`;return;}
-  const [p,q]=f, phi=(p-1)*(q-1);
-  if(gcd(e,phi)!==1){out.innerHTML=`<div class="line">1) n = ${p}·${q}</div><div class="line">2) φ = ${phi}</div>
+  const [p,q]=f, phi=(p===q)?p*(p-1):(p-1)*(q-1);
+  if(gcd(e,phi)!==1){out.innerHTML=`<div class="line">1) n = ${p}·${q}</div><div class="line">2) φ = ${phi}${p===q?' (⚠️ φ(p²)=p(p−1))':''}</div>
     <div class="line" style="color:var(--danger)">ggT(e=${e}, φ=${phi}) = ${gcd(e,phi)} ≠ 1 — dieser e ist ungültig (keine Inverse d).</div>`;return;}
   const d=modinv(e,phi); const {result,sq}=powmodSteps(c,d,n);
   const rows=sq.map(s=>`<div class="line mono" style="font-size:.85rem">${c}^(2^${s.i}) ≡ ${s.pow} (mod ${n}) ${s.used?'<b style="color:var(--accent-dark)">←</b>':''}</div>`).join('');
   out.innerHTML=`<div class="line">1) n = <b>${p}·${q}</b></div>
-    <div class="line">2) φ = (${p}−1)(${q}−1) = <b>${phi}</b></div>
-    <div class="line">3) d = ${e}⁻¹ mod ${phi} = <b>${d}</b></div>
+    <div class="line">2) φ = ${p===q?`${p}·(${p}−1) (⚠️ φ(p²)!)`:`(${p}−1)(${q}−1)`} = <b>${phi}</b></div>
+    <div class="line">3) d = ${e}⁻¹ mod ${phi} = <b>${d}</b> <span class="hint mono">((1+${phi}k)/${e} ganzzahlig bei k=${(e*d-1)/phi})</span></div>
     <div class="line">4) m = ${c}<sup>${d}</sup> mod ${n} = <span class="res">${result}</span></div>
     <div class="hint">schnelle Exponentiation (Exponent d=${d} binär ${d.toString(2)}):</div>${rows}`;
 };
@@ -489,6 +863,10 @@ document.getElementById('rGo').onclick=()=>{
 
 /* Quiz */
 const quizData=[
+  {q:'−6 mod 26 = ?', opts:['−6','6','20','19'], correct:2,
+   why:'Negativ? Einfach den Modul addieren: −6 + 26 = 20. Reste sind immer 0…25.'},
+  {q:'3⁻¹ mod 7 = ? (die Zahl, mit der ·3 wieder 1 ergibt)', opts:['3','4','5','2'], correct:2,
+   why:'3·5 = 15 ≡ 1 (mod 7) ✓. Durchprobier-Formel: (1+7k)/3 → k=2: 15/3=5.'},
   {q:'φ(25) = ?', opts:['16','20','24','5'], correct:1,
    why:'φ(p²)=p(p−1), also φ(25)=5·4=20. NICHT (p−1)²=16 — die berüchtigtste Falle.'},
   {q:'Du sollst 7²²² mod 10 (letzte Ziffer) — welcher Trick?', opts:['Direkt ausrechnen','Exponent mod φ(10)=4 reduzieren','7·222','222 mod 7'], correct:1,
@@ -496,7 +874,9 @@ const quizData=[
   {q:'Bei der affinen Chiffre: welcher a-Wert ist ein GÜLTIGER Schlüssel mod 26?', opts:['a=13','a=12','a=25','a=4'], correct:2,
    why:'Gültig nur, wenn ggT(a,26)=1. ggT(25,26)=1 ✓. 13, 12, 4 teilen sich Faktoren mit 26.'},
   {q:'RSA: Reihenfolge der Entschlüsselung?', opts:['φ → n → d → m','n=p·q → φ → d=e⁻¹ → m=c^d','d → φ → n → m','m → d → φ → n'], correct:1,
-   why:'1) n faktorisieren 2) φ=(p−1)(q−1) 3) d=e⁻¹ mod φ 4) m=c^d mod n.'}
+   why:'1) n faktorisieren 2) φ=(p−1)(q−1) 3) d=e⁻¹ mod φ 4) m=c^d mod n.'},
+  {q:'Auf dem CASIO: 582 ÷R 123 zeigt q=4, R=90. Was ist das im Euklid?', opts:['ggT = 4','die Zeile 582 = 4·123 + 90','582·4 = 123·90','nichts davon'], correct:1,
+   why:'÷R liefert Quotient und Rest — also genau eine Euklid-Zeile. Der Rest (90) steht danach in Ans.'}
 ];
 const qb=document.getElementById('quizBox');
 quizData.forEach((item,i)=>{
