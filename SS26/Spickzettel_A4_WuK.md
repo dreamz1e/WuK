@@ -6,6 +6,7 @@
 > (Fahrstuhl, Urne, Min/Max, Euklid-Tableau, Fermat). **03.07.:** Block ⑦ als Klausur-Fahrplan
 > umgebaut (was tun bei welcher Aufgabe) + 🧮 CASIO-Griffe — **regelkonform: keine Berechnungen,
 > nur Konzepte & Formeln in Variablen** (Zahlen höchstens als „z.B."-Gedächtnisanker).
+> **07.07.:** Block ⑧ Affine im RSA-Stil als Schritt-für-Schritt-Rezept (1–6) umgeschrieben.
 > Wird es beim Abschreiben eng: 🧮-Zeilen zuerst eindampfen (nur die Kürzel ÷R / GGT / (1+mk)/a
 > behalten), dann bei ⑥ die stetige Zeile, dann ③c Urne — **nie** Fahrstuhl oder den Krypto-Block kürzen.
 
@@ -102,11 +103,19 @@ d als Summe von Zweierpotenzen zerlegen → zugehörige Reste multiplizieren, je
 ⚠️ **jeden Quadrier-Rest einzeln mit TR prüfen** — 1 Fehler macht alles danach wertlos
 **5) End-Probe: mᵉ mod n = c?** ✓ → Ergebnis sicher. Formeln immer hinschreiben (Teilpunkte auch bei Zahlendreher!)
 
-### ⑧ Affine Chiffre  f(x) = (a·x + b) mod 26   (A=0,B=1,…,Z=25)
-- 2 bekannte Paare → 2 Gleichungen → **subtrahieren** → `c·a ≡ d (mod 26)`.
-- ggT(c,26)=g: falls g>1 und g|d → **durch g teilen** (Modul wird 26/g), sonst keine Lösung.
-- danach **b** aus einer Gleichung.  ⚠️ Gültiger Schlüssel nur, wenn **ggT(a,26)=1**.
-- Entschlüsseln: x = a⁻¹·(y − b) mod 26 (Inverse → ⑦d).  🧮 Probe: `(a·x+b) ÷R 26` für beide Paare!
+### ⑧ Affine Chiffre — idiotensicher, stur abarbeiten
+Verschlüsseln: **f(x) = (a·x + b) mod 26** · Klausur-Standard: 2 Buchstabenpaare gegeben → **(a, b) finden**
+**1) Buchstaben → Zahlen** (A=0, B=1, …, Z=25 ⚠️ A ist 0, nicht 1!) → je Paar eine Gleichung:
+a·x₁+b ≡ y₁ · a·x₂+b ≡ y₂ (mod 26)
+**2) Subtrahieren** → b fällt weg: **a·(x₁−x₂) ≡ y₁−y₂ (mod 26)** · negative Zahl? sofort **+26**
+**3) ggT-Check:** g = ggT(Zahl vor a, 26) · g=1 → direkt weiter zu 4)
+g>1 und g teilt rechte Seite → **alles durch g teilen, auch den Modul!** (26 → 26/g)
+g teilt rechte Seite **nicht** → hinschreiben: „keine Lösung" (fertig, Punkte!)
+**4) a lösen:** beide Seiten × Inverse der Zahl vor a (→ ⑦d, im **kleinen** Modul) → a₀ ·
+nach Teilen gibt es **g Kandidaten**: a₀, a₀+26/g, … · gültig ist **nur** der mit **ggT(a,26)=1**  🧮 GGT(a;26)
+**5) b bestimmen:** a in Gleichung 1 einsetzen: **b ≡ y₁ − a·x₁ (mod 26)** (negativ → +26)
+**6) Probe (Pflicht!):** beide Paare 🧮 `(a·x+b) ÷R 26` → muss jeweils y ergeben ✓
+Entschlüsseln (falls gefragt): **x = a⁻¹·(y − b) mod 26** — Inverse statt Teilen (⑦d)
 
 ---
 **Konstanten griffbereit:** 2³=8, 2⁴=16, 2⁵=32 · kleine Primzahlen: 2,3,5,7,11,13 · C(n,2)=n(n−1)/2

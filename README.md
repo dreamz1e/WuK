@@ -1,8 +1,24 @@
 # 📱 WuK — Klausurvorbereitung (Handy-Zugriff)
 
-**Modul:** Wahrscheinlichkeitsrechnung und Kryptographie · **Klausur:** Do, 09.07.2026
+**Modul:** Wahrscheinlichkeitsrechnung und Kryptographie
+**⭐ AKTUELL: Wiederholungsklausur Winter 2026/27** → alles Neue liegt in **[WS27/](WS27/)**
 
-Alle Lernmaterialien direkt vom Handy erreichbar. Lesezeichen setzen und loslegen 👇
+## 🎯 WS27 — der neue Plan (nach der SS26-Klausur vom 09.07.2026)
+
+- 📋 **[WS27-Übersicht (README)](https://github.com/dreamz1e/WuK/blob/main/WS27/README.md)** — Einstieg & Reihenfolge
+- 🔍 **[Postmortem SS26](https://github.com/dreamz1e/WuK/blob/main/WS27/00_Postmortem_SS26.md)** — warum es schiefging (zuerst lesen)
+- 🧭 **[Strategie WS27](https://github.com/dreamz1e/WuK/blob/main/WS27/01_Strategie_WS27.md)** — Vollabdeckung statt Template
+- 🗓️ **[Lernplan (Phasen)](https://github.com/dreamz1e/WuK/blob/main/WS27/02_Lernplan_WS27.md)** — Juli 2026 → Klausur
+- ✍️ **[Spickzettel A4 (neu)](https://github.com/dreamz1e/WuK/blob/main/WS27/03_Spickzettel_A4_WS27.md)**
+- 📝 **[Klausur SS26 rekonstruiert + Lösungen](https://github.com/dreamz1e/WuK/blob/main/WS27/Klausuren/Klausur_SS26_Rekonstruktion.md)**
+- 📚 Themen-Module: **[T1 Kombinatorik](https://github.com/dreamz1e/WuK/blob/main/WS27/Themen/T1_Kombinatorik_komplett.md)** · **[T2 Wahrscheinlichkeit](https://github.com/dreamz1e/WuK/blob/main/WS27/Themen/T2_Wahrscheinlichkeit.md)** · **[T3 Verteilungen ⭐](https://github.com/dreamz1e/WuK/blob/main/WS27/Themen/T3_Verteilungen_Zufallsvariablen.md)** · **[T4 Krypto](https://github.com/dreamz1e/WuK/blob/main/WS27/Themen/T4_Krypto_Werkzeugkasten.md)**
+- 🏋️ Übungen: **[Erkennungstraining ⭐](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Erkennungstraining_1.md)** · **[Siebformel](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Drill_Siebformel.md)** · **[Verteilung aufstellen](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Drill_Verteilung_aufstellen.md)** · **[Euklid & Inverse](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Drill_Euklid_Inverse.md)**
+
+---
+
+# 📦 Archiv: SS26 (Klausur 09.07.2026, nicht bestanden)
+
+Aufgabenmaterial (Probeklausuren, Drillsets, Trainer) bleibt nutzbar — Strategie & Spickzettel sind **überholt**, siehe Postmortem.
 
 > **Zwei Link-Sorten:**
 > 🎨 **Apps** laufen live über GitHub Pages (interaktiv, im Browser).

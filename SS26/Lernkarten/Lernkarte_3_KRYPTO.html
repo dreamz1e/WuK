@@ -457,26 +457,72 @@
         A(0) → b und C(2) → 26+b ≡ b landen auf <b>demselben</b> Buchstaben. Nicht mehr unterscheidbar → kein gültiger Schlüssel.
         Deshalb am Ende immer prüfen: <b>ggT(a, 26) = 1?</b></div>
 
-      <h4>Das Rezept</h4>
+      <h4>Das 6-Schritt-Rezept — stur abarbeiten wie bei RSA (immer identisch!)</h4>
       <table>
-        <tr><th>Schritt</th><th>Tun</th></tr>
-        <tr><td>1</td><td>Zwei Gleichungen <span data-tex="a x_1 + b \equiv y_1,\quad a x_2 + b \equiv y_2 \pmod{26}"></span></td></tr>
-        <tr><td>2</td><td><b>Subtrahieren</b> → b fällt weg: <span data-tex="a(x_1-x_2)\equiv (y_1-y_2)\pmod{26}"></span></td></tr>
-        <tr><td>3</td><td>Nach a auflösen (ggT-Tücke beachten!), dann b aus einer Gleichung</td></tr>
-        <tr><td>4</td><td><b>Gültigkeit prüfen:</b> nur <span data-tex="\gcd(a,26)=1"></span> ist ein echter Schlüssel</td></tr>
+        <tr><th>#</th><th>Schritt</th><th>Warum?</th></tr>
+        <tr><td>1</td><td><b>Buchstaben → Zahlen</b> (A=0 … Z=25), je Paar eine Gleichung: <span data-tex="a x_1 + b \equiv y_1,\quad a x_2 + b \equiv y_2 \pmod{26}"></span></td><td>2 Unbekannte (a, b) brauchen 2 Gleichungen. ⚠️ A ist 0, nicht 1!</td></tr>
+        <tr><td>2</td><td><b>Subtrahieren</b>: <span data-tex="a(x_1-x_2)\equiv y_1-y_2\pmod{26}"></span></td><td>b fällt weg → nur noch a gesucht. Negativ? → +26</td></tr>
+        <tr><td>3</td><td><b>ggT-Check</b> der Zahl vor a (Kasten unten!)</td><td>„Teilen" ist mod 26 verboten — erst prüfen, ob und wie es weitergeht</td></tr>
+        <tr><td>4</td><td><b>a lösen</b> per Inverse, dann Kandidaten mit <span data-tex="\gcd(a,26)=1"></span> filtern</td><td>nur so ein Kandidat ist ein echter Schlüssel (Kasten oben)</td></tr>
+        <tr><td>5</td><td><b>b</b> aus Gleichung 1: <span data-tex="b \equiv y_1 - a x_1 \pmod{26}"></span></td><td>a ist jetzt bekannt → einfach einsetzen</td></tr>
+        <tr><td>6</td><td><b>Probe:</b> beide Paare einsetzen</td><td>10 Sekunden TR — sichert alle Punkte ab</td></tr>
       </table>
-      <div class="box warn"><div class="bt">⚠️ Die ggT-Tücke (kostet die meisten Punkte)</div>
-        Taucht z.B. <span data-tex="6a\equiv 20 \pmod{26}"></span> auf und <span data-tex="\gcd(6,26)=2"></span>: <b>nicht</b> „keine Lösung“! Wenn 2 die rechte Seite teilt, <b>durch 2 teilen</b> — <b>auch den Modul!</b> → <span data-tex="3a\equiv 10\pmod{13}"></span>. Das gibt <b>mehrere</b> a-Kandidaten (hier: a und a+13) — gültig ist nur der mit <span data-tex="\gcd(a,26)=1"></span>.</div>
+      <div class="box warn"><div class="bt">⚠️ Die ggT-Tücke in Schritt 3 (kostet die meisten Punkte)</div>
+        Nach dem Subtrahieren steht z.B. <span data-tex="6a\equiv 20 \pmod{26}"></span>. Instinkt: „durch 6 teilen" — aber mod 26 darf man nur mit einer <b>Inversen multiplizieren</b>, und 6 hat keine (<span data-tex="\gcd(6,26)=2\neq 1"></span>). Der Ausweg, in zwei Zügen:<br>
+        <b>1. Kürzen:</b> g = ggT(6, 26) = 2. Teilt g auch die rechte Seite? (2 | 20 ✓) Dann die <b>ganze Gleichung durch g teilen — auch den Modul!</b> → <span data-tex="3a\equiv 10\pmod{13}"></span>. Jetzt hat 3 eine Inverse mod 13 und es geht normal weiter.
+        (Teilt g die rechte Seite <b>nicht</b>, ist es wirklich „keine Lösung" — hinschreiben, Punkte kassieren.)<br>
+        <b>2. Zurückdenken:</b> Die kleine Gleichung verrät a nur <b>mod 13</b> — gesucht ist a aber <b>mod 26</b>. Darum gibt es g = 2 Kandidaten: <b>a₀ und a₀ + 13</b>. Beide hinschreiben, dann gewinnt der mit <span data-tex="\gcd(a,26)=1"></span>.</div>
 
-      <h4>📝 Echte Klausuraufgabe — SoSe20 A8 <span class="tag">verifiziert</span></h4>
-      <p>E→K und K→E, also <span data-tex="f(4)=10"></span> und <span data-tex="f(10)=4"></span>.</p>
+      <h4>📝 Echte Klausuraufgabe in Zeitlupe — SoSe20 A8 <span class="tag">verifiziert</span></h4>
+      <p>„E wird zu K verschlüsselt und K zu E. Bestimmen Sie den Schlüssel (a, b)." — Jeder Schritt einzeln, mit Begründung:</p>
       <div class="steps" id="steps-aff">
-        <div class="step"><div class="lbl">Gleichungen</div> <span data-tex="4a+b\equiv 10,\quad 10a+b\equiv 4 \pmod{26}"></span></div>
-        <div class="step"><div class="lbl">Subtrahieren</div> <span data-tex="6a\equiv -6\equiv 20\pmod{26}"></span> <span class="hint">(−6 negativ → +26, Basics-Regel 2!)</span></div>
-        <div class="step"><div class="lbl">ggT-Tücke</div> <span data-tex="\gcd(6,26)=2,\ 2\mid 20 \Rightarrow 3a\equiv 10\pmod{13}"></span></div>
-        <div class="step"><div class="lbl">a lösen (mit Inverse!)</div> <span data-tex="3^{-1}\equiv 9\ (13)\Rightarrow a\equiv 90\equiv 12\ (13)\Rightarrow a\in\{12,25\}\ (26)"></span></div>
-        <div class="step"><div class="lbl">gültigen Schlüssel wählen</div> <span data-tex="\gcd(12,26)=2"></span> ✗, <span data-tex="\gcd(25,26)=1"></span> ✓ → <b>a = 25</b></div>
-        <div class="step"><div class="lbl">b bestimmen</div> <span data-tex="100+b\equiv 10 \Rightarrow b=14"></span> → <b>(a,b) = (25, 14)</b></div>
+        <div class="step"><div class="lbl">1a) Buchstaben → Zahlen</div>
+          E = 4, K = 10 (Alphabet-Leiste oben). „E→K" heißt <span data-tex="f(4)=10"></span>, „K→E" heißt <span data-tex="f(10)=4"></span>. Gesucht: <b>(a, b)</b>.</div>
+        <div class="step"><div class="lbl">1b) Zwei Gleichungen aufstellen</div>
+          <span data-tex="4a+b\equiv 10,\quad 10a+b\equiv 4 \pmod{26}"></span></div>
+        <div class="step"><div class="lbl">2) Subtrahieren (Zeile 2 − Zeile 1) — b fällt weg</div>
+          <span data-tex="6a\equiv 4-10 = -6 \pmod{26}"></span>, negativ → +26: <span data-tex="6a\equiv 20\pmod{26}"></span></div>
+        <div class="step"><div class="lbl">3) ggT-Check: darf ich durch 6 „teilen"?</div>
+          <span data-tex="\gcd(6,26)=2"></span> → 6 hat <b>keine</b> Inverse mod 26. Aber 2 | 20 ✓ →
+          ganze Gleichung durch 2, <b>auch den Modul</b>: <span data-tex="3a\equiv 10\pmod{13}"></span></div>
+        <div class="step"><div class="lbl">4a) Das Ziel verstehen: die 3 vor dem a loswerden</div>
+          Wir stehen bei <span data-tex="3a\equiv 10\pmod{13}"></span> und wollen „a = irgendwas".
+          Normal würde man <b>durch 3 teilen</b> — aber Teilen ist in der Rest-Welt verboten
+          (10/3 ist keine ganze Zahl). Der Ersatz-Trick: eine Zahl finden, die <b>mal 3 genommen
+          den Rest 1 ergibt</b>. Warum ausgerechnet Rest 1? Weil „×1" nichts ändert — multipliziert
+          man die Gleichung mit so einer Zahl, wird aus „3a" einfach „1·a = a", und die 3 ist verschwunden.
+          Diese Zauberzahl heißt <b>Inverse von 3</b>, geschrieben 3⁻¹.</div>
+        <div class="step"><div class="lbl">4b) Die Inverse suchen: welche Zahl mal 3 gibt Rest 1 (mod 13)?</div>
+          Gesucht ist ein ? mit 3·? = 1 + 13·k (irgendein Vielfaches von 13, plus Rest 1).
+          Umgestellt: ? = (1+13k)/3 — das ist die <b>Durchprobier-Formel</b>. Einfach k=1, 2, 3, … einsetzen,
+          bis eine <b>ganze Zahl</b> herauskommt:<br>
+          <span class="mono">k=1 → (1+13)/3 = 14/3 = 4,67 ✗ · k=2 → (1+26)/3 = 27/3 = <b>9</b> ✓</span> → <b>3⁻¹ = 9</b><br>
+          <b>Probe:</b> 3·9 = 27 = 2·13 + <b>1</b> ✓ — lässt Rest 1, genau was wir wollten.</div>
+        <div class="step"><div class="lbl">4c) Beide Seiten der Gleichung mal 9 nehmen</div>
+          Eine Gleichung bleibt richtig, wenn man <b>links und rechts dasselbe</b> tut. Also überall ×9:
+          aus <span data-tex="3a\equiv 10\pmod{13}"></span> wird <span data-tex="9\cdot 3a\equiv 9\cdot 10\pmod{13}"></span>.<br>
+          <b>Linke Seite:</b> 9·3 = 27, und 27 lässt Rest <b>1</b> (gerade in 4b geprüft!) → übrig bleibt 1·a = <b>a</b>.
+          Die 3 ist weg — genau dafür haben wir die 9 gesucht.<br>
+          <b>Rechte Seite:</b> 9·10 = <b>90</b> (die 10 ist einfach die rechte Seite der Gleichung).<br>
+          Ergebnis: <span data-tex="a\equiv 90\pmod{13}"></span></div>
+        <div class="step"><div class="lbl">4d) 90 kleinrechnen (Rest beim Teilen durch 13)</div>
+          90 ist als Antwort zu groß — in der 13er-Welt zählt nur der Rest:
+          <span class="mono">90 = 6·13 + <b>12</b></span> → <span data-tex="a\equiv 12\pmod{13}"></span>
+          <span class="hint">(TR: 90 ÷R 13 → Rest 12)</span></div>
+        <div class="step"><div class="lbl">4e) Zurück in die 26er-Welt: zwei Kandidaten, einer gewinnt</div>
+          Achtung: „a ≡ 12 (mod 13)" sagt nur „<b>a lässt beim Teilen durch 13 den Rest 12</b>".
+          Solche Zahlen gibt es viele: 12, 25, 38, 51, … Ein Schlüssel muss aber zwischen 0 und 25 liegen →
+          nur <b>12</b> und <b>25</b> passen <span class="hint">(das sind die g = 2 Kandidaten aus der
+          ggT-Tücke: a₀ und a₀ + 13)</span>.<br>
+          Welcher ist der echte Schlüssel? Nur der mit ggT(a, 26) = 1:
+          <span class="mono">ggT(12, 26) = 2 ✗ · ggT(25, 26) = 1 ✓</span> → <b>a = 25</b></div>
+        <div class="step"><div class="lbl">5) b bestimmen: a = 25 in Gleichung 1 einsetzen</div>
+          Gleichung 1 war <span data-tex="4a+b\equiv 10\pmod{26}"></span>. Mit a = 25:
+          <span class="mono">4·25 + b = 100 + b ≡ 10</span>.<br>
+          Erst die 100 kleinrechnen: <span class="mono">100 = 3·26 + <b>22</b></span> → 22 + b ≡ 10 →
+          b ≡ 10 − 22 = <b>−12</b>. Negativ? → +26: −12 + 26 = <b>14</b> → <b>(a, b) = (25, 14)</b></div>
+        <div class="step"><div class="lbl">6) Probe mit beiden Paaren (Gold wert)</div>
+          <span class="mono">25·4+14 = 114 = 4·26 + <b>10</b> → K ✓ · 25·10+14 = 264 = 10·26 + <b>4</b> → E ✓</span> — Schlüssel sicher richtig.</div>
       </div>
       <div class="step-ctrl">
         <button class="btn" data-steps="steps-aff" data-act="next">Nächster Schritt ▸</button>
@@ -723,10 +769,11 @@
         <b>φ:</b> φ(p)=p−1 · φ(pq)=(p−1)(q−1) · <b>φ(p²)=p(p−1)</b> ⚠️ (φ(25)=20)<br>
         <b>Euler:</b> ggT(a,n)=1 ⇒ a^φ(n)≡1 ⇒ Exponent <b>mod φ(n)</b> reduzieren · <b>Fermat:</b> aᵖ≡a (mod p)<br>
         <b>Inverse:</b> a·a⁻¹≡1; erw. Euklid <i>oder</i> (1+mk)/a durchprobieren · <b>schnelle Exp.:</b> a², a⁴, a⁸ … (TR prüfen!)</div>
-      <div class="box tip"><div class="bt">⑧ Affine f(x)=(a·x+b) mod 26</div>
-        2 Paare → 2 Gleichungen → subtrahieren → c·a ≡ d (mod 26)<br>
-        ggT(c,26)=g: falls g | d → durch g teilen (Modul wird 26/g!) · gültig nur ggT(a,26)=1<br>
-        Entschlüsseln: x = a⁻¹·(y − b) mod 26</div>
+      <div class="box tip"><div class="bt">⑧ Affine f(x)=(a·x+b) mod 26 — stur 1–6</div>
+        <b>1)</b> Buchstaben→Zahlen (A=0!), je Paar: a·x+b ≡ y (mod 26) · <b>2)</b> subtrahieren → a·(x₁−x₂) ≡ y₁−y₂ · negativ → +26<br>
+        <b>3)</b> g = ggT(Zahl vor a, 26): g>1 &amp; g | rechts → alles ÷g, <b>auch Modul!</b> · g ∤ rechts → „keine Lösung"<br>
+        <b>4)</b> a = Inverse × rechts (im kleinen Modul) → g Kandidaten (a₀, a₀+26/g) → nur ggT(a,26)=1 gültig<br>
+        <b>5)</b> b = y₁ − a·x₁ mod 26 · <b>6)</b> Probe: beide Paare! · Entschlüsseln: x = a⁻¹·(y−b) mod 26</div>
       <div class="box tip"><div class="bt">⑨ RSA — stur abarbeiten</div>
         <b>0)</b> c gegeben → entschlüsseln (1–5) · nur m gegeben → Einzeiler c = mᵉ mod n, fertig<br>
         <b>1)</b> n = p·q (stur durch 2,3,5,7,11,13 teilen; ⚠️ 91=7·13!) · <b>2)</b> φ=(p−1)(q−1), bei p²: p(p−1) — nie n−1!<br>
