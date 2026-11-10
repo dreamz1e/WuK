@@ -1,6 +1,6 @@
 # 🏋️ Drill: Verteilungen aufstellen (neu — Jäger-Typ der SS26-Klausur)
 
-> Phase 3, Woche 2. Schema aus T3 §2 — **immer alle 5 Schritte hinschreiben:**
+> Woche 6. Schema aus T3 §2 — **immer alle 5 Schritte hinschreiben:**
 > ① |Ω| ② Werte von X ③ Fälle zählen → P(X=k) ④ Σ = 1 prüfen ⑤ E, E[X²], Var.
 > Der Indikator-Trick (T3 §3) dient als Kontrolle für E.
 

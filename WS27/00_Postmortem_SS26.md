@@ -104,11 +104,32 @@ eigentliche Kern des Fachs — wurde übersprungen. Genauso fehlte der **Indikat
 ## 4. Konsequenz: die drei Regeln für WS27
 
 1. **Vollständigkeit vor Effizienz.** Es wird die komplette offizielle Themen-Auswahl
-   abgedeckt. Der lange Vorlauf (≈ 7 Monate statt 6 Wochen) macht das möglich.
+   abgedeckt. Die 11 Wochen bis zum 25.01.2027 (≈ 55–60 h statt ≈ 20 h) reichen dafür.
 2. **Erkennen → Ansetzen → Rechnen → Prüfen.** Jede Übungsaufgabe beginnt mit der
    Klassifikation. Gemischte Sets statt vorsortierter Drills.
 3. **Werkzeuge müssen unter Stress funktionieren.** Jedes Rechenrezept braucht:
    robuste Standardmethode (nicht die schnellste!), Abbruchkriterien für Abkürzungen,
    und eine eingebaute Probe.
+
+---
+
+## 5. Nachtrag 10.11.2026 — woher die Klausuraufgaben kamen
+
+Beim Durcharbeiten der Übungsaufgaben im Skript (`../SS26/VFHWUK.pdf`, jeweils der Abschnitt
+„Aufgaben:" am Kapitelende) zeigt sich: **Die Juli-Klausur war keine Überraschung aus dem
+Nichts, sondern eine Sammlung von Varianten dieser Aufgaben.**
+
+| Klausuraufgabe | Vorbild im Skript |
+|---|---|
+| Eis: 3 Kugeln aus 10 Sorten | Aufgabe 2.2.10 — Eisladen mit 10 Sorten |
+| Siebformel | Aufgaben 2.5.1 und 2.5.2 |
+| Schützen mit Trefferquoten | Aufgaben 3.2.10 (3 Schützen), 3.4.2 und 3.4.7 (Bogenschütze) |
+| Mindestanzahl Schüsse | Aufgaben 3.4.5 und 3.4.6 („Wie oft …, damit … größer als ½") |
+| Jäger auf Hasen, Verteilung, E, Var | Aufgabe 3.3.12 (n Datensätze auf n Speicherplätze), 3.3.2 |
+| RSA mit Faktorisierung | Abschnitt 4.4.8.2 und Aufgaben 4.4.x |
+
+> **Lehre 5:** Der beste Prädiktor für die Klausur sind die Übungsaufgaben der markierten
+> Skript-Kapitel — nicht die alten Klausuren. Sie sind jetzt vollständig in das WS27-Material
+> eingearbeitet (`Uebungen/Skript_Aufgaben_Varianten.md` und die Drills).
 
 → Weiter mit `01_Strategie_WS27.md`.

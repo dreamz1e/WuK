@@ -1,4 +1,4 @@
-# T2 — Wahrscheinlichkeitsrechnung (Phase 2)
+# T2 — Wahrscheinlichkeitsrechnung (Wochen 4–5)
 
 > Skript: Kap. 3.1–3.2 (S. 126–186). Baut direkt auf T1 auf: **Laplace-Wahrscheinlichkeit
 > ist Kombinatorik im Bruch.** Neu betont: die ODER-Regel **ist** die Siebformel.
@@ -76,3 +76,29 @@ gezogen, „aus welcher Urne?" — alles dieselbe Formel mit anderen Wörtern.
 5. P(def) = 0,005+0,006+0,006 = 0,017 → P(C|def) = 0,006/0,017 = 6/17 ≈ 0,353.
 6. [5·4 + 3·2]/(8·7) = 26/56 = 13/28 ≈ 0,464.
 </details>
+
+---
+
+# Ergänzungen November 2026
+
+## 7. Die Skript-Klassiker (alle nachgerechnet)
+
+- **Unabhängige Treffer, „wird die Scheibe getroffen?"** p = 0,5 / 0,3 / 0,2 →
+  1 − 0,5·0,7·0,8 = **0,72**. Genau einer trifft: 0,5·0,7·0,8 + 0,5·0,3·0,8 + 0,5·0,7·0,2 = **0,47**.
+- **Wort aus 3 Buchstaben, alle verschieden:** 26·25·24/26³ = **150/169**. Allgemein k Kugeln auf n Urnen,
+  höchstens eine pro Urne: n!/(n−k)!/nᵏ (Fahrstuhl „alle verschieden").
+- **Bitfolge der Länge 8 mit genau 4 Nullen:** C(8,4)/2⁸ = **35/128**.
+- **Sack 4 weiß, 3 rot, 2 blau, zwei gleichfarbige:** (C(4,2)+C(3,2)+C(2,2))/C(9,2) = 10/36 = **5/18**.
+- **Skat (32 Karten), 3 Karten:** genau ein Ass C(4,1)·C(28,2)/C(32,3) = **189/620** ·
+  mindestens ein Ass 1 − C(28,3)/C(32,3) = **421/1240**.
+- **Skat, 4 Karten:** Werte 7, 8, 9, 10 in beliebigen Farben 4⁴/C(32,4) = **32/4495** ·
+  4 Bilder (12 Stück) C(12,4)/C(32,4) = **99/7192**.
+- **4 Würfel, Produkt durch 5 teilbar** ⇔ mindestens eine 5: 1 − (5/6)⁴ = **671/1296**.
+  **Produkt endet auf 5** ⇔ alle ungerade und mindestens eine 5: (3⁴ − 2⁴)/6⁴ = **65/1296**.
+- **Lotto, genau 4 Richtige:** C(6,4)·C(43,2)/C(49,6) = 13 545/13 983 816.
+- **Bayes mit 3 Ursachen** (gezinkte Münzen 1/3, 2/3, 1): P(Kopf) = 2/3 → Posterior 1/6, 1/3, 1/2.
+- **Zwei unabhängige positive Tests** (1 % krank, 99 % Sensitivität, 5 % Fehlalarm):
+  0,01·0,99²/(0,01·0,99² + 0,99·0,05²) = **0,798** — nach einem Test waren es nur 16,7 %.
+
+**Unabhängigkeit prüfen:** A und B sind unabhängig ⇔ P(A∩B) = P(A)·P(B). „Disjunkt" ist etwas anderes
+(disjunkte Ereignisse mit positiver Wahrscheinlichkeit sind sogar abhängig).

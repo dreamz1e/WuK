@@ -1,4 +1,4 @@
-# T1 — Kombinatorik komplett (Phase 1)
+# T1 — Kombinatorik komplett (Wochen 1–3)
 
 > Skript: Kap. 1–2 (S. 9–121). **Neu gegenüber SS26: die 4 Grundaufgaben als System,
 > Schubfachprinzip, Siebformel.** Ziel: Nicht 6 Formeln auswendig, sondern **eine
@@ -130,3 +130,66 @@ P(kein Fixpunkt) = Dₙ/n! → 1/e ≈ 0,368 für großes n.
 6. ⌊60/2⌋+⌊60/3⌋−⌊60/6⌋ = 30+20−10 = 40 · keine: 60−40 = 20.
 7. **Nein** — 25 Wörter, 26 Fächer: Schubfachprinzip greift erst ab 27 Wörtern. (Genau diese Umkehrung wird gern gefragt.)
 </details>
+
+---
+
+# Ergänzungen November 2026 (aus den Skript-Aufgaben — mögliche Überraschungen)
+
+## 7. Mengen, Lehrsatz-Varianten, Multinomial, Gitterwege
+
+**Mengen (offizielle Auswahl 1.1.1–1.1.7, 1.1.13):**
+- Vereinigung A∪B, Durchschnitt A∩B, Komplement Ā, Differenz A\B = A∩B̄, Teilmenge A⊆B.
+- Mächtigkeit |A| = Anzahl der Elemente. Potenzmenge P(M) = Menge aller Teilmengen, **|P(M)| = 2^|M|**.
+- Kartesisches Produkt A×B = alle Paare, |A×B| = |A|·|B|.
+- **Multimenge:** Elemente dürfen mehrfach vorkommen, z. B. {a, a, b}. Genau das zählen die
+  Multimengen-Permutationen (§3) und die Kombination mit Wiederholung (§2).
+- Beispiel: X = {a,b,c}, Y = {c,d} → X∪Y = {a,b,c,d}, X∩Y = {c}, X\Y = {a,b}, |P(X)| = 8, |X×Y| = 6.
+- Intervalle: [−3,3) ∩ [0,3] = [0,3) · [−3,3) ∪ [0,3] = [−3,3]. (Eckige Klammer = Randpunkt gehört dazu.)
+
+**Binomialkoeffizienten geschickt rechnen:** C(8,7) = C(8,1) = 8 · C(100,98) = C(100,2) = 4950 ·
+C(n+1,n−1) = C(n+1,2) = (n+1)·n/2. Pascal-Zeile 6: 1 6 15 20 15 6 1.
+
+**Lehrsatz mit Vorfaktoren:** Koeffizient von xᵏ in (a+bx)ⁿ ist C(n,k)·aⁿ⁻ᵏ·bᵏ.
+(1−2x)⁶, x⁴: C(6,4)·(−2)⁴ = 240 · (3x−y)⁵, x²y³: C(5,2)·3²·(−1)³ = −90.
+
+**Multinomialkoeffizient:** Koeffizient von xᵃyᵇzᶜ in (x+y+z)ⁿ (a+b+c=n) ist n!/(a!·b!·c!).
+x³yz² in (x+y+z)⁶: 6!/(3!·1!·2!) = **60**. Dieselbe Formel verteilt Dinge auf Gruppen fester Größe:
+8 Karten auf 4 Spieler je 2 → 8!/(2!·2!·2!·2!) = **2520**.
+
+**Gitterwege:** Nur „rechts" und „hoch" → Weg = Wort aus R und H → C(r+h, r).
+König auf 8×8 von Ecke zu Ecke: 7 R, 7 H → C(14,7) = **3432**.
+
+**„Jeder mit jedem":** C(n,2). 741 Gläserklänge → n(n−1) = 1482 → **n = 39**.
+
+**Paare ohne Reihenfolge mit Wiederholung:** Dominosteine mit Zahlen 0..9 → C(10+2−1, 2) = **55**.
+
+**Wörter in alphabetischer Reihenfolge:** Die Reihenfolge ist erzwungen, also zählt nur die Auswahl:
+ohne Wiederholung C(26,n), mit Wiederholung C(26+n−1, n).
+
+## 8. Siebformel und Schubfach — die Skript-Varianten
+
+**Siebformel rückwärts:** Gegeben |A∪B∪C| und alle anderen Größen, gesucht der Dreierschnitt:
+|A∩B∩C| = |A∪B∪C| − |A| − |B| − |C| + |A∩B| + |A∩C| + |B∩C|.
+Skript 2.5.1: 38 − 24 − 15 − 22 + 6 + 13 + 6 = **2**.
+
+**„Genau eine" / „genau zwei" Eigenschaften:** Venn-Diagramm von innen nach außen füllen: zuerst der
+Dreierschnitt t, dann je Paar |A∩B| − t, dann je Menge der Rest. Genau zwei = Σ Paarschnitte − 3t;
+genau eine = |A∪B∪C| − (genau zwei) − t. Bei zwei Mengen: genau eine = |A∪B| − |A∩B|.
+
+**kgV-Falle:** Bei nicht teilerfremden Teilern ist der Schnitt das kgV. 1..300 durch 4, 6 oder 10:
+75+50+30 − 25 (durch 12) − 15 (durch 20) − 10 (durch 30) + 5 (durch 60) = **110**.
+
+**Teilerfremd zu 30 in 1..200:** „durch keine von 2, 3, 5 teilbar" = 200 − (100+66+40−33−20−13+6) = **54**.
+
+**Passwort-Typ** (Skript 4.3.1): „mindestens eine Ziffer und mindestens ein Buchstabe" =
+alle − nur Buchstaben − nur Ziffern: 36⁴ − 26⁴ − 10⁴ = **1 212 640**.
+
+**Schubfach erweitert:** Um bei n Fächern sicher k Objekte in einem Fach zu haben, braucht man (k−1)·n+1.
+Socken in 3 Farben, 4 gleichfarbige: **10**. Umgekehrt: m Objekte in n Fächern → ein Fach hat mindestens ⌈m/n⌉.
+
+**Schubfach mit konstruierten Fächern:** Aus {1,…,10} sicher zwei mit Summe 11 → Fächer sind die
+5 Paare {1,10},…,{5,6} → **6** Zahlen. Unter 7 natürlichen Zahlen gibt es zwei, deren Summe oder
+Differenz durch 10 teilbar ist → Fächer nach Rest mod 10: {0},{1,9},{2,8},{3,7},{4,6},{5} = 6 Fächer.
+
+**Abzählargument** (Skript 2.2.1): Jeder belegt genau 4 Fächer → Summe aller Hörerzahlen muss durch 4
+teilbar sein. 11+10+10+8+5+4+2 = 50 ist es nicht → jemand hat sich nicht an die Regel gehalten.

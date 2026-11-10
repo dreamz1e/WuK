@@ -1,4 +1,4 @@
-# T3 — Zufallsvariablen & Verteilungen (Phase 3) ⭐ Schwerpunkt
+# T3 — Zufallsvariablen & Verteilungen (Wochen 6–7) ⭐ Schwerpunkt
 
 > Skript: Kap. 3.3–3.5 (S. 187–312). **Der Block, der die SS26-Klausur entschieden hat:**
 > 2 von 3 Verteilungsaufgaben (Jäger, Schützen-Vergleich) waren nicht vorbereitet.
@@ -149,3 +149,50 @@ Gleichverteilung auf [a,b]: f = 1/(b−a), E = (a+b)/2, Var = (b−a)²/12.
 4. A muss 2× in Folge gewinnen, bevor B 1× gewinnt: nur Pfad „A, A" = 0,6² = 0,36.
 5. C·9/2 = 1 → C = 2/9 · E = (2/9)·∫₀³x² = (2/9)·9 = 2 · P(X>2) = (2/9)·(9−4)/2 = 5/9.
 </details>
+
+---
+
+# Ergänzungen November 2026
+
+## 10. Skript-Typen rund um Zufallsvariablen (alle nachgerechnet)
+
+**Verteilung als Tabelle gegeben** (Skript 3.3.1): Werte 0,1,2,3 mit P = 0, 1/4, 1/2, 1/4.
+E = 2 · E[X²] = 4,5 → Var = 1/2 · σ ≈ 0,707 · P(1 ≤ X < 3) = 1/4 + 1/2 = 3/4.
+**Verteilungsfunktion** F(x) = P(X ≤ x): F = 0 für x < 1, 1/4 für 1 ≤ x < 2, 3/4 für 2 ≤ x < 3, 1 ab x ≥ 3.
+
+**Maximum zweier Würfel** (3.3.2): P(Max = k) = (2k−1)/36 · E = 161/36 ≈ 4,47 · Var = 2555/1296 ≈ 1,97.
+
+**Summe zweier Zahlen aus {1,2,3} mit Wiederholung** (3.3.5): P = 1/9, 2/9, 3/9, 2/9, 1/9 für 2..6 · E = 4 · Var = 4/3.
+
+**Gezinkte Münze p = 3/4, drei Würfe** (3.3.6): Bin(3; 3/4) → 1/64, 9/64, 27/64, 27/64 · E = 9/4 · Var = 9/16.
+
+**Match mit Abbruchregel** (3.3.7, Tischtennis): Match endet bei 2 Sätzen in Folge oder 3 Sätzen insgesamt, p = 1/2.
+Baum zeichnen, Pfadlängen sammeln: P(X=2) = 1/2, P(X=3) = 1/4, P(X=4) = 1/8, P(X=5) = 1/8 (Σ = 1 ✓) · E = 23/8.
+*Methode:* Bei „Spiel bis …" ist immer der Baum das Werkzeug, X ist die Pfadlänge.
+
+**Lineare Suche** (3.3.8): Position gleichverteilt auf 1..n → P(X=k) = 1/n · E = (n+1)/2 · Var = (n²−1)/12.
+
+**Geometrisch** (3.3.9, 3.4.7): p = 4/5: P(X=k) = (1/5)ᵏ⁻¹·(4/5), E = 5/4.
+„Mehr als 3 Schüsse nötig" bei p = 0,4: 0,6³ = **0,216**. „Mindestens ein Treffer bei 3 Schüssen": 1 − (1−p)³.
+
+**Zwei Zufallsvariablen, Tabelle** (3.3.10): Randverteilung = Zeilen- bzw. Spaltensummen.
+Unabhängig ⇔ **jede** Zelle = Zeilensumme · Spaltensumme. Eine einzige abweichende Zelle genügt als Gegenbeweis.
+
+**Summe von k gezogenen Kugelnummern aus 1..n** (3.3.11): Linearität → jede gezogene Kugel hat
+Erwartungswert (n+1)/2 → **E = k·(n+1)/2** (gilt trotz Abhängigkeit der Züge).
+
+**Hash / belegte Plätze** (3.3.12 — der Zwilling der Jäger-Aufgabe): n Datensätze zufällig auf n Plätze,
+X = Plätze mit genau einem Datensatz → Indikator je Platz: P = n·(1/n)·(1−1/n)ⁿ⁻¹ →
+**E[X] = n·(1−1/n)ⁿ⁻¹**, E/n → 1/e ≈ 0,368. Für n = 4: 27/16.
+
+**Belegungs-Verteilung mit festen Zahlen:** 4 Personen, 3 Stockwerke, X = Anzahl Halte:
+P(1) = 3/81, P(2) = C(3,2)·(2⁴−2)/81 = 42/81, P(3) = 36/81 (Σ = 1 ✓) · E = 65/27 · Var = 230/729.
+
+**Binomial-Klassiker:** Tennis p = 2/3, 4 Sätze, mehr als die Hälfte: P(X≥3) = 32/81 + 16/81 = **16/27** ·
+Partei 40 %, 5 Befragte: P(0) = 0,0778, P(2) = 0,3456, P(≤3) = 0,9130, P(≥2) = 0,6630 ·
+6 Kinder: 3 und 3 → 5/16; weniger Jungen als Mädchen → (1 − 5/16)/2 = 11/32 (Symmetrie!).
+
+**Poisson** (nicht in der markierten Auswahl, nur Formel kennen): P(X=k) = λᵏ·e^(−λ)/k!, E = Var = λ.
+λ immer auf den gefragten Zeitraum umrechnen: 120 Aufträge/h → 2 pro Minute → P(0) = e⁻² ≈ 0,135.
+
+**Stetig mit Parameter** (3.5.1): f(x) = C·(a−x) auf [0,a] → C = 2/a², E = a/3, Var = a²/18.

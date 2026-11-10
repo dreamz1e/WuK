@@ -1,9 +1,9 @@
 # 🎯 Strategie WS27 — Wiederholungsklausur WuK
 
-> **Erstellt 09.07.2026**, direkt nach der nicht bestandenen SS26-Klausur.
+> **Erstellt 09.07.2026**, direkt nach der nicht bestandenen SS26-Klausur. **Aktualisiert 10.11.2026.**
 > Grundlage: Postmortem (`00_Postmortem_SS26.md`), offizielle Themen-Auswahl
 > (`../SS26/wk.vfhwuk.gliederung.auswahl.pdf`), Skript `VFHWUK.pdf`.
-> **Klausurtermin: Winter (vermutlich Ende Jan/Anfang Feb 2027) — eintragen, sobald bekannt.**
+> **Klausurtermin: Montag, 25.01.2027, 10:00–12:00 Uhr.** Vorbereitungszeit ab 10.11.: 11 Wochen, ≈ 55–60 h.
 
 ---
 
@@ -14,8 +14,8 @@
 
 **WS27 („Verstehen + Vollabdeckung + Erkennung"):**
 > Die **komplette offizielle Themen-Auswahl** beherrschen, jede Aufgabe zuerst
-> **klassifizieren**, jedes Werkzeug **stressfest** machen. Der lange Vorlauf
-> (~7 Monate) macht das ohne Hektik möglich.
+> **klassifizieren**, jedes Werkzeug **stressfest** machen — und als Aufgabenpool die
+> **Übungsaufgaben des Skripts** nehmen, nicht die alten Klausuren.
 
 Drei Ebenen, alle drei werden trainiert:
 
@@ -97,7 +97,8 @@ es nicht kann"** — die Klausur hat bewiesen, dass alles aus der Auswahl dranko
 1. **Klassifikation als Pflichtritual.** Jede Übungsaufgabe beginnt mit 3 Zeilen:
    *Modell? Formel? Warum?* — erst dann rechnen. Das Erkennungstraining
    (`Uebungen/Erkennungstraining_1.md`) besteht sogar **nur** aus diesem Schritt.
-2. **Gemischt statt sortiert.** Ab Phase 2 nie wieder nur themenreine Drills —
+2. **Gemischt statt sortiert.** Themenreine Drills nur in der Woche, in der das Thema neu ist —
+   danach nur noch gemischt;
    die Klausur verrät das Thema auch nicht.
 3. **Varianten-Drill.** Zu jedem Typ mindestens 3 Einkleidungen üben
    (Schützen = Würfel = Serverausfälle = Torschüsse). Die Mathematik bleibt gleich,
@@ -106,9 +107,11 @@ es nicht kann"** — die Klausur hat bewiesen, dass alles aus der Auswahl dranko
    „eigene" Verteilungen die Herleitung 1× selbst sauber aufschreiben.
 5. **Werkzeuge mit Probe und Abbruch.** Jedes Rezept endet mit einer Probe;
    jede Abkürzung hat ein hartes Abbruchkriterium (→ Spickzettel).
-6. **Skript nutzen.** Die „Aufgaben:"-Abschnitte des Skripts (je Kapitelende) sind
-   der ehrlichste Prädiktor für Klausuraufgaben — sie werden systematisch mitgerechnet
-   (insb. S. 82–89, 100, 107, 119–121, 177–186, 262–271, 435–438).
+6. **Die Skript-Aufgaben sind der Aufgabenpool.** Abgleich vom 10.11.2026: Die Juli-Klausur
+   bestand aus Varianten der Übungsaufgaben am Kapitelende (Eis ≙ 2.2.10, Schützen ≙ 3.2.10/3.4.x,
+   Jäger-Hasen ≙ Hash-Aufgabe 3.3.12). Deshalb sind alle Übungsaufgaben der markierten Kapitel in
+   die Drills eingearbeitet bzw. in `Uebungen/Skript_Aufgaben_Varianten.md` gesammelt, und die
+   Probeklausur W4 prüft sie mit neuen Zahlen.
 
 ---
 
@@ -124,16 +127,23 @@ es nicht kann"** — die Klausur hat bewiesen, dass alles aus der Auswahl dranko
 
 ---
 
-## 5. Definition of Ready (deutlich strenger als SS26)
+## 5. Definition of Ready
 
-Klausurbereit bist du, wenn:
-- [ ] Du im **Erkennungstraining** 18/20 gemischte Aufgaben korrekt klassifizierst (nur Modell + Formel).
-- [ ] Du die **SS26-Rekonstruktion** unter Klausurbedingungen mit ≥ 85 % löst.
-- [ ] Du **2 alte Klausuren, die du länger nicht angefasst hast**, unter Zeit mit ≥ 70 % löst.
-- [ ] Euklid-Tableau: beliebige Inverse mod m < 1000 in **< 3 min inkl. Probe**.
-- [ ] Du eine unbekannte „Verteilung aufstellen"-Aufgabe (Stil Jäger/Hasen) vollständig
-      durchziehst: Werte, P(X=k), Σ=1, E, Var.
-- [ ] Siebformel mit 3 Mengen fehlerfrei, inkl. einer Anwendungsaufgabe.
-- [ ] Spicker geschrieben **und** 1 Probeklausur ohne ihn ≥ 60 % (der Spicker ist Backup, nicht Krücke).
+Die verbindliche Checkliste (Stichtag 22.01.2027) steht im Lernplan:
+**[02_Lernplan_WS27.md](02_Lernplan_WS27.md#definition-of-ready-stichtag-2201)**.
+Kurzfassung: Erkennungstraining ≥ 18/20 · SS26-Rekonstruktion ≥ 85 % · zwei Probeklausuren ≥ 70 % ·
+eine Probeklausur ohne Spicker ≥ 60 % · Tableau-Inverse < 3 min · Verteilung aufstellen und
+Siebformel (vorwärts und rückwärts) fehlerfrei · alle Skript-Aufgaben gerechnet.
+
+## 6. Die Bausteine des Materials
+
+| Baustein | Trainiert | Datei |
+|---|---|---|
+| Themen-Module T1–T4 | Verstehen | `Themen/` |
+| Drills je Thema | Rechnen | `Uebungen/Drill_*.md` |
+| Erkennungstraining 1–3 + App-Modus „Erkennung" | Erkennen | `Uebungen/Erkennungstraining_*.md`, `Trainer/App.html` |
+| Skript-Aufgaben-Varianten | Überraschungs-Schutz | `Uebungen/Skript_Aufgaben_Varianten.md` |
+| Probeklausuren W1–W4 + Auswertungsbogen | Klausurbedingungen | `Klausuren/` |
+| Spickzettel + erklärte Fassung | Sicherheitsnetz | `03_…`, `04_…` |
 
 → Zeitplan: `02_Lernplan_WS27.md`.

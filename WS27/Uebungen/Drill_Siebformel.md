@@ -1,6 +1,6 @@
 # 🏋️ Drill: Siebformel (neu — kam SS26 dran!)
 
-> Phase 1, Woche 4. Rezept: T1 §5. Immer hinschreiben: welche Mengen, welche Schnitte,
+> Woche 3. Rezept: T1 §5. Immer hinschreiben: welche Mengen, welche Schnitte,
 > dann Formel mit Vorzeichen. Bei Teilbarkeit: Schnitt = kgV.
 
 1. Wie viele Zahlen von 1 bis 60 sind durch 4 oder 6 teilbar?

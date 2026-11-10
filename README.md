@@ -1,18 +1,28 @@
 # 📱 WuK — Klausurvorbereitung (Handy-Zugriff)
 
 **Modul:** Wahrscheinlichkeitsrechnung und Kryptographie
-**⭐ AKTUELL: Wiederholungsklausur Winter 2026/27** → alles Neue liegt in **[WS27/](WS27/)**
+**⭐ Wiederholungsklausur: Montag, 25.01.2027, 10:00–12:00 Uhr** → alles Aktuelle liegt in **[WS27/](WS27/)**
 
-## 🎯 WS27 — der neue Plan (nach der SS26-Klausur vom 09.07.2026)
+## 🎯 WS27 — Stand 10.11.2026
 
-- 📋 **[WS27-Übersicht (README)](https://github.com/dreamz1e/WuK/blob/main/WS27/README.md)** — Einstieg & Reihenfolge
-- 🔍 **[Postmortem SS26](https://github.com/dreamz1e/WuK/blob/main/WS27/00_Postmortem_SS26.md)** — warum es schiefging (zuerst lesen)
-- 🧭 **[Strategie WS27](https://github.com/dreamz1e/WuK/blob/main/WS27/01_Strategie_WS27.md)** — Vollabdeckung statt Template
-- 🗓️ **[Lernplan (Phasen)](https://github.com/dreamz1e/WuK/blob/main/WS27/02_Lernplan_WS27.md)** — Juli 2026 → Klausur
-- ✍️ **[Spickzettel A4 (neu)](https://github.com/dreamz1e/WuK/blob/main/WS27/03_Spickzettel_A4_WS27.md)**
-- 📝 **[Klausur SS26 rekonstruiert + Lösungen](https://github.com/dreamz1e/WuK/blob/main/WS27/Klausuren/Klausur_SS26_Rekonstruktion.md)**
-- 📚 Themen-Module: **[T1 Kombinatorik](https://github.com/dreamz1e/WuK/blob/main/WS27/Themen/T1_Kombinatorik_komplett.md)** · **[T2 Wahrscheinlichkeit](https://github.com/dreamz1e/WuK/blob/main/WS27/Themen/T2_Wahrscheinlichkeit.md)** · **[T3 Verteilungen ⭐](https://github.com/dreamz1e/WuK/blob/main/WS27/Themen/T3_Verteilungen_Zufallsvariablen.md)** · **[T4 Krypto](https://github.com/dreamz1e/WuK/blob/main/WS27/Themen/T4_Krypto_Werkzeugkasten.md)**
-- 🏋️ Übungen: **[Erkennungstraining ⭐](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Erkennungstraining_1.md)** · **[Siebformel](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Drill_Siebformel.md)** · **[Verteilung aufstellen](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Drill_Verteilung_aufstellen.md)** · **[Euklid & Inverse](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Drill_Euklid_Inverse.md)**
+**Täglich:** 📱 **[Trainer-App WS27](https://dreamz1e.github.io/WuK/WS27/Trainer/App.html)** — Erkennung, Drill, Tableau-Trainer, Karteikarten, Klausur-Simulation (offline-fähig, „Zum Startbildschirm hinzufügen")
+
+**Fahrplan & Grundlagen**
+- 🗓️ **[Lernplan — 11 Wochen bis zur Klausur](https://github.com/dreamz1e/WuK/blob/main/WS27/02_Lernplan_WS27.md)** ← hier anfangen
+- 📋 [WS27-Übersicht](https://github.com/dreamz1e/WuK/blob/main/WS27/README.md) · 🔍 [Postmortem](https://github.com/dreamz1e/WuK/blob/main/WS27/00_Postmortem_SS26.md) · 🧭 [Strategie](https://github.com/dreamz1e/WuK/blob/main/WS27/01_Strategie_WS27.md)
+- ✍️ **[Spickzettel A4](https://github.com/dreamz1e/WuK/blob/main/WS27/03_Spickzettel_A4_WS27.md)** · 📖 **[Spickzettel erklärt](https://github.com/dreamz1e/WuK/blob/main/WS27/04_Spickzettel_erklaert.md)**
+
+**Themen-Module**
+- [T1 Kombinatorik](https://github.com/dreamz1e/WuK/blob/main/WS27/Themen/T1_Kombinatorik_komplett.md) · [T2 Wahrscheinlichkeit](https://github.com/dreamz1e/WuK/blob/main/WS27/Themen/T2_Wahrscheinlichkeit.md) · [T3 Verteilungen ⭐](https://github.com/dreamz1e/WuK/blob/main/WS27/Themen/T3_Verteilungen_Zufallsvariablen.md) · [T4 Krypto](https://github.com/dreamz1e/WuK/blob/main/WS27/Themen/T4_Krypto_Werkzeugkasten.md)
+
+**Übungen**
+- 🧭 Erkennung: [Training 1](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Erkennungstraining_1.md) · [Training 2](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Erkennungstraining_2.md) · [Training 3](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Erkennungstraining_3.md)
+- 🏋️ Drills: [Vier Grundaufgaben](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Drill_Vier_Grundaufgaben.md) · [Schubfach/Binomial/Mengen](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Drill_Schubfach_Binomial_Mengen.md) · [Siebformel](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Drill_Siebformel.md) · [Laplace/Bayes](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Drill_Bayes_Laplace.md) · [Verteilung aufstellen](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Drill_Verteilung_aufstellen.md) · [Binomial/Mindest-n/Wettkampf](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Drill_Binomial_Ungleichung_Wettkampf.md) · [Euklid & Inverse](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Drill_Euklid_Inverse.md) · [RSA & Krypto](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Drill_RSA_Krypto.md)
+- 🎯 **[Skript-Aufgaben-Varianten](https://github.com/dreamz1e/WuK/blob/main/WS27/Uebungen/Skript_Aufgaben_Varianten.md)** — der wahrscheinlichste Aufgabenpool
+
+**Probeklausuren (120 min)**
+- [W1](https://github.com/dreamz1e/WuK/blob/main/WS27/Klausuren/Probeklausur_W1.md) ([Lösung](https://github.com/dreamz1e/WuK/blob/main/WS27/Klausuren/Loesung_W1.md)) · [W2](https://github.com/dreamz1e/WuK/blob/main/WS27/Klausuren/Probeklausur_W2.md) ([Lösung](https://github.com/dreamz1e/WuK/blob/main/WS27/Klausuren/Loesung_W2.md)) · [W3 ohne Spicker](https://github.com/dreamz1e/WuK/blob/main/WS27/Klausuren/Probeklausur_W3.md) ([Lösung](https://github.com/dreamz1e/WuK/blob/main/WS27/Klausuren/Loesung_W3.md)) · [W4 Überraschung](https://github.com/dreamz1e/WuK/blob/main/WS27/Klausuren/Probeklausur_W4.md) ([Lösung](https://github.com/dreamz1e/WuK/blob/main/WS27/Klausuren/Loesung_W4.md))
+- [Klausur SS26 rekonstruiert + Lösungen](https://github.com/dreamz1e/WuK/blob/main/WS27/Klausuren/Klausur_SS26_Rekonstruktion.md) · [Auswertungsbogen](https://github.com/dreamz1e/WuK/blob/main/WS27/Klausuren/Auswertungsbogen.md)
 
 ---
 
@@ -30,7 +40,7 @@ Aufgabenmaterial (Probeklausuren, Drillsets, Trainer) bleibt nutzbar — Strateg
 
 | | App | Link |
 |---|---|---|
-| 📱 | **Trainer** — Übungs-App (Drill, Leitner, Karteikarten, Mini-Klausur, offline) | <https://dreamz1e.github.io/WuK/SS26/Trainer/App.html> |
+| 📱 | **Trainer SS26 (alt, deckt die neuen Themen nicht ab)** | <https://dreamz1e.github.io/WuK/SS26/Trainer/App.html> |
 | 🎲 | **Lernkarte 1 — Kombinatorik** | <https://dreamz1e.github.io/WuK/SS26/Lernkarten/Lernkarte_1_KOMB.html> |
 | 🎯 | **Lernkarte 2 — Wahrscheinlichkeit** | <https://dreamz1e.github.io/WuK/SS26/Lernkarten/Lernkarte_2_WK.html> |
 | 🔐 | **Lernkarte 3 — Kryptographie** | <https://dreamz1e.github.io/WuK/SS26/Lernkarten/Lernkarte_3_KRYPTO.html> |
@@ -41,7 +51,7 @@ Aufgabenmaterial (Probeklausuren, Drillsets, Trainer) bleibt nutzbar — Strateg
 
 ## 🚀 Lernpläne & Strategie
 
-- 🏁 ⭐ **[Endspurt-Plan](https://github.com/dreamz1e/WuK/blob/main/SS26/03_Endspurt_Tagesplan.md)** — **AKTUELL:** letzte Woche 02.–08.07 (~3 h/Tag, nichts gestrichen)
+- 🏁 **[Endspurt-Plan](https://github.com/dreamz1e/WuK/blob/main/SS26/03_Endspurt_Tagesplan.md)** — Archiv: letzte Woche 02.–08.07.2026
 - **[Lernplan „Vollgas"](https://github.com/dreamz1e/WuK/blob/main/SS26/01_Lernplan_AKTUELL.md)** — Plan ab 13.06 (~8 h/Woche), Referenz
 - ✅ **[Tagesplan](https://github.com/dreamz1e/WuK/blob/main/SS26/02_Tagesplan.md)** — abhakbarer Tag-für-Tag-Plan (~45–90 min/Tag)
 - 🧭 **[Strategie](https://github.com/dreamz1e/WuK/blob/main/SS26/00_Strategie_WuK.md)** — die 9 Aufgabentypen, Triage, Klausurtaktik

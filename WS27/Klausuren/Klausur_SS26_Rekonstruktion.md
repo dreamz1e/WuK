@@ -140,15 +140,16 @@ $$437 = 19 \cdot 23$$
 
 **2) φ = 18 · 22 = 396** — und **ab jetzt nur noch mit 396 rechnen, nie mit 437** (außer in Schritt 4/5).
 
-**3) d = 317⁻¹ mod 396 — erweiterter Euklid (2 Zeilen!):**
+**3) d = 317⁻¹ mod 396 — Euklid-Tableau (zwei Rechenzeilen!):**
 
-| Gleichung | |
-|---|---|
-| 396 = **1**·317 + 79 | |
-| 317 = **4**·79 + **1** | ← ggT = 1 ✓ (Inverse existiert) |
+| Rest | x | y | q |
+|---|---|---|---|
+| 396 | 1 | 0 | |
+| 317 | 0 | 1 | 1 |
+| 79 | 1 | −1 | 4 |
+| **1** | −4 | **5** | ← ggT = 1, Inverse existiert |
 
-Rückwärts: 1 = 317 − 4·79 = 317 − 4·(396 − 317) = **5·317 − 4·396**
-→ **d = 5**. Probe: 317·5 = 1585 = 4·396 + 1 ✓
+Zeilenprobe: −4·396 + 5·317 = −1584 + 1585 = 1 ✓ → **d = 5**. Probe: 317·5 = 1585 = 4·396 + 1 ✓
 
 *Probierformel als Kontrolle: (1 + 396k)/317 → k = 4 liefert 1585/317 = 5. ✓
 Mit **falschem** Modul 437 statt 396 käme der erste ganzzahlige Wert erst bei k = 140 —

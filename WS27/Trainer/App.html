@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WuK WS27">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>WuK Trainer WS27</title>
+<style>
+  :root{
+    --accent:#0f766e; --accent-soft:#e6f5f3; --accent-dark:#0b5a54;
+    --bg:#f4f6f8; --card:#ffffff; --ink:#1c2330; --muted:#5b6576;
+    --line:#e2e7ee; --ok:#0f9d6b; --ok-soft:#eafaf3; --okline:#a7ecd0;
+    --warn:#d98a06; --warn-soft:#fff6e0; --danger:#dc3f3f; --danger-soft:#fdf0f0; --dline:#f6c4c4;
+    --code:#f0f3f7; --shadow:0 1px 3px rgba(20,30,60,.07),0 8px 24px rgba(20,30,60,.06);
+    --tabh:62px;
+  }
+  [data-theme="dark"]{
+    --accent:#2dd4bf; --accent-soft:#11302d; --accent-dark:#7ee8d9;
+    --bg:#0e1116; --card:#171b23; --ink:#e7eaf0; --muted:#98a1b3;
+    --line:#272d3a; --ok:#34d399; --ok-soft:#0d2620; --okline:#16513c;
+    --warn:#fbbf24; --warn-soft:#2a2210; --danger:#f87171; --danger-soft:#2a1517; --dline:#5b2326;
+    --code:#10141b; --shadow:0 1px 3px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.55; -webkit-font-smoothing:antialiased;
+    padding-bottom:calc(var(--tabh) + env(safe-area-inset-bottom) + 8px)}
+  header{position:sticky; top:0; z-index:20; background:var(--card); border-bottom:1px solid var(--line); padding:env(safe-area-inset-top) .9rem 0}
+  .hbar{display:flex; align-items:center; gap:.5rem; height:52px}
+  .logo{font-weight:800; font-size:1.02rem; display:flex; align-items:center; gap:.5rem; white-space:nowrap}
+  .logo .b{width:30px;height:30px;border-radius:9px;background:var(--accent);display:grid;place-items:center;color:#fff;font-weight:800;font-size:.72rem}
+  [data-theme="dark"] .logo .b{color:#06201d}
+  .spacer{flex:1}
+  .stat{font-size:.76rem; font-weight:700; color:var(--muted); background:var(--accent-soft); padding:.25rem .55rem; border-radius:99px; white-space:nowrap}
+  .stat b{color:var(--accent-dark)}
+  .tbtn{cursor:pointer; border:1px solid var(--line); background:var(--card); color:var(--ink); width:36px;height:36px;border-radius:9px; font-size:1rem; flex:none}
+  main{max-width:680px; margin:0 auto; padding:1rem .9rem 1.5rem}
+  .screen{display:none} .screen.active{display:block}
+  h2.title{font-size:1.25rem; margin:.2rem 0 .15rem; letter-spacing:-.01em}
+  h3{font-size:1rem; margin:.2rem 0 .5rem}
+  .sub{color:var(--muted); font-size:.88rem; margin:0 0 .9rem}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:1rem 1.05rem; box-shadow:var(--shadow); margin:.75rem 0; overflow-wrap:anywhere}
+  .chips{display:flex; gap:.4rem; flex-wrap:wrap; margin:.2rem 0 .8rem}
+  .chips.scroll{flex-wrap:nowrap; overflow-x:auto; padding-bottom:.3rem; scrollbar-width:thin}
+  .chip{cursor:pointer; border:1px solid var(--line); background:var(--card); color:var(--muted); font-weight:700;
+    font-size:.8rem; padding:.38rem .68rem; border-radius:99px; white-space:nowrap; flex:none; font-family:inherit}
+  .chip.on{background:var(--accent); color:#fff; border-color:var(--accent)}
+  [data-theme="dark"] .chip.on{color:#06201d}
+  .ptype{font-size:.7rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-dark)}
+  .prompt{font-size:1.03rem; margin:.5rem 0 1rem; line-height:1.6}
+  .hl{background:var(--accent-soft); color:var(--accent-dark); padding:.05rem .35rem; border-radius:6px; font-weight:700; font-family:ui-monospace,Menlo,Consolas,monospace; white-space:nowrap}
+  .fields{display:flex; flex-direction:column; gap:.6rem; margin-bottom:.9rem}
+  .field{display:flex; align-items:center; gap:.6rem}
+  .field label{font-weight:700; font-size:.92rem; min-width:1.4rem; flex:none; max-width:55%}
+  input[type=text]{flex:1; padding:.65rem .75rem; border:1px solid var(--line); border-radius:11px; font-size:1.05rem;
+    background:var(--bg); color:var(--ink); font-weight:700; min-width:0; width:100%; font-family:inherit}
+  input[type=text]:focus{outline:2px solid var(--accent); border-color:var(--accent)}
+  input.ok{border-color:var(--ok); background:var(--ok-soft)}
+  input.bad{border-color:var(--danger); background:var(--danger-soft)}
+  .btn{cursor:pointer; border:none; background:var(--accent); color:#fff; font-weight:800; font-size:1rem;
+    padding:.75rem 1rem; border-radius:12px; width:100%; font-family:inherit}
+  [data-theme="dark"] .btn{color:#06201d}
+  .btn:active{transform:scale(.985)}
+  .btn.ghost,[data-theme="dark"] .btn.ghost{background:var(--card); color:var(--accent-dark); border:1px solid var(--line)}
+  .btn.sm{width:auto; padding:.55rem .85rem; font-size:.88rem}
+  .btnrow{display:flex; gap:.6rem; margin-top:.4rem; flex-wrap:wrap}
+  .btnrow .btn{flex:1}
+  .fb{margin:.6rem 0; padding:.65rem .85rem; border-radius:11px; font-weight:700; font-size:.93rem; display:none}
+  .fb.show{display:block}
+  .fb.ok{background:var(--ok-soft); color:var(--ok); border:1px solid var(--okline)}
+  .fb.bad{background:var(--danger-soft); color:var(--danger); border:1px solid var(--dline)}
+  .sol{margin-top:.6rem; background:var(--code); border:1px solid var(--line); border-radius:11px; padding:.8rem .9rem; font-size:.9rem; line-height:1.7; display:none; overflow-x:auto}
+  .sol.show{display:block}
+  .lbl{font-size:.68rem; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--accent-dark); display:block; margin-bottom:.3rem}
+  table.tab{border-collapse:collapse; margin:.45rem 0; font-size:.88rem; font-variant-numeric:tabular-nums}
+  table.tab th,table.tab td{border:1px solid var(--line); padding:.22rem .6rem; text-align:right}
+  table.tab th{background:var(--accent-soft); color:var(--accent-dark); font-size:.75rem; text-align:center}
+  table.tab td:first-child{text-align:right}
+  table.tab tr.g td{font-weight:800; background:var(--ok-soft)}
+  .opt{display:block; width:100%; text-align:left; cursor:pointer; border:1px solid var(--line); background:var(--bg); color:var(--ink);
+    font-weight:600; font-size:.95rem; padding:.7rem .85rem; border-radius:12px; margin:.45rem 0; font-family:inherit; line-height:1.4}
+  .opt.right{border-color:var(--ok); background:var(--ok-soft); color:var(--ok); font-weight:800}
+  .opt.wrong{border-color:var(--danger); background:var(--danger-soft); color:var(--danger)}
+  .opt:disabled{cursor:default; opacity:1}
+  nav.tabs{position:fixed; bottom:0; left:0; right:0; z-index:30; height:calc(var(--tabh) + env(safe-area-inset-bottom));
+    padding-bottom:env(safe-area-inset-bottom); background:var(--card); border-top:1px solid var(--line); display:flex; overflow-x:auto; scrollbar-width:none}
+  nav.tabs::-webkit-scrollbar{display:none}
+  nav.tabs button{flex:1 0 62px; border:none; background:none; color:var(--muted); font-size:.64rem; font-weight:700;
+    display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; padding-top:.45rem; font-family:inherit}
+  nav.tabs button .ic{font-size:1.25rem; line-height:1}
+  nav.tabs button.on{color:var(--accent)}
+  .prog{height:8px; background:var(--line); border-radius:99px; overflow:hidden; margin:.3rem 0}
+  .prog>i{display:block; height:100%; background:var(--accent); border-radius:99px}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:.6rem}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem}
+  .mini{background:var(--card); border:1px solid var(--line); border-radius:13px; padding:.7rem .5rem; text-align:center}
+  .mini .n{font-size:1.4rem; font-weight:800; color:var(--accent-dark); font-variant-numeric:tabular-nums} .mini .l{font-size:.72rem; color:var(--muted); font-weight:700}
+  .row{display:flex; align-items:center; gap:.6rem; padding:.5rem 0; border-bottom:1px dotted var(--line); font-size:.9rem}
+  .row:last-child{border-bottom:none}
+  .row .name{font-weight:700; flex:1; min-width:0}
+  .badge{font-size:.7rem; font-weight:800; padding:.15rem .5rem; border-radius:6px; background:var(--accent-soft); color:var(--accent-dark); white-space:nowrap}
+  .chk{display:flex; gap:.6rem; align-items:flex-start; padding:.4rem 0; font-size:.92rem; cursor:pointer}
+  .chk input{width:20px; height:20px; margin:.1rem 0 0; accent-color:var(--accent); flex:none}
+  .chk.done span{color:var(--muted); text-decoration:line-through}
+  .amp{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:.45rem}
+  .amp button{display:flex; align-items:center; gap:.5rem; text-align:left; border:1px solid var(--line); background:var(--bg); color:var(--ink);
+    border-radius:11px; padding:.45rem .55rem; cursor:pointer; font-family:inherit; font-size:.78rem; line-height:1.25}
+  .amp .d{width:12px; height:12px; border-radius:50%; flex:none; background:var(--line)}
+  .amp .d.g{background:var(--ok)} .amp .d.y{background:var(--warn)} .amp .d.r{background:var(--danger)}
+  .amp b{display:block; font-size:.8rem}
+  .amp small{color:var(--muted)}
+  .flash{min-height:170px; display:flex; align-items:center; justify-content:center; text-align:center; cursor:pointer;
+    font-size:1.08rem; font-weight:700; padding:1.2rem .6rem}
+  .flash .face{width:100%} .flash .a{color:var(--accent-dark); font-weight:600; font-size:1rem; line-height:1.6}
+  .flash .hint{font-size:.74rem; color:var(--muted); font-weight:600; margin-top:.8rem}
+  .timer{font-size:1.9rem; font-weight:800; text-align:center; font-variant-numeric:tabular-nums}
+  .timer.low{color:var(--danger)}
+  .dots{display:flex; gap:.35rem; justify-content:center; flex-wrap:wrap; margin:.6rem 0}
+  .dot{width:28px;height:28px;border-radius:8px; display:grid; place-items:center; font-size:.76rem; font-weight:800;
+    background:var(--line); color:var(--muted); cursor:pointer}
+  .dot.cur{outline:2px solid var(--accent)} .dot.done{background:var(--accent-soft); color:var(--accent-dark)}
+  .center{text-align:center} .muted{color:var(--muted); font-size:.86rem}
+  .big{font-size:2.2rem; font-weight:800; color:var(--accent-dark); font-variant-numeric:tabular-nums; line-height:1.1}
+  details{border-bottom:1px solid var(--line); padding:.35rem 0}
+  details:last-child{border-bottom:none}
+  summary{cursor:pointer; font-weight:800; padding:.35rem 0; font-size:.95rem}
+  details ul,details ol{margin:.3rem 0 .5rem; padding-left:1.2rem; font-size:.9rem}
+  details li{margin:.2rem 0}
+  details p{font-size:.9rem; margin:.4rem 0}
+  .ttrow{display:grid; grid-template-columns:repeat(4,1fr); gap:.4rem; margin:.5rem 0}
+  .ttrow input{font-size:.95rem; padding:.55rem .4rem; text-align:center}
+  .note{background:var(--warn-soft); border:1px solid var(--line); border-radius:11px; padding:.6rem .8rem; font-size:.86rem; margin:.5rem 0}
+  a{color:var(--accent-dark); font-weight:700}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hbar">
+    <div class="logo"><span class="b">WuK</span> Trainer WS27</div>
+    <div class="spacer"></div>
+    <div class="stat" id="cdStat">⏳ <b id="cdN">–</b></div>
+    <div class="stat">🔥 <b id="streakN">0</b></div>
+    <button class="tbtn" id="themeBtn" title="Hell/Dunkel" aria-label="Hell/Dunkel umschalten">🌙</button>
+  </div>
+</header>
+
+<main>
+  <section class="screen active" id="s-heute">
+    <h2 class="title">📅 Heute</h2>
+    <p class="sub">Klausur: Montag, 25.01.2027, 10:00–12:00.</p>
+    <div class="card center" id="cdCard"></div>
+    <div class="card" id="dailyCard"></div>
+    <div class="card" id="weekCard"></div>
+    <div class="card"><h3>Ampel je Aufgabentyp</h3><p class="muted" style="margin:0 0 .6rem">Tippen startet den Drill. Grün ≥ 80 %, Gelb ≥ 50 %, Rot darunter, Grau: weniger als 3 Versuche.</p><div class="amp" id="ampel"></div></div>
+    <div class="card"><h3>Definition of Ready</h3><div id="dorList"></div></div>
+    <div class="card center">
+      <div class="grid" style="margin-bottom:.7rem"><div class="mini"><div class="n" id="stTotal">0</div><div class="l">Drill-Aufgaben</div></div><div class="mini"><div class="n" id="stAcc">–</div><div class="l">Trefferquote</div></div></div>
+      <p class="muted">Alle Daten liegen nur lokal auf diesem Gerät.</p>
+      <button class="btn ghost sm" id="resetBtn">Fortschritt zurücksetzen</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s-rec">
+    <h2 class="title">🧭 Erkennung</h2>
+    <p class="sub">Erst klassifizieren, dann rechnen: Welches Modell steckt in der Aufgabe?</p>
+    <div class="chips" id="recChips"></div>
+    <div class="card" id="recCard"></div>
+    <p class="muted center" id="recStat"></p>
+  </section>
+
+  <section class="screen" id="s-drill">
+    <h2 class="title">🎯 Drill</h2>
+    <p class="sub">Zufallsaufgabe rechnen, Antwort eintippen, Rechenweg nach WS27-Methode.</p>
+    <div class="chips scroll" id="typeChips"></div>
+    <div class="card" id="drillCard"></div>
+  </section>
+
+  <section class="screen" id="s-tab">
+    <h2 class="title">🧮 Tableau-Trainer</h2>
+    <p class="sub">Erweiterter Euklid Zeile für Zeile. Ziel: Inverse in unter 3 Minuten inklusive Probe.</p>
+    <div class="chips" id="ttChips"></div>
+    <div class="card" id="ttCard"></div>
+    <div class="card" id="ttStats"></div>
+  </section>
+
+  <section class="screen" id="s-rep">
+    <h2 class="title">🔁 Wiederholung</h2>
+    <p class="sub">Leitner-System (5 Boxen): Schwaches kommt oft, Sicheres selten.</p>
+    <div class="card" id="repStatus"></div>
+    <div class="card" id="repCard" style="display:none"></div>
+  </section>
+
+  <section class="screen" id="s-cards">
+    <h2 class="title">🃏 Karteikarten</h2>
+    <p class="sub">Formeln, Begriffe, Fallen. Tippen zum Umdrehen.</p>
+    <div class="chips" id="cardChips"></div>
+    <div class="card"><div class="flash" id="flash"></div></div>
+    <div class="btnrow"><button class="btn ghost" id="flashNo">Nochmal ✗</button><button class="btn" id="flashYes">Gewusst ✓</button></div>
+    <p class="muted center" id="flashProg" style="margin-top:.8rem"></p>
+  </section>
+
+  <section class="screen" id="s-exam">
+    <h2 class="title">⏱️ Klausur</h2>
+    <p class="sub">7 Aufgaben quer durch alle Blöcke, ohne Themenhinweis, unter Zeit.</p>
+    <div id="examIntro"></div>
+    <div id="examRun" style="display:none">
+      <div class="card"><div class="timer" id="examTimer">120:00</div><div class="dots" id="examDots"></div></div>
+      <div class="card" id="examCard"></div>
+      <div class="btnrow"><button class="btn ghost sm" id="examPrev">‹ Zurück</button><button class="btn ghost sm" id="examNext">Weiter ›</button><button class="btn sm" id="examSubmit">Abgeben</button></div>
+    </div>
+    <div id="examResult" style="display:none"></div>
+  </section>
+
+  <section class="screen" id="s-spick">
+    <h2 class="title">📄 Spicker</h2>
+    <p class="sub">Kompakte Nachschlageansicht. Die Vorlage zum Abschreiben liegt in <code>03_Spickzettel_A4_WS27.md</code>.</p>
+    <div class="card" id="spickBody"></div>
+  </section>
+</main>
+
+<nav class="tabs" aria-label="Modi">
+  <button data-go="heute" class="on"><span class="ic">📅</span>Heute</button>
+  <button data-go="rec"><span class="ic">🧭</span>Erkennung</button>
+  <button data-go="drill"><span class="ic">🎯</span>Drill</button>
+  <button data-go="tab"><span class="ic">🧮</span>Tableau</button>
+  <button data-go="rep"><span class="ic">🔁</span>Wdh.</button>
+  <button data-go="cards"><span class="ic">🃏</span>Karten</button>
+  <button data-go="exam"><span class="ic">⏱️</span>Klausur</button>
+  <button data-go="spick"><span class="ic">📄</span>Spicker</button>
+</nav>
+
+<script id="core">
+/* ============================================================
+   WuK Trainer WS27 — KERN (ohne DOM): Mathe, Generatoren, Daten
+   Wird von test_generators.js direkt geladen und geprüft.
+   ============================================================ */
+'use strict';
+
+/* ---------- Mathe-Grundfunktionen ---------- */
+const RI=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function fact(n){let r=1;for(let i=2;i<=n;i++)r*=i;return r;}
+function comb(n,k){if(k<0||k>n)return 0;k=Math.min(k,n-k);let r=1;for(let i=1;i<=k;i++)r=r*(n-k+i)/i;return Math.round(r);}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b];}return a;}
+const lcm=(a,b)=>a/gcd(a,b)*b;
+const mod=(a,m)=>((a%m)+m)%m;
+function powmod(b,e,m){let B=BigInt(mod(b,m)),E=BigInt(e),M=BigInt(m),r=1n;while(E>0n){if(E&1n)r=r*B%M;B=B*B%M;E>>=1n;}return Number(r%M);}
+/* Erweiterter Euklid als Tableau: Zeilen (Rest|x|y), Start (a|1|0),(b|0|1), neue Zeile = obere − q·untere */
+function tableau(a,b){
+  const rows=[{r:a,x:1,y:0},{r:b,x:0,y:1}];
+  while(rows[rows.length-1].r!==0){
+    const u=rows[rows.length-2],l=rows[rows.length-1];const q=Math.floor(u.r/l.r);
+    l.q=q; rows.push({r:u.r-q*l.r,x:u.x-q*l.x,y:u.y-q*l.y});
+  }
+  return rows; // letzte Zeile hat Rest 0, die davor ist die ggT-Zeile
+}
+function egcd(a,b){const t=tableau(a,b);const g=t[t.length-2];return[g.r,g.x,g.y];}
+function modinv(a,m){a=mod(a,m);if(a===0)return null;const[g,,y]=egcd(m,a);return g!==1?null:mod(y,m);}
+function isPrime(n){if(n<2)return false;for(let i=2;i*i<=n;i++)if(n%i===0)return false;return true;}
+function phi(n){let r=n,m=n;for(let p=2;p*p<=m;p++){if(m%p===0){while(m%p===0)m/=p;r=r/p*(p-1);}}if(m>1)r=r/m*(m-1);return r;}
+function primeFactors(n){const f=[];for(let p=2;p*p<=n;p++){while(n%p===0){f.push(p);n/=p;}}if(n>1)f.push(n);return f;}
+function binpmf(n,k,p){return comb(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k);}
+function derange(n){let a=1,b=0;if(n===0)return 1;if(n===1)return 0;for(let i=2;i<=n;i++){const c=(i-1)*(a+b);a=b;b=c;}return b;}
+const L=i=>String.fromCharCode(65+mod(i,26));
+const N_=c=>c.charCodeAt(0)-65;
+
+/* ---------- Darstellung ---------- */
+function fs(num,den){const g=gcd(num,den)||1;num/=g;den/=g;if(den<0){num=-num;den=-den;}return den===1?(''+num):(num+'/'+den);}
+function fm(x,d){d=d==null?4:d;let s=x.toFixed(d);if(s.includes('.'))s=s.replace(/0+$/,'').replace(/\.$/,'');return s.replace('.',',');}
+const pc=p=>fm(p*100,2)+' %';
+const neg=x=>x<0?'−'+(-x):''+x;
+const pn=x=>x<0?'(−'+(-x)+')':''+x;
+const hl=s=>`<span class="hl">${s}</span>`;
+function tabHTML(a,b){
+  const t=tableau(a,b);let h='<table class="tab"><tr><th>Rest</th><th>x</th><th>y</th><th>q</th></tr>';
+  for(let i=0;i<t.length-1;i++){const r=t[i],g=i===t.length-2;
+    h+=`<tr${g?' class="g"':''}><td>${r.r}</td><td>${neg(r.x)}</td><td>${neg(r.y)}</td><td>${g?'← ggT':(r.q!=null?'q='+r.q:'')}</td></tr>`;}
+  return h+'</table>';
+}
+/* Rechenweg Inverse a⁻¹ mod m als Tableau + Probe */
+function invHTML(a,m){
+  const[g,x,y]=egcd(m,a);
+  let h=`Tableau mit (${m}, ${a}) — neue Zeile = obere − q·untere:`+tabHTML(m,a);
+  h+=`Kontrolle: ${pn(x)}·${m} + ${pn(y)}·${a} = ${x*m+y*a} ✓<br>`;
+  if(g!==1)return h+`ggT = ${g} ≠ 1 → <b>keine Inverse</b>.`;
+  const inv=mod(y,m);
+  h+=`y-Wert = ${neg(y)}${y<0?` → +${m} = ${inv}`:''} → <b>${a}⁻¹ ≡ ${inv} (mod ${m})</b><br>Probe: ${a}·${inv} = ${a*inv} = ${Math.floor(a*inv/m)}·${m} + 1 ✓`;
+  return h;
+}
+/* Quadrier-Kette b^e mod m */
+function chainHTML(b,e,m){
+  b=mod(b,m);
+  if(e<=2){return `${b}<sup>${e}</sup> = ${Math.pow(b,e)} ≡ <b>${powmod(b,e,m)}</b> (mod ${m})`;}
+  const sq=[b];let p=1;while(p*2<=e){sq.push(sq[sq.length-1]*sq[sq.length-1]%m);p*=2;}
+  let h='Quadrier-Kette (jeden Rest notieren): '+sq.map((v,i)=>`${b}<sup>${Math.pow(2,i)}</sup>≡${v}`).join(' · ')+'<br>';
+  const bits=[];for(let i=0;i<sq.length;i++)if(Math.floor(e/Math.pow(2,i))%2===1)bits.push(i);
+  h+=`${e} = ${bits.map(i=>Math.pow(2,i)).reverse().join(' + ')} → `;
+  const use=bits.slice().reverse();let acc=sq[use[0]];
+  if(use.length===1){h+=`<b>${acc}</b> (mod ${m})`;return h;}
+  h+=use.map(i=>sq[i]).join('·')+': ';const st=[];
+  for(let j=1;j<use.length;j++){const nx=acc*sq[use[j]]%m;st.push(`${acc}·${sq[use[j]]} ≡ ${j===use.length-1?'<b>'+nx+'</b>':nx}`);acc=nx;}
+  h+=st.join(' → ')+` (mod ${m})`;
+  return h;
+}
+function factHTML(n,p,q){
+  const r=Math.floor(Math.sqrt(n));const ps=[];for(let i=2;i<=Math.min(p,q);i++)if(isPrime(i))ps.push(i);
+  return `√${n} ≈ ${fm(Math.sqrt(n),1)} → Primzahlen bis ${r} testen: ${ps.map(x=>x+(n%x===0?' ✓':' ✗')).join(', ')} → <b>${n} = ${Math.min(p,q)}·${Math.max(p,q)}</b>`;
+}
+
+/* ---------- Antwortprüfung ---------- */
+function parseNum(s){
+  s=(''+s).trim().replace(/\s/g,'').replace(/−/g,'-').replace(',','.');if(!s)return NaN;
+  let pct=false;if(s.endsWith('%')){pct=true;s=s.slice(0,-1);}
+  let v;if(s.includes('/')){const p=s.split('/');if(p.length!==2||p[1]==='')return NaN;v=Number(p[0])/Number(p[1]);}else v=Number(s);
+  return pct?v/100:v;
+}
+function parseYN(s){s=(''+s).trim().toLowerCase();if(['ja','j','y','yes','1','lösbar','loesbar'].includes(s))return 1;if(['nein','n','no','0','unlösbar'].includes(s))return 0;return NaN;}
+function checkField(f,u,all){
+  if(f.kind==='text')return (''+u).trim().toUpperCase().replace(/\s/g,'')===(''+f.value).toUpperCase();
+  if(f.kind==='yn')return parseYN(u)===f.value;
+  const x=parseNum(u);if(!Number.isFinite(x))return false;
+  if(f.check)return f.check(all.map(parseNum));
+  if(f.kind==='int')return Math.abs(x-f.value)<1e-6;
+  return Math.abs(x-f.value)<=Math.max(0.0005,Math.abs(f.value)*0.02);
+}
+function fieldShow(f){
+  if(f.show)return f.show;if(f.kind==='yn')return f.value?'ja':'nein';if(f.kind==='text'||f.kind==='int')return ''+f.value;
+  return Math.abs(f.value-Math.round(f.value))<1e-9?''+Math.round(f.value):fm(f.value,4);
+}
+
+/* ============================================================
+   TYP-KATALOG
+   ============================================================ */
+const BLOCKS=[{id:'K',name:'Kombinatorik'},{id:'W',name:'Wahrscheinlichkeit'},{id:'V',name:'Verteilungen'},{id:'Z',name:'Krypto'}];
+const TYPES=[
+  {key:'K1',name:'Permutation / Multimenge'},{key:'K2',name:'Vier Grundaufgaben'},{key:'K3',name:'Auswahl mit Bedingungen'},
+  {key:'K4',name:'Siebformel'},{key:'K5',name:'Schubfachprinzip'},{key:'K6',name:'Binomialkoeff. / Lehrsatz / Wege'},
+  {key:'W1',name:'Laplace'},{key:'W2',name:'Fahrstuhl / Belegung'},{key:'W3',name:'Urne / hypergeometrisch'},
+  {key:'W4',name:'Bayes / totale W.'},{key:'W5',name:'UND / ODER unabhängig'},
+  {key:'V1',name:'Binomialverteilung'},{key:'V2',name:'Mindest-n-Ungleichung'},{key:'V3',name:'Wettkampf (2 Serien)'},
+  {key:'V4',name:'Verteilung aufstellen, E, Var'},{key:'V5',name:'Geometrisch / Poisson'},{key:'V6',name:'Stetige ZV'},
+  {key:'Z1',name:'ggT / erw. Euklid'},{key:'Z2',name:'Inverse / Kongruenz'},{key:'Z3',name:'φ / Euler / Fermat'},
+  {key:'Z4',name:'RSA'},{key:'Z5',name:'Affine Chiffre'},{key:'Z6',name:'Caesar / Vigenère'},{key:'Z7',name:'Diffie-Hellman'},
+];
+const TNAME={};TYPES.forEach(t=>TNAME[t.key]=t.name);
+
+/* Problem-Baukasten: m = Modell-ID (für Erkennung), rec = Erkennungszeile */
+function P(key,m,prompt,fields,rec,steps,meta){
+  return {key,m,title:key+' · '+TNAME[key],prompt,fields,rec,solution:`<b>Erkennung:</b> ${rec}<br>${steps}`,meta:meta||{}};
+}
+const I=(label,value)=>({label,kind:'int',value});
+const PR=(label,value,show)=>({label,kind:'prob',value,show});
+
+/* ============================================================
+   KOMBINATORIK
+   ============================================================ */
+const WORDS=['RADAR','OTTO','ANANAS','BANANE','TOMATE','KASSE','PAPPEL','BARBARA','MISSISSIPPI','ABRAKADABRA','STATISTIK','LETTER','KOMMODE','ROTOR','ERDBEERE','PARALLEL'];
+function counts(w){const c={};for(const ch of w)c[ch]=(c[ch]||0)+1;return c;}
+function multi(c){let n=0,d=1;for(const k in c){n+=c[k];d*=fact(c[k]);}return fact(n)/d;}
+function cstr(c){return Object.keys(c).map(k=>c[k]+'!').join('·');}
+
+function gK1(){
+  const v=pick(['plain','plain','block','start','groups','altern']);
+  if(v==='groups'){
+    const names=['Mathebücher','Informatikbücher','Physikbücher','Englischbücher','Romane'];const g=RI(3,4);const s=[];for(let i=0;i<g;i++)s.push(RI(2,4));
+    const ans=fact(g)*s.reduce((a,x)=>a*fact(x),1);
+    return P('K1','perm',`Auf ein Regal sollen ${s.map((x,i)=>x+' '+names[i]).join(', ')} (alle verschieden). Auf wie viele Weisen geht das, wenn die Bücher <b>jeder Gruppe zusammenbleiben</b> sollen?`,
+      [I('=',ans)],'Alle anordnen, Gruppen als Blöcke → Permutation in zwei Ebenen.',
+      `Blöcke anordnen: ${g}! · innerhalb jedes Blocks: ${s.map(x=>x+'!').join('·')}<br>= ${fact(g)}·${s.map(x=>fact(x)).join('·')} = <b>${ans}</b>`,{v,g,s});
+  }
+  if(v==='altern'){
+    const m=RI(3,4);const ans=2*fact(m)*fact(m);
+    return P('K1','perm',`${m} Mädchen und ${m} Jungen setzen sich auf ${2*m} Plätze in einer Reihe. Wie viele Sitzordnungen gibt es, bei denen <b>nie zwei Mädchen oder zwei Jungen</b> direkt nebeneinander sitzen?`,
+      [I('=',ans)],'Anordnung mit Muster (abwechselnd) → Muster wählen, dann je Gruppe permutieren.',
+      `2 Muster (MJMJ… oder JMJM…) · ${m}! · ${m}! = 2·${fact(m)}·${fact(m)} = <b>${ans}</b>`,{v,m});
+  }
+  let w,c;do{w=pick(WORDS);c=counts(w);}while(v!=='plain'&&!Object.values(c).some(x=>x>=2));
+  const n=w.length;
+  if(v==='plain'){
+    const ans=multi(c);
+    return P('K1','perm',`Wie viele verschiedene „Wörter“ kann man durch Umordnen der Buchstaben von ${hl(w)} bilden?`,
+      [I('=',ans)],'Alle Buchstaben anordnen, gleiche Buchstaben → Permutation einer Multimenge n!/(n₁!·n₂!·…).',
+      `n = ${n}, Häufigkeiten: ${Object.keys(c).map(k=>k+':'+c[k]).join(', ')}<br>${n}!/(${cstr(c)}) = <b>${ans}</b>`,{v,w});
+  }
+  const multis=Object.keys(c).filter(k=>c[k]>=2);const ch=pick(multis);
+  if(v==='block'){
+    const c2=Object.assign({},c);c2[ch]=1;const ans=multi(c2);
+    return P('K1','perm',`Buchstaben von ${hl(w)}: In wie vielen Anordnungen stehen <b>alle ${c[ch]} „${ch}“ direkt nebeneinander</b>?`,
+      [I('=',ans)],'Multimengen-Permutation mit „zusammen“ → Block als 1 Element.',
+      `Die ${c[ch]}×${ch} als 1 Block → ${n-c[ch]+1} Elemente: ${n-c[ch]+1}!/(${cstr(c2)}) = <b>${ans}</b>`,{v,w,ch});
+  }
+  const c2=Object.assign({},c);c2[ch]--;if(c2[ch]===0)delete c2[ch];const ans=multi(c2);
+  return P('K1','perm',`Buchstaben von ${hl(w)}: Wie viele Anordnungen <b>beginnen mit „${ch}“</b>?`,
+    [I('=',ans)],'Multimengen-Permutation mit fixiertem Platz → Platz besetzen, Rest permutieren.',
+    `Ein ${ch} vorn fest → Rest ${n-1} Buchstaben, ${ch} nur noch ${c[ch]-1}×: ${n-1}!/(${cstr(c2)||'1'}) = <b>${ans}</b> (Zähler <i>und</i> die ${ch}-Gruppe schrumpfen!)`,{v,w,ch});
+}
+
+function gK2(){
+  const cell=pick(['vmw','vow','kow','kmw','kmw']);
+  let n,k,ans,txt,rec,st;
+  if(cell==='vmw'){
+    n=RI(3,10);k=RI(2,5);ans=Math.pow(n,k);
+    txt=pick([`Ein Zahlenschloss hat ${k} Rädchen mit je ${n} Symbolen. Wie viele Einstellungen gibt es?`,
+      `Wie viele Wörter der Länge ${k} lassen sich aus einem Alphabet mit ${n} Buchstaben bilden, wenn Buchstaben mehrfach vorkommen dürfen?`,
+      `${k} unterscheidbare Pakete werden auf ${n} Lagerhallen verteilt (mehrere Pakete pro Halle erlaubt). Wie viele Verteilungen gibt es?`,
+      `Ein Test hat ${k} Fragen mit je ${n} Antwortmöglichkeiten. Auf wie viele Arten kann man den Bogen ausfüllen?`]);
+    rec='Reihenfolge wichtig + Wiederholung erlaubt → Variation mit Wdh.: nᵏ';st=`${n}<sup>${k}</sup> = <b>${ans}</b>`;
+  }else if(cell==='vow'){
+    n=RI(5,12);k=RI(2,4);ans=fact(n)/fact(n-k);
+    txt=pick([`Bei einem Rennen starten ${n} Läufer. Wie viele Möglichkeiten gibt es für die Plätze 1 bis ${k}?`,
+      `Ein Verein mit ${n} Mitgliedern besetzt ${k} verschiedene Ämter; niemand erhält zwei Ämter. Wie viele Besetzungen gibt es?`,
+      `Wie viele ${k}-stellige Codes aus ${n} verschiedenen Zeichen gibt es, wenn kein Zeichen doppelt vorkommen darf?`,
+      `Aus ${n} Fotos werden ${k} ausgewählt und nebeneinander an die Wand gehängt. Wie viele verschiedene Bildreihen sind möglich?`]);
+    rec='Reihenfolge wichtig + keine Wiederholung → Variation ohne Wdh.: n!/(n−k)!';st=`${Array.from({length:k},(_,i)=>n-i).join('·')} = <b>${ans}</b>`;
+  }else if(cell==='kow'){
+    n=RI(6,16);k=RI(2,5);ans=comb(n,k);
+    txt=pick([`Aus ${n} Bewerbern wird ein ${k}er-Team ohne feste Rollen gebildet. Wie viele Teams sind möglich?`,
+      `Bei einer Lotterie werden ${k} aus ${n} Zahlen gezogen. Wie viele Ziehungsergebnisse gibt es (Reihenfolge egal)?`,
+      `Aus ${n} verschiedenen Büchern nimmst du ${k} mit in den Urlaub. Wie viele Möglichkeiten?`,
+      `Wie viele ${k}-elementige Teilmengen hat eine Menge mit ${n} Elementen?`]);
+    rec='Reihenfolge egal + keine Wiederholung → Kombination ohne Wdh.: C(n,k)';st=`C(${n},${k}) = <b>${ans}</b>`;
+  }else{
+    n=RI(3,12);k=RI(2,6);ans=comb(n+k-1,k);
+    txt=pick([`Eine Eisdiele hat ${n} Sorten. Wie viele verschiedene Becher mit ${k} Kugeln gibt es, wenn Sorten mehrfach gewählt werden dürfen und die Reihenfolge keine Rolle spielt?`,
+      `${k} identische Bonbons werden auf ${n} Kinder verteilt (Kinder dürfen leer ausgehen). Wie viele Verteilungen gibt es?`,
+      `Ein Strauß aus ${k} Blumen wird aus ${n} Sorten zusammengestellt (von jeder Sorte ist genug da). Wie viele verschiedene Sträuße gibt es?`,
+      `Wie viele Wörter der Länge ${k} über einem Alphabet mit ${n} Buchstaben gibt es, deren Buchstaben in alphabetischer Reihenfolge stehen (Wiederholungen erlaubt)?`,
+      `Du würfelst ${k} nicht unterscheidbare Würfel mit je ${n} Seiten. Wie viele verschiedene Wurfbilder gibt es?`]);
+    rec='Reihenfolge egal + Wiederholung erlaubt → Kombination mit Wdh.: C(n+k−1, k) — die Eis-Falle!';
+    st=`C(${n}+${k}−1, ${k}) = C(${n+k-1},${k}) = <b>${ans}</b> &nbsp;(nicht ${n}<sup>${k}</sup> = ${Math.pow(n,k)} — das wären geordnete Tupel)`;
+  }
+  return P('K2',cell,txt,[I('=',ans)],rec,`2 Fragen: Reihenfolge wichtig? Wiederholung erlaubt?<br>${st}`,{cell,n,k});
+}
+
+function gK3(){
+  const v=pick(['pflicht','exact','atleast1','atleastJ','gleich3','nichtbeide']);
+  if(v==='pflicht'){const n=RI(8,14),k=RI(3,6),m=RI(1,2);const ans=comb(n-m,k-m);
+    return P('K3','kbed',`Aus ${n} Personen wird ein ${k}er-Ausschuss gebildet. ${m===1?'Anna muss':'Anna und Ben müssen'} auf jeden Fall dabei sein. Wie viele Ausschüsse sind möglich?`,
+      [I('=',ans)],'Auswahl (Reihenfolge egal, ohne Wdh.) mit Pflichtmitgliedern → Pflichtplätze abziehen.',`${m} fest → C(${n}−${m}, ${k}−${m}) = C(${n-m},${k-m}) = <b>${ans}</b>`,{v,n,k,m});}
+  if(v==='nichtbeide'){const n=RI(7,12),k=RI(3,5);const ans=comb(n,k)-comb(n-2,k-2);
+    return P('K3','kbed',`Aus ${n} Personen wird ein ${k}er-Team gebildet. Zwei bestimmte Personen sind zerstritten und dürfen <b>nicht beide</b> im Team sein. Wie viele Teams sind möglich?`,
+      [I('=',ans)],'Auswahl mit Verbot → alle minus verbotene (Gegenereignis).',`C(${n},${k}) − C(${n-2},${k-2}) = ${comb(n,k)} − ${comb(n-2,k-2)} = <b>${ans}</b>`,{v,n,k});}
+  if(v==='exact'){const f=RI(4,7),m=RI(5,8),a=RI(1,3),b=RI(2,3);const ans=comb(f,a)*comb(m,b);
+    return P('K3','kbed',`Für ein Komitee aus ${b} Männern und ${a} ${a===1?'Frau':'Frauen'} stellen sich ${m} Männer und ${f} Frauen zur Wahl. Wie viele Komitees sind möglich?`,
+      [I('=',ans)],'Auswahl aus zwei Gruppen → je Gruppe C(…), dann multiplizieren.',`C(${m},${b})·C(${f},${a}) = ${comb(m,b)}·${comb(f,a)} = <b>${ans}</b>`,{v,f,m,a,b});}
+  if(v==='atleast1'){const r=RI(3,5),b=RI(4,7),k=RI(3,4);const ans=comb(r+b,k)-comb(b,k);
+    return P('K3','kbed',`In einem Beutel liegen ${r+b} nummerierte Kugeln, ${r} rote und ${b} blaue. Es werden ${k} Kugeln gezogen (ohne Zurücklegen, Reihenfolge egal). Wie viele Ziehungsergebnisse enthalten <b>mindestens eine rote</b> Kugel?`,
+      [I('=',ans)],'Auswahl mit „mindestens eine“ → Gegenereignis (alle − keine rote).',`C(${r+b},${k}) − C(${b},${k}) = ${comb(r+b,k)} − ${comb(b,k)} = <b>${ans}</b>`,{v,r,b,k});}
+  if(v==='atleastJ'){const f=RI(4,6),m=RI(4,7),k=RI(3,4),j=2;let ans=0;const parts=[];for(let i=j;i<=Math.min(k,f);i++){ans+=comb(f,i)*comb(m,k-i);parts.push(`C(${f},${i})·C(${m},${k-i})`);}
+    return P('K3','kbed',`Aus ${f} Frauen und ${m} Männern wird ein ${k}er-Ausschuss gebildet, in dem <b>mindestens ${j} Frauen</b> sitzen sollen. Wie viele Ausschüsse gibt es?`,
+      [I('=',ans)],'Auswahl aus zwei Gruppen mit „mindestens“ → Fälle summieren.',`${parts.join(' + ')} = <b>${ans}</b>`,{v,f,m,k,j});}
+  const r=RI(4,6),b=RI(4,7);const ans=comb(r,3)*b+comb(b,3)*r;
+  return P('K3','kbed',`In einem Beutel liegen ${r} rote und ${b} blaue nummerierte Kugeln. Es werden 4 gezogen (ohne Zurücklegen, Reihenfolge egal). Bei wie vielen Ziehungsergebnissen sind <b>genau 3 Kugeln gleichfarbig</b>?`,
+    [I('=',ans)],'Auswahl aus zwei Gruppen, zwei disjunkte Fälle (3 rot+1 blau ODER 3 blau+1 rot) → addieren.',
+    `C(${r},3)·C(${b},1) + C(${b},3)·C(${r},1) = ${comb(r,3)*b} + ${comb(b,3)*r} = <b>${ans}</b>`,{v,r,b});
+}
+
+function gK4(){
+  const v=pick(['div2','div3','div3','none3','sets2','sets3','rev3','derange','passwort','words']);
+  if(v==='div2'){
+    const N=pick([50,60,100,120,200,250,300,500,1000]);let a,b;do{a=RI(2,12);b=RI(2,12);}while(a>=b||b%a===0);
+    const l=lcm(a,b);const u=Math.floor(N/a)+Math.floor(N/b)-Math.floor(N/l);const none=Math.random()<0.35;
+    return P('K4','sieb',`Wie viele der Zahlen von 1 bis ${N} sind durch ${a} oder ${b} teilbar?`.replace('durch',none?'<b>weder</b> durch':'durch').replace(' oder ',none?' noch durch ':' oder '),
+      [I('=',none?N-u:u)],'„durch a oder b teilbar“, Mengen überlappen → Siebformel (2 Mengen), Schnitt = kgV.',
+      `⌊${N}/${a}⌋ + ⌊${N}/${b}⌋ − ⌊${N}/${l}⌋ (kgV(${a},${b}) = ${l}) = ${Math.floor(N/a)} + ${Math.floor(N/b)} − ${Math.floor(N/l)} = ${none?u:'<b>'+u+'</b>'}`+(none?`<br>weder noch: ${N} − ${u} = <b>${N-u}</b>`:''),{v,N,ds:[a,b],none});
+  }
+  if(v==='div3'||v==='none3'){
+    const N=pick([100,120,150,200,300,500,1000]);const[a,b,c]=shuffle([2,3,4,5,6,7,9,10,11]).slice(0,3).sort((x,y)=>x-y);
+    const f=x=>Math.floor(N/x);const ab=lcm(a,b),ac=lcm(a,c),bc=lcm(b,c),abc=lcm(ab,c);
+    const u=f(a)+f(b)+f(c)-f(ab)-f(ac)-f(bc)+f(abc);const none=v==='none3';
+    return P('K4','sieb',none?`Wie viele der Zahlen von 1 bis ${N} sind durch <b>keine</b> der Zahlen ${a}, ${b}, ${c} teilbar?`:`Wie viele der Zahlen von 1 bis ${N} sind durch ${a}, ${b} oder ${c} teilbar?`,
+      [I('=',none?N-u:u)],'„durch a oder b oder c“ / „keine der Eigenschaften“ → Siebformel (3 Mengen), Schnitte über kgV.',
+      `Einzeln: ${f(a)} + ${f(b)} + ${f(c)}<br>Paare (kgV ${ab}, ${ac}, ${bc}): − ${f(ab)} − ${f(ac)} − ${f(bc)}<br>Tripel (kgV ${abc}): + ${f(abc)}<br>= ${none?u:'<b>'+u+'</b>'}`+(none?` → keine: ${N} − ${u} = <b>${N-u}</b>`:''),{v,N,ds:[a,b,c],none});
+  }
+  if(v==='sets2'){
+    const both=RI(5,20),oa=RI(10,30),ob=RI(8,25),no=RI(3,20);const A=oa+both,B=ob+both,T=oa+ob+both+no;
+    const q=pick(['min1','genau1','keine']);const ans=q==='min1'?T-no:q==='genau1'?oa+ob:no;
+    const what=q==='min1'?'mindestens eine der beiden Sprachen':q==='genau1'?'genau eine der beiden Sprachen':'keine der beiden Sprachen';
+    return P('K4','sieb',`Von ${T} Befragten sprechen ${A} Englisch, ${B} Französisch und ${both} beide Sprachen. Wie viele sprechen <b>${what}</b>?`,
+      [I('=',ans)],'Überlappende Kategorien („A oder B“, „beides“ gegeben) → Siebformel für 2 Mengen.',
+      `|E∪F| = ${A} + ${B} − ${both} = ${A+B-both}`+(q==='genau1'?`<br>genau eine: ${A+B-both} − ${both} = <b>${ans}</b>`:q==='keine'?`<br>keine: ${T} − ${A+B-both} = <b>${ans}</b>`:` = <b>${ans}</b>`),{v,T,A,B,both,q});
+  }
+  if(v==='sets3'||v==='rev3'){
+    const r=[RI(1,8),RI(1,8),RI(1,8),RI(1,6),RI(1,6),RI(1,6),RI(1,5),RI(0,9)]; // a,b,c,ab,ac,bc,abc,none
+    const A=r[0]+r[3]+r[4]+r[6],B=r[1]+r[3]+r[5]+r[6],C=r[2]+r[4]+r[5]+r[6],AB=r[3]+r[6],AC=r[4]+r[6],BC=r[5]+r[6],ABC=r[6];
+    const U=r.slice(0,7).reduce((x,y)=>x+y,0),T=U+r[7];
+    if(v==='rev3')return P('K4','sieb',`${U} Studierende haben mindestens eine der Klausuren Mathe, Physik, Programmieren bestanden. Mathe: ${A}, Physik: ${B}, Programmieren: ${C}. Mathe und Physik: ${AB}, Mathe und Programmieren: ${AC}, Physik und Programmieren: ${BC}. Wie viele haben <b>alle drei</b> bestanden?`,
+      [I('=',ABC)],'Drei überlappende Mengen, Vereinigung gegeben, Dreierschnitt gesucht → Siebformel nach |A∩B∩C| umstellen.',
+      `|A∩B∩C| = |A∪B∪C| − |A| − |B| − |C| + |A∩B| + |A∩C| + |B∩C|<br>= ${U} − ${A} − ${B} − ${C} + ${AB} + ${AC} + ${BC} = <b>${ABC}</b>`,{v,r});
+    const none=Math.random()<0.5;
+    return P('K4','sieb',`In einem Jahrgang mit ${T} Studierenden haben ${A} Mathe, ${B} Physik und ${C} Programmieren bestanden; ${AB} Mathe und Physik, ${AC} Mathe und Programmieren, ${BC} Physik und Programmieren, ${ABC} alle drei. Wie viele haben <b>${none?'keine der drei Klausuren':'mindestens eine Klausur'}</b> bestanden?`,
+      [I('=',none?T-U:U)],'Drei überlappende Mengen, „mindestens eine“/„keine“ → Siebformel (3 Mengen).',
+      `${A} + ${B} + ${C} − ${AB} − ${AC} − ${BC} + ${ABC} = ${none?U:'<b>'+U+'</b>'}`+(none?` → keine: ${T} − ${U} = <b>${T-U}</b>`:''),{v,r,none});
+  }
+  if(v==='derange'){
+    const n=RI(3,6),D=derange(n);const asP=Math.random()<0.4;
+    const story=pick([`${n} Briefe werden blind in ${n} adressierte Umschläge gesteckt`,`${n} Gäste nehmen beim Gehen zufällig je einen der ${n} Mäntel`,`${n} Wichtel ziehen je einen der ${n} Namenszettel`]);
+    return P('K4','sieb',asP?`${story}. Wie groß ist die Wahrscheinlichkeit, dass <b>niemand das Eigene</b> erwischt?`:`${story}. Bei wie vielen Zuordnungen landet <b>nichts beim richtigen Besitzer</b>?`,
+      [asP?PR('P =',D/fact(n),fs(D,fact(n))):I('=',D)],'„kein Element an seinem Platz“ → Derangement (Siebformel-Anwendung): Dₙ = n!·Σ(−1)ᵏ/k!',
+      `D<sub>${n}</sub> = ${n}!·(${Array.from({length:n+1},(_,k)=>(k%2?'− ':'+ ')+'1/'+k+'!').join(' ').replace(/^\+ /,'')}) = <b>${D}</b>`+(asP?` → P = ${D}/${fact(n)} = <b>${fs(D,fact(n))}</b> ≈ ${fm(D/fact(n))}`:''),{v,n,asP});
+  }
+  if(v==='passwort'){
+    const k=RI(3,5);const ans=Math.pow(36,k)-Math.pow(26,k)-Math.pow(10,k);
+    return P('K4','sieb',`Ein Passwort besteht aus genau ${k} Zeichen (Kleinbuchstaben a–z oder Ziffern 0–9). Wie viele Passwörter enthalten <b>mindestens eine Ziffer und mindestens einen Buchstaben</b>?`,
+      [I('=',ans)],'„mindestens ein … und mindestens ein …“ → alle minus (nur Buchstaben ∪ nur Ziffern) — Siebformel über das Gegenereignis.',
+      `36<sup>${k}</sup> − 26<sup>${k}</sup> − 10<sup>${k}</sup> (die beiden Verbotsmengen sind disjunkt) = ${Math.pow(36,k)} − ${Math.pow(26,k)} − ${Math.pow(10,k)} = <b>${ans}</b>`,{v,k});
+  }
+  const s=RI(3,5),k=RI(3,5);const ans=Math.pow(s,k)-2*Math.pow(s-1,k)+Math.pow(s-2,k);
+  return P('K4','sieb',`Wie viele Wörter der Länge ${k} über dem Alphabet {${'abcde'.slice(0,s).split('').join(', ')}} enthalten <b>mindestens ein „a“ und mindestens ein „b“</b>?`,
+    [I('=',ans)],'„mindestens ein a UND mindestens ein b“ → Gegenereignis „kein a ODER kein b“ mit Siebformel.',
+    `alle − |kein a| − |kein b| + |weder a noch b| = ${s}<sup>${k}</sup> − 2·${s-1}<sup>${k}</sup> + ${s-2}<sup>${k}</sup> = ${Math.pow(s,k)} − ${2*Math.pow(s-1,k)} + ${Math.pow(s-2,k)} = <b>${ans}</b>`,{v,s,k});
+}
+
+function gK5(){
+  const v=pick(['socks','socks','pairsum','period','ceil']);
+  if(v==='socks'){const c=RI(3,5),k=RI(2,5);const ans=(k-1)*c+1;
+    const st=pick([`In einem Wäschesack liegen sehr viele Socken in ${c} Farben. Wie viele Socken muss man blind mindestens herausgreifen, damit <b>mit Sicherheit ${k} gleichfarbige</b> dabei sind?`,
+      `Ein Automat gibt Kaugummis in ${c} Farben zufällig aus. Wie viele muss man mindestens ziehen, um <b>garantiert ${k} derselben Farbe</b> zu haben?`]);
+    return P('K5','schub',st,[I('=',ans)],'„mit Sicherheit / garantiert … gleiche“ → Schubfachprinzip (worst case).',
+      `Worst case: von jeder der ${c} Farben nur ${k-1} → ${(k-1)*c} Stück ohne Erfolg; das nächste erzwingt es: (${k}−1)·${c} + 1 = <b>${ans}</b>`,{v,c,k});}
+  if(v==='pairsum'){const m=RI(4,12);const ans=m+1;
+    return P('K5','schub',`Wie viele Zahlen muss man mindestens aus {1, 2, …, ${2*m}} auswählen, damit <b>mit Sicherheit zwei</b> davon die Summe ${2*m+1} ergeben?`,
+      [I('=',ans)],'„mit Sicherheit zwei mit Eigenschaft“ → Schubfachprinzip, Fächer = Paare.',
+      `${m} Fächer {1,${2*m}}, {2,${2*m-1}}, … (je Summe ${2*m+1}). Mit ${m} Zahlen kann man noch aus jedem Fach nur eine nehmen → <b>${ans}</b> Zahlen nötig.`,{v,m});}
+  if(v==='period'){const per=pick([[12,'im selben Monat'],[7,'am selben Wochentag'],[26,'mit demselben Anfangsbuchstaben im Nachnamen']]);const k=RI(2,4);const ans=(k-1)*per[0]+1;
+    return P('K5','schub',`Wie viele Personen müssen mindestens in einem Raum sein, damit <b>garantiert ${k}</b> von ihnen ${per[1]} ${per[0]===26?'heißen':'Geburtstag haben'}?`,
+      [I('=',ans)],'„garantiert k im selben Fach“ → erweitertes Schubfachprinzip.',`${per[0]} Fächer, je höchstens ${k-1} ohne Erfolg: (${k}−1)·${per[0]} + 1 = <b>${ans}</b>`,{v,n:per[0],k});}
+  const n=pick([7,12]);const m=RI(n+3,n*6);const ans=Math.ceil(m/n);
+  return P('K5','schub',`In einem Hörsaal sitzen ${m} Studierende. Wie viele von ihnen haben <b>mindestens garantiert</b> ${n===12?'im selben Monat':'am selben Wochentag'} Geburtstag?`,
+    [I('=',ans)],'„mindestens garantiert im selben Fach“ → erweitertes Schubfachprinzip ⌈m/n⌉.',`${m} Objekte auf ${n} Fächer → ein Fach enthält mindestens ⌈${m}/${n}⌉ = <b>${ans}</b>`,{v,m,n});
+}
+
+function gK6(){
+  const v=pick(['coeff','coeff','multi','paths','klink','cnn2','karten','subsets']);
+  if(v==='coeff'){const n=RI(4,8),k=RI(1,n-1),a=pick([1,2,3]),b=pick([-2,-1,1,2,3]);const ans=comb(n,k)*Math.pow(a,n-k)*Math.pow(b,k);
+    const bx=b===1?'x':b===-1?'−x':(b<0?'− '+(-b):'')+ (b>0?b:'')+'x';
+    const inner=b<0?`${a} ${b===-1?'− x':'− '+(-b)+'x'}`:`${a} + ${b===1?'x':b+'x'}`;
+    return P('K6','binl',`Wie groß ist der Koeffizient von x<sup>${k}</sup> in (${inner})<sup>${n}</sup>?`,
+      [I('=',ans)],'Koeffizient in (a+b)ⁿ → binomischer Lehrsatz: C(n,k)·aⁿ⁻ᵏ·bᵏ.',
+      `C(${n},${k})·${a}<sup>${n-k}</sup>·(${neg(b)})<sup>${k}</sup> = ${comb(n,k)}·${Math.pow(a,n-k)}·${neg(Math.pow(b,k))} = <b>${neg(ans)}</b>`,{v,n,k,a,b});}
+  if(v==='multi'){const i=RI(1,3),j=RI(1,3),l=RI(1,3);const n=i+j+l;const ans=fact(n)/(fact(i)*fact(j)*fact(l));
+    const e=(s,x)=>x===1?s:`${s}<sup>${x}</sup>`;
+    return P('K6','binl',`Wie groß ist der Koeffizient von ${e('x',i)}${e('y',j)}${e('z',l)} in (x + y + z)<sup>${n}</sup>?`,
+      [I('=',ans)],'Koeffizient in (x+y+z)ⁿ → Multinomialkoeffizient = Multimengen-Permutation n!/(i!·j!·l!).',`${n}!/(${i}!·${j}!·${l}!) = <b>${ans}</b>`,{v,i,j,l});}
+  if(v==='paths'){const a=RI(3,8),b=RI(3,8);const ans=comb(a+b,a);
+    return P('K6','perm',pick([`Ein König soll auf einem ${a+1}×${b+1}-Brett von der Ecke links unten in die Ecke rechts oben wandern und darf pro Zug nur ein Feld nach rechts oder nach oben. Wie viele Wege gibt es?`,
+      `In einem Straßengitter liegt das Ziel ${a} Blöcke östlich und ${b} Blöcke nördlich. Wie viele kürzeste Wege gibt es?`]),
+      [I('=',ans)],'Gitterwege = Reihenfolge von R- und O-Schritten → Multimengen-Permutation / C(a+b, a).',`${a}×R und ${b}×O anordnen: ${a+b}!/(${a}!·${b}!) = C(${a+b},${a}) = <b>${ans}</b>`,{v,a,b});}
+  if(v==='klink'){const n=RI(8,45);const H=comb(n,2);
+    return P('K6','kow',pick([`Auf einer Party stößt jeder Gast mit jedem anderen genau einmal an; es klingt ${H}-mal. Wie viele Gäste sind da?`,
+      `In einem Turnier spielt jede Mannschaft genau einmal gegen jede andere; es finden ${H} Spiele statt. Wie viele Mannschaften nehmen teil?`]),
+      [I('n =',n)],'„jeder mit jedem“ = Paare zählen → C(n,2) = n(n−1)/2, rückwärts nach n auflösen.',`n(n−1)/2 = ${H} ⇒ n(n−1) = ${2*H} = ${n}·${n-1} ⇒ <b>n = ${n}</b>`,{v,n});}
+  if(v==='cnn2'){const n=RI(20,100),d=pick([1,2,3]);const ans=comb(n,d);
+    return P('K6','binl',`Berechne möglichst einfach: C(${n}, ${n-d})`,[I('=',ans)],'Binomialkoeffizient mit großem k → Symmetrie C(n,k) = C(n,n−k).',
+      `C(${n},${n-d}) = C(${n},${d}) = ${d===1?n:d===2?`${n}·${n-1}/2`:`${n}·${n-1}·${n-2}/6`} = <b>${ans}</b>`,{v,n,d});}
+  if(v==='karten'){const[s,c]=pick([[4,2],[3,2],[2,3],[3,3],[2,4],[3,4],[2,5]]);const ans=fact(s*c)/Math.pow(fact(c),s);
+    return P('K6','perm',`Auf wie viele Weisen kann man ${s*c} verschiedene Spielkarten so an ${s} Spieler verteilen, dass jeder genau ${c} Karten erhält?`,
+      [I('=',ans)],'Aufteilen in Gruppen fester Größe → Multinomialkoeffizient n!/(c!·c!·…).',`${s*c}!/(${Array(s).fill(c+'!').join('·')}) = <b>${ans}</b>`,{v,s,c});}
+  const n=RI(4,12);
+  return P('K6','binl',`Wie viele Teilmengen (inklusive der leeren Menge) hat eine Menge mit ${n} Elementen?`,[I('=',Math.pow(2,n))],
+    'Alle Teilmengen = Σ C(n,k) = 2ⁿ (jedes Element: drin oder nicht).',`2<sup>${n}</sup> = <b>${Math.pow(2,n)}</b>`,{v,n});
+}
+
+/* ============================================================
+   WAHRSCHEINLICHKEIT
+   ============================================================ */
+function gW1(){
+  const v=pick(['sum','atleast','ass','word','bits','prod5','last5']);
+  if(v==='sum'){const s=RI(3,11);let c=0;for(let a=1;a<=6;a++)for(let b=1;b<=6;b++)if(a+b===s)c++;
+    return P('W1','lap',`Zwei Würfel werden geworfen. Wie wahrscheinlich ist die Augensumme ${s}?`,[PR('P =',c/36,fs(c,36))],
+      'Endlich viele gleichwahrscheinliche Ergebnisse → Laplace, |Ω| = 36.',`${c} günstige Paare von 36 → <b>${fs(c,36)}</b> ≈ ${fm(c/36)}`,{v,s});}
+  if(v==='atleast'){const n=RI(2,4),f=RI(1,6);const ans=1-Math.pow(5/6,n);
+    return P('W1','lap',`${n} Würfel werden geworfen. Wie wahrscheinlich zeigt <b>mindestens einer</b> eine ${f}?`,[PR('P =',ans,fs(Math.pow(6,n)-Math.pow(5,n),Math.pow(6,n)))],
+      '„mindestens ein“ → Gegenereignis: 1 − P(kein).',`1 − (5/6)<sup>${n}</sup> = <b>${fs(Math.pow(6,n)-Math.pow(5,n),Math.pow(6,n))}</b> ≈ ${fm(ans)}`,{v,n});}
+  if(v==='ass'){const m=RI(2,4);const q=pick(['genau1','min1','keins']);const tot=comb(32,m);
+    const num=q==='genau1'?4*comb(28,m-1):q==='min1'?tot-comb(28,m):comb(28,m);
+    const what=q==='genau1'?'genau ein Ass':q==='min1'?'wenigstens ein Ass':'kein Ass';
+    return P('W1','hyp',`Aus einem Skatblatt (32 Karten, 4 Asse) werden blind ${m} Karten gezogen. Wie groß ist die Wahrscheinlichkeit, dass sich darunter <b>${what}</b> befindet?`,
+      [PR('P =',num/tot,fs(num,tot))],'Ziehen ohne Zurücklegen aus 2 Sorten (Ass / kein Ass) → Laplace mit C(…) = hypergeometrisch.',
+      (q==='genau1'?`C(4,1)·C(28,${m-1})/C(32,${m})`:q==='min1'?`1 − C(28,${m})/C(32,${m})`:`C(28,${m})/C(32,${m})`)+` = ${num}/${tot} = <b>${fs(num,tot)}</b> ≈ ${fm(num/tot)}`,{v,m,q});}
+  if(v==='word'){const s=pick([5,6,8,10,26]),k=RI(2,4);let num=1;for(let i=0;i<k;i++)num*=s-i;const den=Math.pow(s,k);
+    return P('W1','beleg',`Aus ${s} Buchstaben wird zufällig ein Wort der Länge ${k} gebildet (Buchstaben können mehrfach auftreten). Wie wahrscheinlich sind <b>alle ${k} Buchstaben verschieden</b>?`,
+      [PR('P =',num/den,fs(num,den))],'Laplace mit |Ω| = nᵏ (mit Wdh.), günstig = alle verschieden (ohne Wdh.) — Belegungsmodell.',
+      `${Array.from({length:k},(_,i)=>s-i).join('·')}/${s}<sup>${k}</sup> = ${num}/${den} = <b>${fs(num,den)}</b> ≈ ${fm(num/den)}`,{v,s,k});}
+  if(v==='bits'){const n=RI(4,10),k=RI(1,n-1);const num=comb(n,k),den=Math.pow(2,n);
+    return P('W1','lap',`Eine zufällige Bitfolge der Länge ${n} (Nullen und Einsen gleich wahrscheinlich): Wie wahrscheinlich enthält sie <b>genau ${k} Nullen</b>?`,
+      [PR('P =',num/den,fs(num,den))],'Laplace: |Ω| = 2ⁿ, günstig = Positionen der Nullen wählen (= Binomial mit p = ½).',`C(${n},${k})/2<sup>${n}</sup> = ${num}/${den} = <b>${fs(num,den)}</b> ≈ ${fm(num/den)}`,{v,n,k});}
+  if(v==='prod5'){const n=RI(2,4);const num=Math.pow(6,n)-Math.pow(5,n),den=Math.pow(6,n);
+    return P('W1','lap',`${n} Würfel werden geworfen. Wie wahrscheinlich ist das <b>Produkt der Augenzahlen durch 5 teilbar</b>?`,[PR('P =',num/den,fs(num,den))],
+      'Produkt durch 5 teilbar ⇔ mindestens eine 5 → Gegenereignis.',`1 − (5/6)<sup>${n}</sup> = <b>${fs(num,den)}</b> ≈ ${fm(num/den)}`,{v,n});}
+  const n=RI(2,4);const num=Math.pow(3,n)-Math.pow(2,n),den=Math.pow(6,n);
+  return P('W1','lap',`${n} Würfel werden geworfen. Wie wahrscheinlich hat das <b>Produkt der Augenzahlen die letzte Ziffer 5</b>?`,[PR('P =',num/den,fs(num,den))],
+    'Letzte Ziffer 5 ⇔ alle ungerade UND mindestens eine 5 → „alle ungerade“ minus „alle aus {1,3}“.',`(3<sup>${n}</sup> − 2<sup>${n}</sup>)/6<sup>${n}</sup> = ${num}/${den} = <b>${fs(num,den)}</b> ≈ ${fm(num/den)}`,{v,n});
+}
+
+function gW2(){
+  const v=pick(['once','alldiff','together','alone','two22','exact2','birthday']);
+  const st=pick([{a:'Personen',z:'Stockwerke',t:(n,k)=>`In einen Fahrstuhl steigen ${n} Personen; jede wählt unabhängig und zufällig eines von ${k} Stockwerken.`,s:'Der Fahrstuhl hält',w:'Stockwerk'},
+    {a:'Anfragen',z:'Server',t:(n,k)=>`${n} Anfragen werden unabhängig und zufällig auf ${k} Server verteilt.`,s:'Belegt werden',w:'Server'},
+    {a:'Touristen',z:'Hotels',t:(n,k)=>`${n} Touristen wählen unabhängig und zufällig je eines von ${k} Hotels.`,s:'Belegt werden',w:'Hotel'}]);
+  if(v==='birthday'){const n=RI(2,4);let num=1;for(let i=0;i<n;i++)num*=7-i;const den=Math.pow(7,n);
+    return P('W2','beleg',`${n} zufällig ausgewählte Personen: Wie wahrscheinlich sind <b>mindestens zwei am selben Wochentag</b> geboren?`,[PR('P =',1-num/den,fs(den-num,den))],
+      'Akteure wählen Ziele (Belegungsmodell, |Ω| = 7ⁿ) + „mindestens zwei gleich“ → Gegenereignis „alle verschieden“.',
+      `1 − ${Array.from({length:n},(_,i)=>7-i).join('·')}/7<sup>${n}</sup> = 1 − ${num}/${den} = <b>${fs(den-num,den)}</b> ≈ ${fm(1-num/den)}`,{v,n,k:7});}
+  const k=RI(3,6);
+  if(v==='two22'){const num=comb(k,2)*6,den=Math.pow(k,4);
+    return P('W2','beleg',`${st.t(4,k)} Wie wahrscheinlich werden <b>genau zwei ${st.z}</b> gewählt, und zwar <b>jedes von genau zwei ${st.a}</b>?`,[PR('P =',num/den,fs(num,den))],
+      'Belegungsmodell: |Ω| = k⁴; Ziele wählen · Akteure aufteilen.',`C(${k},2)·4!/(2!·2!) / ${k}⁴ = ${comb(k,2)}·6/${den} = <b>${fs(num,den)}</b> ≈ ${fm(num/den)}`,{v,n:4,k});}
+  const n=v==='alldiff'?RI(2,Math.min(4,k)):RI(3,5);const den=Math.pow(k,n);
+  if(v==='once')return P('W2','beleg',`${st.t(n,k)} Wie wahrscheinlich wählen <b>alle dasselbe ${st.w}</b>?`,[PR('P =',k/den,fs(k,den))],
+    'Belegungsmodell: n Akteure, k Ziele, |Ω| = kⁿ.',`${k} günstige (ein gemeinsames Ziel) von ${k}<sup>${n}</sup> = ${den} → <b>${fs(k,den)}</b> ≈ ${fm(k/den)}`,{v,n,k});
+  if(v==='alldiff'){let num=1;for(let i=0;i<n;i++)num*=k-i;
+    return P('W2','beleg',`${st.t(n,k)} Wie wahrscheinlich wählen <b>alle verschiedene ${st.z}</b>?`,[PR('P =',num/den,fs(num,den))],
+      'Belegungsmodell: |Ω| = kⁿ, günstig = k·(k−1)·… (ohne Wdh.).',`${Array.from({length:n},(_,i)=>k-i).join('·')}/${k}<sup>${n}</sup> = ${num}/${den} = <b>${fs(num,den)}</b> ≈ ${fm(num/den)}`,{v,n,k});}
+  if(v==='together')return P('W2','beleg',`${st.t(n,k)} Wie wahrscheinlich wählen <b>zwei bestimmte ${st.a} (A und B) dasselbe ${st.w}</b> (der Rest ist egal)?`,[PR('P =',1/k,'1/'+k)],
+    'Belegungsmodell; nur A und B zählen: B muss das Ziel von A treffen.',`${k}·${k}<sup>${n-2}</sup>/${k}<sup>${n}</sup> = <b>1/${k}</b> ≈ ${fm(1/k)}`,{v,n,k});
+  if(v==='alone'){const num=k*Math.pow(k-1,n-1);
+    return P('W2','beleg',`${st.t(n,k)} Wie wahrscheinlich ist ein bestimmter Akteur A <b>allein</b> an seinem Ziel (niemand sonst wählt dasselbe ${st.w})?`,[PR('P =',num/den,fs(num,den))],
+      'Belegungsmodell: A frei, alle anderen meiden A\'s Ziel.',`${k}·${k-1}<sup>${n-1}</sup>/${k}<sup>${n}</sup> = ((${k-1})/${k})<sup>${n-1}</sup> = <b>${fs(num,den)}</b> ≈ ${fm(num/den)}`,{v,n,k});}
+  const num=comb(k,2)*(Math.pow(2,n)-2);
+  return P('W2','beleg',`${st.t(n,k)} Wie wahrscheinlich werden <b>insgesamt genau zwei verschiedene ${st.z}</b> gewählt?`,[PR('P =',num/den,fs(num,den))],
+    'Belegungsmodell: 2 Ziele wählen · Akteure surjektiv darauf verteilen (2ⁿ − 2).',`C(${k},2)·(2<sup>${n}</sup> − 2)/${k}<sup>${n}</sup> = ${comb(k,2)}·${Math.pow(2,n)-2}/${den} = <b>${fs(num,den)}</b> ≈ ${fm(num/den)}`,{v,n,k});
+}
+
+function gW3(){
+  const v=pick(['exact','exact','min1','same2','E']);
+  if(v==='same2'){const names=['weiße','rote','blaue','grüne'];const nc=RI(2,3);const cnt=[];for(let i=0;i<nc;i++)cnt.push(RI(2,6));
+    const N=cnt.reduce((a,b)=>a+b,0);const num=cnt.reduce((a,c)=>a+c*(c-1),0),den=N*(N-1);
+    return P('W3','hyp',`Ein Sack enthält ${cnt.map((c,i)=>c+' '+names[i]).join(', ')} Kugeln. Man holt blind zwei Kugeln heraus. Wie wahrscheinlich haben <b>beide die gleiche Farbe</b>?`,
+      [PR('P =',num/den,fs(num,den))],'Ziehen ohne Zurücklegen → Laplace mit C(…); Farben einzeln, dann addieren.',
+      `[${cnt.map(c=>`C(${c},2)`).join(' + ')}]/C(${N},2) = ${cnt.reduce((a,c)=>a+comb(c,2),0)}/${comb(N,2)} = <b>${fs(num,den)}</b> ≈ ${fm(num/den)}`,{v,cnt});}
+  const N=RI(8,20),r=RI(2,Math.min(7,N-3)),m=RI(2,Math.min(5,N-r));
+  const st=pick([{t:`Eine Lieferung enthält ${N} Teile, davon ${r} defekt. Es werden ${m} Teile zufällig entnommen (ohne Zurücklegen).`,g:'defekte'},
+    {t:`In einer Lostrommel liegen ${N} Lose, davon ${r} Gewinne. Du ziehst ${m} Lose.`,g:'Gewinne'},
+    {t:`Eine Schachtel enthält ${N} Glühbirnen, von denen ${r} kaputt sind. Du nimmst ${m} Birnen heraus, um sie zu testen.`,g:'kaputte'},
+    {t:`In einem Kurs sitzen ${N} Studierende, davon ${r} Erstsemester. ${m} werden zufällig für eine Befragung ausgelost.`,g:'Erstsemester'}]);
+  const tot=comb(N,m);
+  if(v==='E')return P('W3','hyp',`${st.t} X = Anzahl der ${st.g} in der Stichprobe. Wie groß ist <b>E[X]</b>?`,[PR('E[X] =',m*r/N,fs(m*r,N))],
+    'Ohne Zurücklegen, 2 Sorten → hypergeometrisch: E[X] = m·r/N.',`E[X] = ${m}·${r}/${N} = <b>${fs(m*r,N)}</b> ≈ ${fm(m*r/N)}`,{v,N,r,m});
+  if(v==='min1'){const num=tot-comb(N-r,m);
+    return P('W3','hyp',`${st.t} Wie wahrscheinlich ist <b>mindestens ein</b> Exemplar der Sorte „${st.g}“ dabei?`,[PR('P =',num/tot,fs(num,tot))],
+      'Ohne Zurücklegen, 2 Sorten → hypergeometrisch; „mindestens ein“ → Gegenereignis.',`1 − C(${N-r},${m})/C(${N},${m}) = 1 − ${comb(N-r,m)}/${tot} = <b>${fs(num,tot)}</b> ≈ ${fm(num/tot)}`,{v,N,r,m});}
+  const k=RI(Math.max(0,m-(N-r)),Math.min(r,m));const num=comb(r,k)*comb(N-r,m-k);
+  return P('W3','hyp',`${st.t} Wie wahrscheinlich sind <b>genau ${k}</b> davon ${st.g}?`,[PR('P =',num/tot,fs(num,tot))],
+    'Stichprobe ohne Zurücklegen aus 2 Sorten → hypergeometrisch (nicht Binomial — p ändert sich!).',
+    `C(${r},${k})·C(${N-r},${m-k})/C(${N},${m}) = ${comb(r,k)}·${comb(N-r,m-k)}/${tot} = <b>${fs(num,tot)}</b> ≈ ${fm(num/tot)}`,{v,N,r,m,k});
+}
+
+function gW4(){
+  const v=pick(['test','test','total','neg','lief3','lief3','coins','urnen']);
+  if(v==='test'||v==='total'||v==='neg'){
+    const pa=pick([0.001,0.005,0.01,0.02,0.05,0.1,0.2]),s=pick([0.9,0.95,0.98,0.99]),f=pick([0.01,0.02,0.05,0.1]);
+    const st=pick([{t:`Eine Krankheit tritt bei ${pc(pa)} der Bevölkerung auf. Ein Test erkennt Kranke mit ${pc(s)}; bei Gesunden schlägt er fälschlich in ${pc(f)} der Fälle an.`,A:'krank',B:'Test positiv'},
+      {t:`${pc(pa)} aller E-Mails sind Spam. Ein Filter markiert Spam mit ${pc(s)}, aber auch ${pc(f)} der erwünschten Mails.`,A:'Spam',B:'markiert'},
+      {t:`${pc(pa)} der Dateien auf einem Server sind infiziert. Ein Scanner meldet infizierte Dateien mit ${pc(s)}, saubere Dateien fälschlich mit ${pc(f)}.`,A:'infiziert',B:'Meldung'},
+      {t:`${pc(pa)} der Sportler eines Wettkampfs sind gedopt. Der Dopingtest erkennt Gedopte mit ${pc(s)}; bei sauberen Sportlern fällt er in ${pc(f)} der Fälle positiv aus.`,A:'gedopt',B:'Test positiv'}]);
+    const pb=s*pa+f*(1-pa);
+    if(v==='total')return P('W4','bayes',`${st.t} Wie groß ist die Wahrscheinlichkeit für „${st.B}“ <b>insgesamt</b>?`,[PR('P =',pb)],
+      'Zwei Ursachen-Zweige führen zum selben Ereignis → Satz von der totalen Wahrscheinlichkeit (Baum, Pfade addieren).',
+      `P(B) = P(B|A)·P(A) + P(B|Ā)·P(Ā) = ${fm(s)}·${fm(pa)} + ${fm(f)}·${fm(1-pa)} = <b>${fm(pb,5)}</b>`,{v,pa,s,f});
+    if(v==='neg'){const ans=(1-f)*(1-pa)/(1-pb);
+      return P('W4','bayes',`${st.t} Der Befund ist <b>negativ</b> (nicht „${st.B}“). Mit welcher Wahrscheinlichkeit liegt tatsächlich <b>nicht</b> „${st.A}“ vor?`,[PR('P =',ans)],
+        '„Wirkung beobachtet, Ursache gesucht“ → Bayes (hier mit den Komplementen).',
+        `P(Ā|B̄) = P(B̄|Ā)·P(Ā)/P(B̄) = ${fm(1-f)}·${fm(1-pa)} / (1 − ${fm(pb,5)}) = <b>${fm(ans,5)}</b>`,{v,pa,s,f});}
+    const ans=s*pa/pb;
+    return P('W4','bayes',`${st.t} Es liegt „${st.B}“ vor. Mit welcher Wahrscheinlichkeit ist es wirklich „${st.A}“?`,[PR('P =',ans)],
+      '„Wirkung beobachtet, Ursache gesucht“ (P(A|B) aus P(B|A)) → Satz von Bayes.',
+      `4 Größen: P(A)=${fm(pa)}, P(Ā)=${fm(1-pa)}, P(B|A)=${fm(s)}, P(B|Ā)=${fm(f)}<br>P(A|B) = ${fm(s)}·${fm(pa)} / (${fm(s)}·${fm(pa)} + ${fm(f)}·${fm(1-pa)}) = ${fm(s*pa,5)}/${fm(pb,5)} = <b>${fm(ans)}</b>`,{v,pa,s,f});
+  }
+  if(v==='lief3'){
+    const sh=pick([[50,30,20],[40,35,25],[60,25,15],[45,45,10],[50,25,25]]),d=[pick([1,2,3]),pick([2,3,4]),pick([3,5,6])];
+    const pd=sh.reduce((a,x,i)=>a+x*d[i],0)/10000;const i=RI(0,2);const ask=pick(['post','total']);
+    const txt=`Drei Maschinen A, B, C fertigen ${sh[0]} %, ${sh[1]} % und ${sh[2]} % der Produktion; ihr Ausschussanteil beträgt ${d[0]} %, ${d[1]} % bzw. ${d[2]} %.`;
+    if(ask==='total')return P('W4','bayes',`${txt} Wie groß ist die Wahrscheinlichkeit, dass ein zufällig gewähltes Teil <b>defekt</b> ist?`,[PR('P =',pd)],
+      'Mehrere Ursachen (Zerlegung), Gesamtwahrscheinlichkeit gesucht → totale Wahrscheinlichkeit.',`${sh.map((x,j)=>`${fm(x/100)}·${fm(d[j]/100)}`).join(' + ')} = <b>${fm(pd,5)}</b>`,{v,sh,d,ask});
+    const ans=sh[i]*d[i]/10000/pd;
+    return P('W4','bayes',`${txt} Ein zufällig gewähltes Teil ist defekt. Mit welcher Wahrscheinlichkeit stammt es von <b>Maschine ${'ABC'[i]}</b>?`,[PR('P =',ans,fs(sh[i]*d[i],sh.reduce((a,x,j)=>a+x*d[j],0)))],
+      'Wirkung (defekt) beobachtet, Ursache (Maschine) gesucht → Bayes mit 3 Ursachen.',
+      `P(def) = ${sh.map((x,j)=>`${fm(x/100)}·${fm(d[j]/100)}`).join(' + ')} = ${fm(pd,5)}<br>P(${'ABC'[i]}|def) = ${fm(sh[i]*d[i]/10000,5)}/${fm(pd,5)} = <b>${fs(sh[i]*d[i],sh.reduce((a,x,j)=>a+x*d[j],0))}</b> ≈ ${fm(ans)}`,{v,sh,d,i,ask});
+  }
+  if(v==='coins'){
+    const den=pick([3,4,5]);const nums=[RI(1,den-1),RI(1,den-1),den];const i=RI(0,2);const tot=nums[0]+nums[1]+nums[2];
+    return P('W4','bayes',`Drei gezinkte Münzen M1, M2, M3 zeigen „Kopf“ mit Wahrscheinlichkeit ${nums[0]}/${den}, ${nums[1]}/${den} bzw. 1. Eine Münze wird zufällig gewählt und geworfen: Kopf. Mit welcher Wahrscheinlichkeit war es <b>M${i+1}</b>?`,
+      [PR('P =',nums[i]/tot,fs(nums[i],tot))],'Ergebnis beobachtet, „welche Münze war es?“ → Bayes mit 3 gleichwahrscheinlichen Ursachen.',
+      `P(Kopf) = ⅓·(${nums[0]}/${den} + ${nums[1]}/${den} + 1) = ${fs(tot,3*den)}<br>P(M${i+1}|Kopf) = ⅓·${fs(nums[i],den)} / ${fs(tot,3*den)} = <b>${fs(nums[i],tot)}</b> ≈ ${fm(nums[i]/tot)}`,{v,den,nums,i});
+  }
+  const r1=RI(1,6),b1=RI(1,6),r2=RI(1,6),b2=RI(1,6);const p1=r1/(r1+b1),p2=r2/(r2+b2);const ans=p1/(p1+p2);
+  return P('W4','bayes',`Urne 1 enthält ${r1} rote und ${b1} blaue Kugeln, Urne 2 enthält ${r2} rote und ${b2} blaue. Eine Urne wird zufällig gewählt und daraus eine Kugel gezogen: sie ist rot. Mit welcher Wahrscheinlichkeit stammt sie aus <b>Urne 1</b>?`,
+    [PR('P =',ans,fs(r1*(r2+b2),r1*(r2+b2)+r2*(r1+b1)))],'Zweistufig, Ergebnis bekannt, Ursache (welche Urne) gesucht → Bayes.',
+    `P(rot) = ½·${fs(r1,r1+b1)} + ½·${fs(r2,r2+b2)}<br>P(U1|rot) = ½·${fs(r1,r1+b1)} / P(rot) = <b>${fs(r1*(r2+b2),r1*(r2+b2)+r2*(r1+b1))}</b> ≈ ${fm(ans)}`,{v,r1,b1,r2,b2});
+}
+
+function gW5(){
+  const v=pick(['min1','min1','genau1','alle','union']);
+  if(v==='union'){const a=pick([0.2,0.3,0.4,0.5,0.6]),b=pick([0.1,0.25,0.3,0.5,0.7]);const ans=a+b-a*b;
+    return P('W5','unabh',`Zwei <b>unabhängige</b> Ereignisse A und B haben P(A) = ${fm(a)} und P(B) = ${fm(b)}. Wie groß ist P(A ∪ B)?`,[PR('P =',ans)],
+      'ODER bei nicht-disjunkten Ereignissen → Siebformel für P; UND bei Unabhängigkeit = Produkt.',`P(A) + P(B) − P(A)·P(B) = ${fm(a)} + ${fm(b)} − ${fm(a*b)} = <b>${fm(ans)}</b>`,{v,ps:[a,b]});}
+  const n=RI(2,3);const ps=[];for(let i=0;i<n;i++)ps.push(pick([0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]));
+  const st=pick([{t:`${n} Schützen treffen die Scheibe mit den Wahrscheinlichkeiten ${ps.map(fm).join(', ')} und schießen gleichzeitig (unabhängig).`,e:'trifft',min:'die Scheibe getroffen wird'},
+    {t:`${n} unabhängige Alarmanlagen lösen bei einem Einbruch mit den Wahrscheinlichkeiten ${ps.map(fm).join(', ')} aus.`,e:'löst aus',min:'der Einbruch bemerkt wird (mindestens eine löst aus)'},
+    {t:`${n} Studierende lösen eine Aufgabe unabhängig voneinander mit den Wahrscheinlichkeiten ${ps.map(fm).join(', ')}.`,e:'löst sie',min:'die Aufgabe von mindestens einem gelöst wird'}]);
+  const none=ps.reduce((a,p)=>a*(1-p),1),all=ps.reduce((a,p)=>a*p,1);
+  if(v==='min1')return P('W5','unabh',`${st.t} Wie groß ist die Wahrscheinlichkeit, dass ${st.min}?`,[PR('P =',1-none)],
+    'Unabhängige Ereignisse mit verschiedenen p, „mindestens einer“ → 1 − Π(1−pᵢ) (kein Binomial: p nicht konstant!).',`1 − ${ps.map(p=>fm(1-p)).join('·')} = 1 − ${fm(none)} = <b>${fm(1-none)}</b>`,{v,ps});
+  if(v==='alle')return P('W5','unabh',`${st.t} Wie groß ist die Wahrscheinlichkeit, dass <b>jeder</b> Erfolg hat (${st.e})?`,[PR('P =',all)],
+    'UND bei Unabhängigkeit → Produkt.',`${ps.map(fm).join('·')} = <b>${fm(all)}</b>`,{v,ps});
+  let ex=0;const parts=[];ps.forEach((p,i)=>{let t=p;ps.forEach((q,j)=>{if(j!==i)t*=(1-q);});ex+=t;parts.push(ps.map((q,j)=>fm(j===i?q:1-q)).join('·'));});
+  return P('W5','unabh',`${st.t} Wie groß ist die Wahrscheinlichkeit, dass <b>genau einer</b> Erfolg hat?`,[PR('P =',ex)],
+    'Unabhängig, verschiedene p, „genau einer“ → disjunkte Fälle (wer ist der eine?) addieren.',`${parts.join(' + ')} = <b>${fm(ex)}</b>`,{v,ps});
+}
+
+/* ============================================================
+   VERTEILUNGEN
+   ============================================================ */
+const BIN_ST=[
+  (n,p)=>({t:`Ein Bogenschütze trifft mit Wahrscheinlichkeit ${pc(p)}. Er schießt ${n}-mal (unabhängig).`,x:'Treffer'}),
+  (n,p)=>({t:`Eine Partei hat ${pc(p)} Anhänger unter den Wahlberechtigten. ${n} Wahlberechtigte werden zufällig befragt (große Grundgesamtheit, unabhängig).`,x:'Anhänger'}),
+  (n,p)=>({t:`Ein Bauteil ist mit Wahrscheinlichkeit ${pc(p)} fehlerhaft. Es werden ${n} Bauteile unabhängig voneinander geprüft.`,x:'fehlerhafte Teile'}),
+  (n,p)=>({t:`Ein Server beantwortet jede Anfrage unabhängig mit Wahrscheinlichkeit ${pc(p)} zu langsam. Es kommen ${n} Anfragen.`,x:'langsame Antworten'}),
+  (n,p)=>({t:`Eine Basketballerin verwandelt jeden Freiwurf unabhängig mit Wahrscheinlichkeit ${pc(p)}. Sie wirft ${n}-mal.`,x:'Treffer'}),
+];
+function gV1(){
+  const n=RI(4,12),p=pick([0.1,0.2,0.25,0.3,0.4,0.5,0.6,0.75]);const st=pick(BIN_ST)(n,p);
+  const v=pick(['exact','exact','atmost','atleast','half','EV']);
+  const rec='Feste Anzahl unabhängiger Versuche, konstantes p, Treffer/Niete → Binomialverteilung.';
+  const term=k=>`C(${n},${k})·${fm(p)}<sup>${k}</sup>·${fm(1-p)}<sup>${n-k}</sup>`;
+  if(v==='EV')return P('V1','bin',`${st.t} X = Anzahl ${st.x}. Bestimme <b>E[X]</b> und <b>Var(X)</b>.`,[PR('E[X] =',n*p),PR('Var =',n*p*(1-p))],rec,
+    `E = n·p = ${n}·${fm(p)} = <b>${fm(n*p)}</b> · Var = n·p·(1−p) = <b>${fm(n*p*(1-p))}</b>`,{v,n,p});
+  if(v==='exact'){const k=RI(0,Math.min(n,6));const ans=binpmf(n,k,p);
+    return P('V1','bin',`${st.t} Wie groß ist die Wahrscheinlichkeit für <b>genau ${k}</b> ${st.x}?`,[PR('P =',ans)],rec,`P(X=${k}) = ${term(k)} = <b>${fm(ans,5)}</b>`,{v,n,p,k});}
+  if(v==='atmost'){const k=RI(1,2);let ans=0;for(let i=0;i<=k;i++)ans+=binpmf(n,i,p);
+    return P('V1','bin',`${st.t} Wie groß ist die Wahrscheinlichkeit für <b>höchstens ${k}</b> ${st.x}?`,[PR('P =',ans)],rec+' „höchstens“ → kurze Seite summieren.',
+      `P(X≤${k}) = ${Array.from({length:k+1},(_,i)=>`P(X=${i})`).join(' + ')} = ${Array.from({length:k+1},(_,i)=>fm(binpmf(n,i,p),5)).join(' + ')} = <b>${fm(ans,5)}</b>`,{v,n,p,k});}
+  if(v==='atleast'){const k=RI(1,2);let s=0;for(let i=0;i<k;i++)s+=binpmf(n,i,p);
+    return P('V1','bin',`${st.t} Wie groß ist die Wahrscheinlichkeit für <b>mindestens ${k}</b> ${st.x}?`,[PR('P =',1-s)],rec+' „mindestens“ → Gegenereignis.',
+      `P(X≥${k}) = 1 − ${Array.from({length:k},(_,i)=>`P(X=${i})`).join(' − ')} = 1 − ${Array.from({length:k},(_,i)=>fm(binpmf(n,i,p),5)).join(' − ')} = <b>${fm(1-s,5)}</b>`,{v,n,p,k});}
+  const nn=pick([4,5,6]);const st2=pick(BIN_ST)(nn,p);const h=Math.floor(nn/2)+1;let ans=0;for(let i=h;i<=nn;i++)ans+=binpmf(nn,i,p);
+  return P('V1','bin',`${st2.t} Wie groß ist die Wahrscheinlichkeit, dass es bei <b>mehr als der Hälfte</b> der Versuche zu „${st2.x}“ kommt?`,[PR('P =',ans)],rec+' „mehr als die Hälfte“ → k-Bereich bestimmen, summieren.',
+    `mehr als ${nn}/2 ⇒ k ≥ ${h}: ${Array.from({length:nn-h+1},(_,i)=>`P(X=${h+i})`).join(' + ')} = ${Array.from({length:nn-h+1},(_,i)=>fm(binpmf(nn,h+i,p),5)).join(' + ')} = <b>${fm(ans,5)}</b>`,{v,n:nn,p,h});
+}
+
+function minN(p,s,strict){let n=1;while(strict?!(1-Math.pow(1-p,n)>s):!(1-Math.pow(1-p,n)>=s))n++;return n;}
+function gV2(){
+  let o,s,strict,n;
+  const opts=[{p:0.05,t:'Ein Los gewinnt mit Wahrscheinlichkeit 5 %',q:'Lose kaufen',e:'mindestens einen Gewinn zu haben'},
+    {p:0.1,t:'Ein Server fällt an einem Tag mit Wahrscheinlichkeit 10 % aus (Tage unabhängig)',q:'Tage beobachten',e:'mindestens einen Ausfall zu sehen'},
+    {p:0.2,t:'Ein Schütze trifft mit Wahrscheinlichkeit 20 %',q:'schießen',e:'mindestens einmal zu treffen'},
+    {p:0.3,t:'Ein Angler fängt pro Wurf mit Wahrscheinlichkeit 30 % einen Fisch',q:'die Angel auswerfen',e:'mindestens einen Fisch zu fangen'},
+    {p:0.4,t:'Eine Bogenschützin trifft mit Wahrscheinlichkeit 40 %',q:'schießen',e:'mindestens einmal zu treffen'},
+    {p:1/6,t:'Es wird mit einem fairen Würfel gewürfelt',q:'würfeln',e:'mindestens eine Sechs zu werfen'},
+    {p:1/16,t:'Aus einem Skatblatt (32 Karten, 2 schwarze Buben) wird eine Karte gezogen und wieder zurückgelegt',q:'ziehen',e:'mindestens einmal einen schwarzen Buben zu erwischen'},
+    {p:0.5,t:'Eine faire Münze wird geworfen',q:'werfen',e:'mindestens einmal „Kopf“ zu sehen'},
+    {p:0.02,t:'Ein Bauteil ist mit Wahrscheinlichkeit 2 % defekt',q:'Bauteile prüfen',e:'mindestens ein defektes zu finden'}];
+  do{o=pick(opts);s=pick([0.5,0.9,0.95,0.955,0.99,0.999]);strict=s===0.5;n=minN(o.p,s,strict);}
+  while(Math.abs(1-Math.pow(1-o.p,n)-s)<1e-9||Math.abs(1-Math.pow(1-o.p,n-1)-s)<1e-9||n<2);
+  const q=1-o.p;const raw=Math.log(1-s)/Math.log(q);
+  return P('V2','minn',`${o.t}. Wie oft muss man mindestens ${o.q}, um mit einer Wahrscheinlichkeit von ${strict?'mehr als':'mindestens'} ${pc(s)} ${o.e}?`,
+    [I('n =',n)],'„Wie oft mindestens, damit P(mind. 1 Treffer) ≥ s?“ → Gegenereignis + Ungleichung + Logarithmus.',
+    `1 − ${fm(q)}<sup>n</sup> ${strict?'&gt;':'≥'} ${fm(s)} ⇔ ${fm(q)}<sup>n</sup> ${strict?'&lt;':'≤'} ${fm(1-s)}<br>n ${strict?'&gt;':'≥'} ln(${fm(1-s)})/ln(${fm(q)}) = ${fm(raw,2)} (⚠️ ln(${fm(q)}) &lt; 0 → Ungleichung dreht sich) → aufrunden: <b>n = ${n}</b><br>Probe: n=${n-1}: ${fm(1-Math.pow(q,n-1))} ✗ · n=${n}: ${fm(1-Math.pow(q,n))} ✓`,{p:o.p,s,strict});
+}
+
+function duel(sA,sB,nA,nB,pA,pB){ // P(A gewinnt), P(Gleichstand)
+  let win=0,tie=0;
+  for(let y=0;y<=nB;y++)for(let x=0;x<=nA;x++){const pr=binpmf(nA,x,pA)*binpmf(nB,y,pB);if(sA+x>sB+y)win+=pr;else if(sA+x===sB+y)tie+=pr;}
+  return[win,tie];
+}
+function gV3(){
+  let sA,sB,nA,nB,pA,pB,win,tie;
+  do{nA=RI(2,5);nB=RI(1,4);pA=pick([0.2,0.3,0.4,0.5,0.6,0.7,0.8]);pB=pick([0.2,0.3,0.4,0.5,0.6,0.7,0.8]);
+    sA=RI(2,8);sB=sA+RI(-2,3);[win,tie]=duel(sA,sB,nA,nB,pA,pB);}while(win<0.03||win>0.97||sB<0);
+  const st=pick([{a:'Schütze A',b:'Schütze B',u:'Treffer',r:'Schüsse'},{a:'Team A',b:'Team B',u:'Tore',r:'Elfmeter'},{a:'Spielerin A',b:'Spielerin B',u:'Punkte',r:'Würfe'}]);
+  const D=sB-sA+1;const askTie=Math.random()<0.3;
+  let rows='';for(let y=0;y<=nB;y++){let tail=0;for(let x=Math.max(0,y+D);x<=nA;x++)tail+=binpmf(nA,x,pA);
+    rows+=`<tr><td>${y}</td><td>${fm(binpmf(nB,y,pB))}</td><td>X ≥ ${y+D}: ${fm(tail)}</td><td>${fm(binpmf(nB,y,pB)*tail,5)}</td></tr>`;}
+  const fields=[PR(`P(${st.a.slice(-1)} gewinnt) =`,win)];if(askTie)fields.push(PR('P(Gleichstand) =',tie));
+  return P('V3','wett',`${st.a} (Erfolgswahrscheinlichkeit ${fm(pA)}) hat bisher ${sA} ${st.u} und noch ${nA} ${st.r}. ${st.b} (Erfolgswahrscheinlichkeit ${fm(pB)}) hat ${sB} ${st.u} und noch ${nB} ${st.r}. Alle Versuche sind unabhängig. Wie groß ist die Wahrscheinlichkeit, dass <b>${st.a} am Ende mehr ${st.u}</b> hat${askTie?' — und wie groß die für einen <b>Gleichstand</b>':''}?`,
+    fields,'Zwei Serien im Vergleich, Zwischenstand gegeben → Wettkampf: zwei Binomial-Restserien, Gewinnbedingung als Ungleichung.',
+    `1) Restserien: X ~ Bin(${nA}; ${fm(pA)}), Y ~ Bin(${nB}; ${fm(pB)})<br>2) ${sA} + X &gt; ${sB} + Y ⇔ <b>X ≥ Y ${D>=0?'+ '+D:'− '+(-D)}</b><br>3) P = Σ<sub>y</sub> P(Y=y)·P(X ≥ y${D>=0?'+'+D:'−'+(-D)}):`+
+    `<table class="tab"><tr><th>y</th><th>P(Y=y)</th><th>P(X ≥ …)</th><th>Produkt</th></tr>${rows}</table>Summe = <b>${fm(win)}</b>`+(askTie?` · Gleichstand (X = Y${D-1>=0?'+'+(D-1):'−'+(1-D)}): <b>${fm(tie)}</b>`:''),{sA,sB,nA,nB,pA,pB,askTie});
+}
+
+function gV4(){
+  const v=pick(['table','minmax','jaeger','jaeger','hash','sum','fix','suche','match']);
+  if(v==='table'){const m=RI(3,4);const D=pick([8,10,12,20]);const num=Array(m).fill(1);let rem=D-m;while(rem>0){num[RI(0,m-1)]++;rem--;}
+    const xs=Math.random()<0.5?Array.from({length:m},(_,i)=>i):Array.from({length:m},(_,i)=>i+1);
+    let E=0,E2=0;xs.forEach((x,i)=>{E+=x*num[i]/D;E2+=x*x*num[i]/D;});
+    return P('V4','vert',`Die Zufallsvariable X hat die Verteilung ${xs.map((x,i)=>`P(X=${x}) = ${fs(num[i],D)}`).join(', ')}. Berechne <b>E[X]</b> und <b>Var(X)</b>.`,
+      [PR('E[X] =',E),PR('Var =',E2-E*E)],'Verteilungstabelle gegeben → E und Var stur nach Definition (Tabelle k | P | k·P | k²·P).',
+      `Kontrolle: Σ P = ${fs(num.reduce((a,b)=>a+b,0),D)} ✓<br>E[X] = Σ k·P = (${xs.map((x,i)=>x+'·'+num[i]).join(' + ')})/${D} = <b>${fm(E)}</b><br>E[X²] = (${xs.map((x,i)=>x+'²·'+num[i]).join(' + ')})/${D} = ${fm(E2)}<br>Var = E[X²] − (E[X])² = <b>${fm(E2-E*E)}</b>`,{v,xs,num,D});}
+  if(v==='minmax'){const isMin=Math.random()<0.5;const askE=Math.random()<0.4;const pm=k=>isMin?(13-2*k):(2*k-1);
+    if(askE){const E=isMin?91/36:161/36;
+      return P('V4','vert',`Zwei faire Würfel werden geworfen. X sei die <b>${isMin?'kleinere':'größere'}</b> der beiden Augenzahlen. Bestimme <b>E[X]</b>.`,[PR('E[X] =',E,isMin?'91/36':'161/36')],
+        'Kein Standardname → Verteilung selbst aufstellen (|Ω| = 36), dann E nach Definition.',
+        `P(X=k) = ${isMin?'[(7−k)² − (6−k)²]/36 = (13−2k)/36':'[k² − (k−1)²]/36 = (2k−1)/36'} für k = 1..6 (Σ = 36/36 ✓)<br>E[X] = Σ k·P(X=k) = (${[1,2,3,4,5,6].map(k=>k+'·'+pm(k)).join(' + ')})/36 = <b>${isMin?'91/36':'161/36'}</b> ≈ ${fm(E)}`,{v,isMin,askE});}
+    const k=RI(1,6);
+    return P('V4','vert',`Zwei faire Würfel werden geworfen. X sei die <b>${isMin?'kleinere':'größere'}</b> der beiden Augenzahlen. Bestimme <b>P(X = ${k})</b>.`,[PR('P =',pm(k)/36,fs(pm(k),36))],
+      'Kein Standardname → Verteilung selbst aufstellen: |Ω| = 36, Fälle zählen.',
+      isMin?`P(Min ≥ k) = ((7−k)/6)² ⇒ P(Min = ${k}) = [${(7-k)*(7-k)} − ${(6-k)*(6-k)}]/36 = <b>${fs(pm(k),36)}</b>`:`P(Max ≤ k) = (k/6)² ⇒ P(Max = ${k}) = [${k*k} − ${(k-1)*(k-1)}]/36 = <b>${fs(pm(k),36)}</b>`,{v,isMin,askE,k});}
+  if(v==='jaeger'){const n=RI(3,9);const st=pick([['Jäger','Hasen','schießen gleichzeitig; jeder wählt zufällig und unabhängig einen','und trifft','getroffenen Hasen'],
+      ['Torschützen','Tore','schießen je auf ein zufällig gewähltes','(jeder Schuss sitzt)','getroffenen Tore'],
+      ['Pakete','Server','werden unabhängig je an einen zufällig gewählten','geschickt','Server, die mindestens ein Paket erhalten'],
+      ['Gäste','Hotels','buchen unabhängig je eines der','(zufällig)','belegten Hotels']]);
+    const p1=1/(n*n),p2=3*(n-1)/(n*n),p3=(n-1)*(n-2)/(n*n);const E=p1+2*p2+3*p3,E2=p1+4*p2+9*p3;const w=pick(['p2E','p3V','p1E']);
+    const fields=w==='p2E'?[PR('P(X=2) =',p2,fs(3*(n-1),n*n)),PR('E[X] =',E,fs(3*n*n-3*n+1,n*n))]:w==='p3V'?[PR('P(X=3) =',p3,fs((n-1)*(n-2),n*n)),PR('Var(X) =',E2-E*E)]:[PR('P(X=1) =',p1,fs(1,n*n)),PR('E[X] =',E,fs(3*n*n-3*n+1,n*n))];
+    return P('V4','vert',`3 ${st[0]} ${st[2]} der ${n} ${st[1]} ${st[3]}. X = Anzahl der ${st[4]}. Bestimme ${w==='p2E'?'<b>P(X = 2)</b> und <b>E[X]</b>':w==='p3V'?'<b>P(X = 3)</b> und <b>Var(X)</b>':'<b>P(X = 1)</b> und <b>E[X]</b>'}.`,
+      fields,'Kein Standardname, X zählt „getroffene Ziele“ → Verteilung selbst aufstellen (5 Schritte), |Ω| = n³.',
+      `① |Ω| = ${n}³ = ${n*n*n} ② X ∈ {1, 2, 3}<br>③ X=1: alle dasselbe Ziel → ${n} Fälle → 1/n² = <b>${fs(1,n*n)}</b><br>&nbsp;&nbsp; X=3: alle verschieden → ${n}·${n-1}·${n-2} → (n−1)(n−2)/n² = <b>${fs((n-1)*(n-2),n*n)}</b><br>&nbsp;&nbsp; X=2: C(${n},2)·(2³−2) = ${comb(n,2)*6} → 3(n−1)/n² = <b>${fs(3*(n-1),n*n)}</b><br>④ Σ = (1 + ${3*(n-1)} + ${(n-1)*(n-2)})/${n*n} = 1 ✓<br>⑤ E[X] = (1 + 2·${3*(n-1)} + 3·${(n-1)*(n-2)})/${n*n} = <b>${fs(3*n*n-3*n+1,n*n)}</b> ≈ ${fm(E)} · E[X²] = ${fm(E2)} · Var = <b>${fm(E2-E*E)}</b><br>Probe (Indikator): E = n·(1 − ((n−1)/n)³) = ${fm(n*(1-Math.pow((n-1)/n,3)))} ✓`,{v,n,w});}
+  if(v==='hash'){const n=RI(3,6),m=RI(2,5);const w=pick(['occ','single']);
+    const E=w==='occ'?n*(1-Math.pow(1-1/n,m)):m*Math.pow(1-1/n,m-1);
+    return P('V4','indik',`Bei einem Hashverfahren werden ${m} Datensätze unabhängig und zufällig auf ${n} Speicherplätze verteilt (Kollisionen möglich). X = Anzahl der Speicherplätze, ${w==='occ'?'die <b>mindestens einen</b> Datensatz erhalten':'denen <b>genau ein</b> Datensatz zugewiesen wird'}. Bestimme <b>E[X]</b>.`,
+      [PR('E[X] =',E)],'X zählt Plätze mit einer Eigenschaft, nur E gefragt → Indikator-Trick: E[X] = Σ P(Iᵢ = 1) (Linearität, keine Verteilung nötig).',
+      w==='occ'?`P(Platz i bleibt leer) = ((n−1)/n)<sup>m</sup> = (${n-1}/${n})<sup>${m}</sup> → P(belegt) = ${fm(1-Math.pow(1-1/n,m))}<br>E[X] = ${n}·${fm(1-Math.pow(1-1/n,m))} = <b>${fm(E)}</b>`
+        :`P(Platz i hat genau einen) = m·(1/n)·((n−1)/n)<sup>m−1</sup> = ${m}·(1/${n})·(${n-1}/${n})<sup>${m-1}</sup> = ${fm(E/n,5)}<br>E[X] = ${n}·${fm(E/n,5)} = <b>${fm(E)}</b>`,{v,n,m,w});}
+  if(v==='sum'){const s=RI(3,5);const t=RI(2,2*s);const cnt=Math.min(t-1,2*s+1-t);
+    return P('V4','vert',`Aus der Menge {1, …, ${s}} werden zufällig zwei Zahlen gewählt (dieselbe Zahl darf zweimal kommen). X = Summe der beiden Zahlen. Bestimme <b>P(X = ${t})</b> und <b>E[X]</b>.`,
+      [PR(`P(X=${t}) =`,cnt/(s*s),fs(cnt,s*s)),PR('E[X] =',s+1)],'Kein Standardname → Verteilung aufstellen: |Ω| = s² geordnete Paare; E per Linearität.',
+      `|Ω| = ${s*s} · Paare mit Summe ${t}: ${cnt} → <b>${fs(cnt,s*s)}</b><br>E[X] = E[Z₁] + E[Z₂] = 2·(${s}+1)/2 = <b>${s+1}</b> (Linearität)`,{v,s,t});}
+  if(v==='fix'){const n=RI(3,5);const D=derange(n);
+    return P('V4','vert',`Die Zahlen 1, …, ${n} werden zufällig angeordnet. X = Anzahl der Zahlen, die an ihrem ursprünglichen Platz stehen. Bestimme <b>P(X = 0)</b> und <b>E[X]</b>.`,
+      [PR('P(X=0) =',D/fact(n),fs(D,fact(n))),PR('E[X] =',1)],'X zählt Fixpunkte → P(X=0) über Derangements (Siebformel), E über Indikatoren.',
+      `P(X=0) = D<sub>${n}</sub>/${n}! = ${D}/${fact(n)} = <b>${fs(D,fact(n))}</b><br>E[X] = Σ P(Zahl i am Platz) = ${n}·(1/${n}) = <b>1</b> (Indikator-Trick)`,{v,n});}
+  if(v==='suche'){const n=RI(4,12);
+    return P('V4','vert',`In einem Array mit ${n} verschiedenen Zahlen wird per linearer Suche ein Wert gesucht, der sicher vorkommt; jede Position ist gleich wahrscheinlich. X = Anzahl der nötigen Vergleiche. Bestimme <b>E[X]</b> und <b>Var(X)</b>.`,
+      [PR('E[X] =',(n+1)/2),PR('Var =',(n*n-1)/12)],'P(X=k) = 1/n für k = 1..n → gleichmäßige diskrete Verteilung.',
+      `E[X] = (n+1)/2 = <b>${fm((n+1)/2)}</b> · Var = (n²−1)/12 = <b>${fm((n*n-1)/12)}</b>`,{v,n});}
+  const ask=pick([3,4,5]);const pm={2:1/2,3:1/4,4:1/8,5:1/8};
+  return P('V4','vert',`Zwei gleich starke Spieler (Satzgewinn je ½) spielen ein Match: Es gewinnt, wer <b>zwei Sätze hintereinander</b> oder <b>insgesamt drei Sätze</b> gewinnt. X = Anzahl der gespielten Sätze. Bestimme <b>P(X = ${ask})</b> und <b>E[X]</b>.`,
+    [PR(`P(X=${ask}) =`,pm[ask],fs(1,1/pm[ask])),PR('E[X] =',2.875,'23/8')],'Kein Standardname → Verteilung per Baum aufstellen (X ∈ {2,3,4,5}).',
+    `Baum: nach 2 Sätzen Ende bei AA/BB (½) · nach 3 bei ABB/BAA (¼) · nach 4 bei ABAA/BABB (⅛) · sonst 5 Sätze (⅛) — Σ = 1 ✓<br>P(X=${ask}) = <b>${fs(1,1/pm[ask])}</b> · E[X] = 2·½ + 3·¼ + 4·⅛ + 5·⅛ = <b>23/8 = 2,875</b>`,{v,ask});
+}
+
+function gV5(){
+  const v=pick(['geoK','geoGt','geoLe','geoE','pois0','poisK','pois1']);
+  if(v.startsWith('geo')){const p=pick([0.1,0.2,0.25,0.3,0.4,0.5,0.8,1/6]);const k=RI(2,5);const q=1-p;
+    const st=pick([`Ein Bogenschütze trifft mit Wahrscheinlichkeit ${fm(p)} und schießt so oft, bis er zum ersten Mal trifft.`,`Ein Gerät besteht jeden Test unabhängig mit Wahrscheinlichkeit ${fm(p)}; es wird getestet, bis es zum ersten Mal besteht.`,`Bei einem Spiel gewinnt man jede Runde unabhängig mit Wahrscheinlichkeit ${fm(p)} und spielt bis zum ersten Gewinn.`]);
+    const rec='„so oft, bis zum ersten Erfolg“ → geometrische Verteilung: P(X=k) = (1−p)ᵏ⁻¹·p.';
+    if(v==='geoK')return P('V5','geo',`${st} Wie wahrscheinlich gelingt der erste Erfolg <b>genau im ${k}. Versuch</b>?`,[PR('P =',Math.pow(q,k-1)*p)],rec,`${fm(q)}<sup>${k-1}</sup>·${fm(p)} = <b>${fm(Math.pow(q,k-1)*p,5)}</b>`,{v,p,k});
+    if(v==='geoGt')return P('V5','geo',`${st} Wie wahrscheinlich sind dafür <b>mehr als ${k}</b> Versuche nötig?`,[PR('P =',Math.pow(q,k))],rec+' „mehr als k“ ⇔ die ersten k sind Nieten.',`P(X &gt; ${k}) = (1−p)<sup>${k}</sup> = ${fm(q)}<sup>${k}</sup> = <b>${fm(Math.pow(q,k),5)}</b>`,{v,p,k});
+    if(v==='geoLe')return P('V5','geo',`${st} Wie wahrscheinlich gelingt der erste Erfolg <b>spätestens im ${k}. Versuch</b>?`,[PR('P =',1-Math.pow(q,k))],rec+' „spätestens im k-ten“ = mind. 1 Erfolg in k Versuchen.',`1 − ${fm(q)}<sup>${k}</sup> = <b>${fm(1-Math.pow(q,k),5)}</b>`,{v,p,k});
+    return P('V5','geo',`${st} Wie viele Versuche sind dafür <b>im Mittel</b> nötig?`,[PR('E[X] =',1/p)],rec+' E[X] = 1/p.',`E[X] = 1/${fm(p)} = <b>${fm(1/p)}</b>`,{v,p});}
+  const per=pick([[120,'Stunde','Minute',60],[90,'Stunde','Minute',60],[30,'Minute','Sekunde',60],[6,'Minute','10 Sekunden',6],[180,'Stunde','Minute',60]]);const lam=per[0]/per[3];
+  const txt=`Die Anzahl der Aufträge an einen Server sei Poisson-verteilt; im Mittel gehen ${per[0]} Aufträge pro ${per[1]} ein.`;const rec='„Poisson-verteilt“, Rate gegeben → λ auf das gefragte Intervall umrechnen, P(X=k) = λᵏ·e^(−λ)/k!.';
+  if(v==='pois0')return P('V5','pois',`${txt} Wie wahrscheinlich geht in ${per[2]==='10 Sekunden'?'':'einer '}${per[2]} <b>kein</b> Auftrag ein?`,[PR('P =',Math.exp(-lam))],rec,`λ = ${per[0]}/${per[3]} = ${fm(lam)} → P(X=0) = e<sup>−${fm(lam)}</sup> = <b>${fm(Math.exp(-lam),5)}</b>`,{v,lam});
+  if(v==='pois1')return P('V5','pois',`${txt} Wie wahrscheinlich geht in ${per[2]==='10 Sekunden'?'':'einer '}${per[2]} <b>mindestens ein</b> Auftrag ein?`,[PR('P =',1-Math.exp(-lam))],rec,`λ = ${fm(lam)} → 1 − e<sup>−${fm(lam)}</sup> = <b>${fm(1-Math.exp(-lam),5)}</b>`,{v,lam});
+  const k=RI(1,3);const ans=Math.pow(lam,k)*Math.exp(-lam)/fact(k);
+  return P('V5','pois',`${txt} Wie wahrscheinlich gehen in ${per[2]==='10 Sekunden'?'':'einer '}${per[2]} <b>genau ${k}</b> Aufträge ein?`,[PR('P =',ans)],rec,`λ = ${fm(lam)} → ${fm(lam)}<sup>${k}</sup>·e<sup>−${fm(lam)}</sup>/${k}! = <b>${fm(ans,5)}</b>`,{v,lam,k});
+}
+
+function gV6(){
+  const v=pick(['CE','CE','Var','P','unif']);
+  if(v==='unif'){const a=RI(0,4),b=a+RI(2,8);
+    return P('V6','stet',`X sei gleichverteilt auf dem Intervall [${a}, ${b}]. Bestimme <b>E[X]</b> und <b>Var(X)</b>.`,[PR('E[X] =',(a+b)/2),PR('Var =',(b-a)*(b-a)/12)],
+      'Stetige Gleichverteilung: f = 1/(b−a) auf [a,b].',`E = (a+b)/2 = <b>${fm((a+b)/2)}</b> · Var = (b−a)²/12 = ${(b-a)*(b-a)}/12 = <b>${fm((b-a)*(b-a)/12)}</b>`,{v,a,b});}
+  const a=RI(1,3),b=RI(1,4);const C=(a+1)/Math.pow(b,a+1),E=(a+1)*b/(a+2),E2=(a+1)*b*b/(a+3);
+  const fx=a===1?'x':`x<sup>${a}</sup>`;const head=`Die stetige Zufallsvariable X hat die Dichte f(x) = C·${fx} für 0 ≤ x ≤ ${b} (sonst 0).`;
+  const rec='Dichte mit unbekannter Konstante → stetige ZV: C aus ∫f = 1, dann E = ∫x·f, E[X²] = ∫x²·f.';
+  const cS=`∫₀<sup>${b}</sup> C·${fx} dx = C·${b}<sup>${a+1}</sup>/${a+1} = 1 ⇒ C = <b>${fs(a+1,Math.pow(b,a+1))}</b>`;
+  const eS=`E[X] = C·∫₀<sup>${b}</sup> x<sup>${a+1}</sup> dx = C·${b}<sup>${a+2}</sup>/${a+2} = <b>${fs((a+1)*b,a+2)}</b>`;
+  if(v==='CE')return P('V6','stet',`${head} Bestimme <b>C</b> und <b>E[X]</b>.`,[PR('C =',C,fs(a+1,Math.pow(b,a+1))),PR('E[X] =',E,fs((a+1)*b,a+2))],rec,`${cS}<br>${eS}`,{v,a,b});
+  if(v==='Var')return P('V6','stet',`${head} Bestimme <b>E[X]</b> und <b>Var(X)</b>.`,[PR('E[X] =',E,fs((a+1)*b,a+2)),PR('Var =',E2-E*E)],rec,
+    `${cS}<br>${eS}<br>E[X²] = C·${b}<sup>${a+3}</sup>/${a+3} = ${fs((a+1)*b*b,a+3)} → Var = E[X²] − E² = <b>${fm(E2-E*E)}</b>`,{v,a,b});
+  const c=pick([b/2,b/4,3*b/4]);const more=Math.random()<0.5;const Fc=Math.pow(c/b,a+1);
+  return P('V6','stet',`${head} Bestimme <b>P(X ${more?'&gt;':'≤'} ${fm(c)})</b>.`,[PR('P =',more?1-Fc:Fc)],rec+' Wahrscheinlichkeit = Fläche unter f.',
+    `${cS}<br>P(X ≤ ${fm(c)}) = C·${fm(c)}<sup>${a+1}</sup>/${a+1} = (${fm(c)}/${b})<sup>${a+1}</sup> = ${fm(Fc)}`+(more?` → P(X &gt; ${fm(c)}) = 1 − ${fm(Fc)} = <b>${fm(1-Fc)}</b>`:` = <b>${fm(Fc)}</b>`),{v,a,b,c,more});
+}
+
+/* ============================================================
+   KRYPTO
+   ============================================================ */
+function gZ1(){
+  const v=pick(['ggt','bezout','dioph','dioph']);
+  const g=pick([1,1,1,2,3,3,4,6,7,12,23]);let a,b;do{a=g*RI(5,g>6?20:60);b=g*RI(3,g>6?15:40);}while(a<=b||gcd(a,b)!==g||a%b===0);
+  const eu=()=>{let h='',x=a,y=b;while(y){h+=`${x} = ${Math.floor(x/y)}·${y} + ${x%y}<br>`;[x,y]=[y,x%y];}return h;};
+  if(v==='ggt')return P('Z1','eukl',`Bestimme ggT(${a}, ${b}).`,[I('ggT =',g)],'ggT zweier Zahlen → Euklidischer Algorithmus (letzter Rest ≠ 0).',`${eu()}→ ggT = <b>${g}</b>`,{v,a,b});
+  const[,x0,y0]=egcd(a,b);
+  if(v==='bezout')return P('Z1','eukl',`Bestimme ganze Zahlen x, y mit ${a}·x + ${b}·y = ggT(${a}, ${b}). Gib auch den ggT an. (Jede gültige Lösung wird akzeptiert.)`,
+    [I('ggT =',g),{label:'x =',kind:'int',value:x0,check:vals=>a*vals[1]+b*vals[2]===g},{label:'y =',kind:'int',value:y0,check:vals=>a*vals[1]+b*vals[2]===g}],
+    'ggT als Summe von Vielfachen darstellen → erweiterter Euklid (Tableau).',`${tabHTML(a,b)}→ ggT = <b>${g}</b>, x = <b>${neg(x0)}</b>, y = <b>${neg(y0)}</b><br>Probe: ${pn(x0)}·${a} + ${pn(y0)}·${b} = ${x0*a+y0*b} ✓`,{v,a,b,g});
+  const solv=Math.random()<0.6;let c;if(solv)c=g*pick([1,2,3,5]);else{do{c=RI(2,40);}while(c%g===0&&g>1);if(g===1)c=null;}
+  if(c===null){return gZ1();}
+  if(solv){const f=c/g;const chk=vals=>a*vals[2]+b*vals[3]===c;
+    return P('Z1','eukl',`Hat die Gleichung ${a}·x + ${b}·y = ${c} ganzzahlige Lösungen? Gib ggT(${a}, ${b}) an, ob sie lösbar ist (ja/nein) und ggf. eine Lösung.`,
+      [I('ggT =',g),{label:'lösbar?',kind:'yn',value:1},{label:'x =',kind:'int',value:x0*f,check:chk},{label:'y =',kind:'int',value:y0*f,check:chk}],
+      'a·x + b·y = c ganzzahlig → lösbar ⇔ ggT(a,b) | c; Lösung per Tableau, dann skalieren.',
+      `${tabHTML(a,b)}ggT = ${g}, ${g} | ${c} ✓ → lösbar. Tableau: ${pn(x0)}·${a} + ${pn(y0)}·${b} = ${g}`+(f>1?` → alles ×${f}:`:':')+` x = <b>${neg(x0*f)}</b>, y = <b>${neg(y0*f)}</b><br>Probe: ${pn(x0*f)}·${a} + ${pn(y0*f)}·${b} = ${x0*f*a+y0*f*b} ✓`,{v,a,b,g,c,solv});}
+  return P('Z1','eukl',`Hat die Gleichung ${a}·x + ${b}·y = ${c} ganzzahlige Lösungen? Gib ggT(${a}, ${b}) an und ob sie lösbar ist (ja/nein).`,
+    [I('ggT =',g),{label:'lösbar?',kind:'yn',value:0}],'a·x + b·y = c ganzzahlig → lösbar ⇔ ggT(a,b) | c.',
+    `${eu()}ggT = ${g}, aber ${g} ∤ ${c} → <b>keine Lösung</b> (linke Seite ist immer Vielfaches von ${g}). Hinschreiben — fertig!`,{v,a,b,g,c,solv});
+}
+
+function gZ2(){
+  const v=pick(['inv','inv','inv','cong','cong']);
+  if(v==='inv'){const m=pick([26,17,23,31,40,43,60,72,96,97,120,127,180,220,288,396,432,504,616,840]);let a;do{a=RI(3,m-2);}while(gcd(a,m)!==1);const ans=modinv(a,m);
+    return P('Z2','inv',`Berechne die Inverse ${a}<sup>−1</sup> mod ${m}.`,[I('=',ans)],'Inverse mod m → erweiterter Euklid als Tableau mit (m, a); existiert, da ggT = 1.',invHTML(a,m),{v,a,m});}
+  let a,b,m,g;do{m=pick([12,15,18,20,24,26,26,28,30,35,36,42]);a=RI(2,m-1);b=RI(1,m-1);g=gcd(a,m);}while(false);
+  if(b%g!==0)return P('Z2','inv',`Löse ${a}·x ≡ ${b} (mod ${m}). Wie viele Lösungen gibt es in {0, …, ${m-1}}, und welches ist die kleinste? (Falls keine Lösung existiert: zweimal 0 eintragen.)`,
+    [I('Anzahl =',0),I('kleinste x =',0)],'Lineare Kongruenz a·x ≡ b (mod m) → ggT-Fallunterscheidung.',`g = ggT(${a}, ${m}) = ${g}, aber ${g} ∤ ${b} → <b>keine Lösung</b>.`,{v,a,b,m});
+  const a2=a/g,b2=b/g,m2=m/g;const inv=m2===1?0:modinv(a2,m2);const x0=m2===1?0:mod(inv*b2,m2);const all=Array.from({length:g},(_,i)=>x0+i*m2);
+  return P('Z2','inv',`Löse ${a}·x ≡ ${b} (mod ${m}). Wie viele Lösungen gibt es in {0, …, ${m-1}}, und welches ist die kleinste? (Falls keine Lösung existiert: zweimal 0 eintragen.)`,
+    [I('Anzahl =',g),I('kleinste x =',x0)],'Lineare Kongruenz a·x ≡ b (mod m) → ggT-Fallunterscheidung, dann Inverse im kleinen Modul.',
+    `g = ggT(${a}, ${m}) = ${g}`+(g>1?`, ${g} | ${b} ✓ → alles ÷${g} (auch den Modul!): ${a2}·x ≡ ${b2} (mod ${m2})`:' → eindeutig lösbar')+
+    (m2===1?'<br>→ jedes x ist Lösung':`<br>${a2}<sup>−1</sup> mod ${m2} = ${inv} (Probe: ${a2}·${inv} = ${a2*inv} ≡ 1) → x ≡ ${inv}·${b2} ≡ <b>${x0}</b> (mod ${m2})`)+
+    `<br>${g} Lösung${g>1?'en':''} mod ${m}: {${all.join(', ')}} · Probe: ${a}·${x0} = ${a*x0} ≡ ${mod(a*x0,m)} ✓`,{v,a,b,m});
+}
+
+function gZ3(){
+  const v=pick(['phi','phi','euler','euler','fermat','digit','digits2']);
+  if(v==='phi'){const n=pick([13,29,97,15,21,35,77,91,143,221,437,25,49,121,27,125,16,64,12,18,36,45,50,60,72,100,360]);const pf=primeFactors(n);const up=[...new Set(pf)];
+    return P('Z3','phi',`Bestimme φ(${n}) (Euler'sche Phi-Funktion).`,[I('φ =',phi(n))],'φ(n) → Primfaktorzerlegung, dann φ(n) = n·∏(1 − 1/p). Sonderfälle: φ(p)=p−1, φ(pq)=(p−1)(q−1), φ(p²)=p(p−1).',
+      `${n} = ${pf.join('·')} → φ = ${n}${up.map(p=>`·(1 − 1/${p})`).join('')} = <b>${phi(n)}</b>`+(pf.length===2&&pf[0]===pf[1]?` &nbsp;(⚠️ φ(p²) = p(p−1), nicht (p−1)²)`:''),{v,n});}
+  if(v==='digit'||v==='digits2'){const m=v==='digit'?10:100;const a=pick(v==='digit'?[3,7,9,13,17]:[3,7,9,11,13]);const e=RI(50,999);const ph=phi(m);const r=e%ph;
+    return P('Z3','euler',v==='digit'?`Was ist die letzte Dezimalziffer von ${a}<sup>${e}</sup>?`:`Wie lauten die letzten beiden Dezimalziffern von ${a}<sup>${e}</sup>? (als Zahl 0–99)`,[I('=',powmod(a,e,m))],
+      `Letzte Ziffer(n) = Rest mod ${m} → Euler: Exponent mod φ(${m}) = ${ph} reduzieren.`,`ggT(${a}, ${m}) = 1, φ(${m}) = ${ph} → ${a}<sup>${ph}</sup> ≡ 1<br>${e} = ${Math.floor(e/ph)}·${ph} + ${r} → ${a}<sup>${e}</sup> ≡ ${a}<sup>${r}</sup> (mod ${m})<br>${chainHTML(a,r,m)}`,{v,a,e,m});}
+  if(v==='fermat'){const p=pick([7,11,13,17,19,23,29,31]);let a;do{a=RI(2,12);}while(a%p===0);const e=RI(30,400);const r=e%(p-1);
+    return P('Z3','euler',`Welchen Rest lässt ${a}<sup>${e}</sup> bei Division durch ${p}?`,[I('=',powmod(a,e,p))],'Große Potenz mod Primzahl → kleiner Fermat: a^(p−1) ≡ 1 (mod p), Exponent mod (p−1) reduzieren.',
+      `${p} prim, ${p} ∤ ${a} → ${a}<sup>${p-1}</sup> ≡ 1 (mod ${p})<br>${e} = ${Math.floor(e/(p-1))}·${p-1} + ${r} → ${a}<sup>${e}</sup> ≡ ${a}<sup>${r}</sup><br>${chainHTML(a,r,p)}`,{v,a,e,m:p});}
+  const n=pick([9,10,14,15,20,21,25,26,33,35]);let a;do{a=RI(2,n-1);}while(gcd(a,n)!==1);const e=RI(40,999);const ph=phi(n);const r=e%ph;
+  return P('Z3','euler',`Berechne möglichst effizient ${a}<sup>${e}</sup> mod ${n}.`,[I('=',powmod(a,e,n))],'Große Potenz mod n → Euler-Theorem: Exponent mod φ(n) reduzieren, Rest per Quadrier-Kette.',
+    `ggT(${a}, ${n}) = 1 ✓, φ(${n}) = ${ph} → ${a}<sup>${ph}</sup> ≡ 1 (mod ${n})<br>${e} = ${Math.floor(e/ph)}·${ph} + ${r} → ${a}<sup>${e}</sup> ≡ ${a}<sup>${r}</sup><br>${chainHTML(a,r,n)}`,{v,a,e,m:n});
+}
+
+const RSA_P=[3,5,7,11,13,17,19,23,29,31];
+function rsaSetup(smallE){
+  let p,q,n,ph,e,d,m;
+  for(;;){
+    if(Math.random()<0.55){p=pick([17,19,23,29,31]);q=pick([17,19,23,29,31]);}else{p=pick(RSA_P);q=pick(RSA_P);}
+    if(p===q)continue;if(p>q)[p,q]=[q,p];n=p*q;if(n<33)continue;ph=(p-1)*(q-1);
+    if(smallE){const c=[3,5,7,11,13,17,19,23].filter(x=>x<ph&&gcd(x,ph)===1);if(!c.length)continue;e=pick(c);d=modinv(e,ph);}
+    else{const c=[];for(let x=3;x<=Math.min(35,ph-1);x++)if(gcd(x,ph)===1)c.push(x);if(!c.length)continue;d=pick(c);e=modinv(d,ph);}
+    if(e===d||e<3||d<3||(smallE&&d>130))continue;
+    do{m=RI(2,n-2);}while(gcd(m,n)!==1);
+    return {p,q,n,ph,e,d,m,c:powmod(m,e,n)};
+  }
+}
+function gZ4(){
+  const v=pick(['dec','dec','dec','enc','echoice','pq']);
+  if(v==='pq'){const big=[11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97];let p,q;do{p=pick(big);q=pick(big);}while(p>=q);const n=p*q,ph=(p-1)*(q-1);
+    return P('Z4','rsa',`Die Zahl n = ${n} ist das Produkt zweier Primzahlen p &lt; q, und es ist φ(n) = ${ph}. Bestimme p und q.`,[I('p =',p),I('q =',q)],
+      'n und φ(n) bekannt → p + q = n − φ(n) + 1, dann quadratische Gleichung / Vieta.',
+      `φ = (p−1)(q−1) = n − (p+q) + 1 ⇒ p + q = ${n} − ${ph} + 1 = ${p+q}<br>x² − ${p+q}x + ${n} = 0 ⇒ x = (${p+q} ± √(${(p+q)*(p+q)} − ${4*n}))/2 = (${p+q} ± ${q-p})/2 ⇒ <b>p = ${p}, q = ${q}</b><br>Probe: ${p}·${q} = ${n} ✓`,{v,n,ph});}
+  const smallE=v==='echoice'?true:Math.random()<0.35;const R=rsaSetup(smallE);const{p,q,n,ph,e,d,m,c}=R;
+  const s1=`<b>1) Faktorisieren bis √n:</b> ${factHTML(n,p,q)}<br><b>2)</b> φ = ${p-1}·${q-1} = <b>${ph}</b> (ab jetzt Modul ${ph}!)<br>`;
+  const s3=`<b>3) d = ${e}<sup>−1</sup> mod ${ph}:</b> ${invHTML(e,ph)}<br>`;
+  const s4=`<b>4) m = c<sup>d</sup> mod n = ${c}<sup>${d}</sup> mod ${n}</b> (wieder Modul n!): ${chainHTML(c,d,n)}<br><b>5) Endprobe:</b> ${m}<sup>${e}</sup> mod ${n} = ${powmod(m,e,n)} = c ✓`;
+  if(v==='enc')return P('Z4','rsa',`RSA mit öffentlichem Schlüssel (n, e) = (${n}, ${e}). Verschlüssle die Nachricht m = ${m}.`,[I('c =',c)],
+    'RSA, nur m gegeben → Einzeiler c = mᵉ mod n (keine Faktorisierung nötig!).',`c = ${m}<sup>${e}</sup> mod ${n}: ${chainHTML(m,e,n)}`,{v,R});
+  if(v==='dec')return P('Z4','rsa',`RSA: öffentlicher Schlüssel n = ${n}, e = ${e}. Abgefangen wurde der Geheimtext c = ${c}. Bestimme den geheimen Schlüssel d und den Klartext m.`,
+    [I('d =',d),I('m =',m)],'RSA, c gegeben → volle Entschlüsselung: n faktorisieren → φ → d (Tableau) → m = cᵈ mod n → Probe.',s1+s3+s4,{v,R});
+  const inval=[];for(let x=3;x<Math.min(ph,40);x++)if(gcd(x,ph)>1)inval.push(x);const b1=pick(inval);let b2;do{b2=pick(inval);}while(b2===b1);const cands=[e,b1,b2].sort((x,y)=>x-y);
+  return P('Z4','rsa',`RSA mit n = ${n}. Als öffentlicher Exponent stehen ${hl('{'+cands.join(', ')+'}')} zur Wahl — nur einer ist zulässig. Mit ihm wurde c = ${c} erzeugt. Bestimme e, d und den Klartext m.`,
+    [I('e =',e),I('d =',d),I('m =',m)],'RSA mit e-Auswahl → zulässig nur ggT(e, φ) = 1; dann normale Entschlüsselung.',
+    s1+`<b>2b)</b> ${cands.map(x=>`ggT(${x}, ${ph}) = ${gcd(x,ph)} ${gcd(x,ph)===1?'✓':'✗'}`).join(' · ')} → <b>e = ${e}</b><br>`+s3+s4,{v,R,cands});
+}
+
+const KWORDS=['HAUS','BAUM','CODE','MATHE','KRYPTO','GEHEIM','ZUFALL','PRIM','MODUL','RING','TEST','DATEN','LOGIK','WALD','BERLIN','KLAUSUR'];
+function gZ5(){
+  const keys=[3,5,7,9,11,15,17,19,21,23,25];const a=pick(keys),b=RI(0,25);const v=pick(['key','key','key','dec','enc']);
+  if(v==='enc'){const w=pick(KWORDS).slice(0,4);const out=w.split('').map(ch=>L(a*N_(ch)+b)).join('');
+    return P('Z5','aff',`Verschlüssle ${hl(w)} mit der affinen Chiffre f(x) = (${a}·x + ${b}) mod 26 (A=0, …, Z=25).`,[{label:'=',kind:'text',value:out}],
+      'Affine Chiffre, Schlüssel gegeben → buchstabenweise einsetzen.',w.split('').map(ch=>`${ch}=${N_(ch)} → ${a}·${N_(ch)}+${b} = ${a*N_(ch)+b} ≡ ${mod(a*N_(ch)+b,26)} = ${L(a*N_(ch)+b)}`).join('<br>')+`<br>→ <b>${out}</b>`,{v,a,b,w});}
+  if(v==='dec'){const w=pick(KWORDS).slice(0,4);const ct=w.split('').map(ch=>L(a*N_(ch)+b)).join('');const ai=modinv(a,26);
+    return P('Z5','aff',`Der Geheimtext ${hl(ct)} wurde mit der affinen Chiffre f(x) = (${a}·x + ${b}) mod 26 erzeugt (A=0, …, Z=25). Entschlüssle ihn.`,[{label:'=',kind:'text',value:w}],
+      'Affine Chiffre entschlüsseln → x = a⁻¹·(y − b) mod 26.',`${a}<sup>−1</sup> mod 26 = ${ai} (Probe: ${a}·${ai} = ${a*ai} ≡ 1)<br>`+ct.split('').map(ch=>`${ch}=${N_(ch)} → ${ai}·(${N_(ch)}−${b}) ≡ ${mod(ai*(N_(ch)-b),26)} = ${L(ai*(N_(ch)-b))}`).join('<br>')+`<br>→ <b>${w}</b>`,{v,a,b,w,ct});}
+  const tricky=Math.random()<0.5;let x1,x2;do{x1=RI(0,25);x2=RI(0,25);}while(x1===x2||gcd(mod(x1-x2,26),26)!==(tricky?2:1));
+  const y1=mod(a*x1+b,26),y2=mod(a*x2+b,26),dx=mod(x1-x2,26),dy=mod(y1-y2,26);let sol=`${x1}·a + b ≡ ${y1}, ${x2}·a + b ≡ ${y2} → subtrahieren: <b>${dx}·a ≡ ${dy} (mod 26)</b><br>`;
+  if(!tricky){const iv=modinv(dx,26);sol+=`ggT(${dx}, 26) = 1 → ${dx}<sup>−1</sup> mod 26 = ${iv} (Tableau) → a ≡ ${iv}·${dy} ≡ <b>${a}</b>, ggT(a,26) = 1 ✓`;}
+  else{const a13=mod(modinv(dx/2,13)*(dy/2),13);const c1=a13,c2=a13+13;const bad=gcd(c1,26)===1?c2:c1;
+    sol+=`⚠️ ggT(${dx}, 26) = 2 und 2 | ${dy} → alles ÷2 (auch Modul): ${dx/2}·a ≡ ${dy/2} (mod 13) → a ≡ ${a13} (mod 13)<br>Kandidaten a ∈ {${c1}, ${c2}}; gültig nur ggT(a,26) = 1: ${bad} ✗, <b>a = ${a}</b> ✓`;}
+  sol+=`<br>b ≡ ${y1} − ${a}·${x1} ≡ <b>${b}</b> (mod 26)<br>Probe mit beiden Paaren: ${a}·${x1}+${b} ≡ ${y1} ✓, ${a}·${x2}+${b} ≡ ${y2} ✓`;
+  return P('Z5','aff',`Affine Chiffre f(x) = (a·x + b) mod 26 (A=0, …, Z=25). Bekannt: ${hl(L(x1)+' → '+L(y1))} und ${hl(L(x2)+' → '+L(y2))}. Bestimme den gültigen Schlüssel a und b.`,
+    [I('a =',a),I('b =',b)],'Affine Chiffre, 2 Klartext-Geheimtext-Paare → 2 Gleichungen, subtrahieren, ggT-Check, Inverse.',sol,{v,a,b,x1,x2,y1,y2});
+}
+
+function gZ6(){
+  const v=pick(['cEnc','cDec','cKey','vEnc','vDec']);const w=pick(KWORDS);
+  if(v==='cKey'){const k=RI(1,25);const x=RI(0,25);
+    return P('Z6','caes',`Bei einer Caesar-Chiffre wird der Klartextbuchstabe ${hl(L(x))} zu ${hl(L(x+k))} (A=0, …, Z=25). Wie groß ist der Schlüssel k (0–25)?`,[I('k =',k)],
+      'Caesar: y = x + k mod 26 → k = y − x mod 26.',`${L(x)} = ${x}, ${L(x+k)} = ${mod(x+k,26)} → k = ${mod(x+k,26)} − ${x} ≡ <b>${k}</b> (mod 26)`,{v,k,x});}
+  if(v==='cEnc'||v==='cDec'){const k=RI(1,25);const ct=w.split('').map(ch=>L(N_(ch)+k)).join('');const enc=v==='cEnc';
+    return P('Z6','caes',enc?`Verschlüssle ${hl(w)} mit einer Caesar-Chiffre mit Schlüssel k = ${k} (A=0, …, Z=25).`:`Der Geheimtext ${hl(ct)} wurde mit einer Caesar-Chiffre mit Schlüssel k = ${k} erzeugt. Wie lautet der Klartext?`,
+      [{label:'=',kind:'text',value:enc?ct:w}],enc?'Caesar: jeden Buchstaben um k verschieben: y = x + k mod 26.':'Caesar entschlüsseln: x = y − k mod 26.',
+      (enc?w:ct).split('').map(ch=>`${ch}=${N_(ch)} → ${N_(ch)}${enc?'+':'−'}${k} ≡ ${mod(N_(ch)+(enc?k:-k),26)} = ${L(N_(ch)+(enc?k:-k))}`).join(' · ')+` → <b>${enc?ct:w}</b>`,{v,k,w,ct});}
+  const key=pick(['ABC','KEY','ROT','TOR','MAX','WUK','PI','ZU']);const ks=w.split('').map((_,i)=>N_(key[i%key.length]));const ct=w.split('').map((ch,i)=>L(N_(ch)+ks[i])).join('');const enc=v==='vEnc';
+  return P('Z6','caes',enc?`Verschlüssle ${hl(w)} mit der Vigenère-Chiffre und dem Schlüsselwort ${hl(key)} (A=0, …, Z=25).`:`Der Geheimtext ${hl(ct)} wurde mit der Vigenère-Chiffre und dem Schlüsselwort ${hl(key)} erzeugt. Wie lautet der Klartext?`,
+    [{label:'=',kind:'text',value:enc?ct:w}],'Vigenère: Schlüsselwort periodisch unter den Text schreiben, buchstabenweise '+(enc?'addieren':'subtrahieren')+' mod 26.',
+    `Schlüsselfolge: ${w.split('').map((_,i)=>key[i%key.length]).join('')} = ${ks.join(', ')}<br>`+(enc?w:ct).split('').map((ch,i)=>`${ch}(${N_(ch)})${enc?'+':'−'}${ks[i]} ≡ ${mod(N_(ch)+(enc?ks[i]:-ks[i]),26)} = ${L(N_(ch)+(enc?ks[i]:-ks[i]))}`).join(' · ')+` → <b>${enc?ct:w}</b>`,{v,key,w,ct});
+}
+
+function gZ7(){
+  const p=pick([11,13,17,19,23,29,31]);const g=RI(2,p-2),a=RI(2,p-2),b=RI(2,p-2);const A=powmod(g,a,p),B=powmod(g,b,p),K=powmod(B,a,p);
+  const rec='Öffentlich p und g, zwei geheime Exponenten → Diffie-Hellman: α = gᵃ, β = gᵇ, K = βᵃ = αᵇ (mod p).';
+  if(Math.random()<0.35)return P('Z7','dh',`Diffie-Hellman mit p = ${p} und g = ${g}. Alice hat α = ${A} gesendet. Bob wählt geheim b = ${b}. Welchen gemeinsamen Schlüssel K berechnet Bob?`,[I('K =',K)],rec,
+    `K = α<sup>b</sup> mod p = ${A}<sup>${b}</sup> mod ${p}: ${chainHTML(A,b,p)}`,{p,g,a,b,short:true});
+  return P('Z7','dh',`Diffie-Hellman-Schlüsselaustausch mit p = ${p} und g = ${g}. Alice wählt geheim a = ${a}, Bob wählt geheim b = ${b}. Bestimme α (Alice sendet), β (Bob sendet) und den gemeinsamen Schlüssel K.`,
+    [I('α =',A),I('β =',B),I('K =',K)],rec,`α = ${g}<sup>${a}</sup> mod ${p}: ${chainHTML(g,a,p)}<br>β = ${g}<sup>${b}</sup> mod ${p}: ${chainHTML(g,b,p)}<br>K = β<sup>a</sup> = ${B}<sup>${a}</sup> mod ${p}: ${chainHTML(B,a,p)}<br>Probe: α<sup>b</sup> = ${A}<sup>${b}</sup> mod ${p} = ${powmod(A,b,p)} ✓`,{p,g,a,b});
+}
+
+const GEN={K1:gK1,K2:gK2,K3:gK3,K4:gK4,K5:gK5,K6:gK6,W1:gW1,W2:gW2,W3:gW3,W4:gW4,W5:gW5,V1:gV1,V2:gV2,V3:gV3,V4:gV4,V5:gV5,V6:gV6,Z1:gZ1,Z2:gZ2,Z3:gZ3,Z4:gZ4,Z5:gZ5,Z6:gZ6,Z7:gZ7};
+function genProblem(key){
+  if(!key||key==='all')key=pick(TYPES).key;
+  else if(key.length===1)key=pick(TYPES.filter(t=>t.key[0]===key)).key;
+  return GEN[key]();
+}
+/* Klausur-Zusammenstellung: 7 Aufgaben quer durch die Blöcke */
+function examSet(){
+  return [pick(['K4','K4','K2']),pick(['K1','K3','K5','K6','K2']),pick(['W4','W4','W1','W2','W3','W5']),pick(['V4','V4','V3']),pick(['V1','V2','V5','V6','V3']),pick(['Z4','Z4','Z2']),pick(['Z1','Z3','Z5','Z6','Z7'])];
+}
+
+/* ============================================================
+   ERKENNUNG — Modelle + handgeschriebene Aufgabentexte
+   ============================================================ */
+const MODELS={
+  perm:'Permutation / Multimenge: n!/(n₁!·n₂!·…)',
+  vmw:'Variation mit Wdh.: nᵏ',
+  vow:'Variation ohne Wdh.: n!/(n−k)!',
+  kow:'Kombination ohne Wdh.: C(n,k)',
+  kmw:'Kombination mit Wdh.: C(n+k−1, k)',
+  kbed:'Auswahl mit Bedingung: Produkt/Summe von C(…)',
+  sieb:'Siebformel (Inklusion–Exklusion)',
+  schub:'Schubfachprinzip',
+  binl:'Binomischer Lehrsatz / Multinomialkoeffizient',
+  lap:'Laplace: günstige / mögliche',
+  beleg:'Belegungsmodell (Fahrstuhl): |Ω| = kⁿ',
+  hyp:'Hypergeometrisch (ohne Zurücklegen)',
+  bayes:'Bayes / totale Wahrscheinlichkeit',
+  unabh:'Unabhängige Ereignisse: Produkt bzw. 1 − Π(1−pᵢ)',
+  bin:'Binomialverteilung',
+  minn:'Mindest-n-Ungleichung (Gegenereignis + ln)',
+  wett:'Wettkampf: zwei Binomialserien vergleichen',
+  vert:'Verteilung selbst aufstellen → E, Var',
+  indik:'Indikator-Trick / Linearität von E',
+  geo:'Geometrische Verteilung (bis zum 1. Erfolg)',
+  pois:'Poisson-Verteilung',
+  stet:'Stetige ZV: Dichte integrieren',
+  eukl:'Erweiterter Euklid: a·x + b·y = c',
+  inv:'Inverse mod m / lineare Kongruenz',
+  euler:'Euler / Fermat: Exponent reduzieren',
+  phi:'φ-Funktion',
+  rsa:'RSA',
+  aff:'Affine Chiffre',
+  caes:'Caesar / Vigenère',
+  dh:'Diffie-Hellman',
+};
+/* typische Verwechsler je Modell */
+const CONF={
+  perm:['vow','kow','vmw','binl'],vmw:['kmw','vow','kow'],vow:['vmw','kow','perm'],kow:['vow','kmw','kbed'],kmw:['vmw','kow','vow'],
+  kbed:['kow','hyp','sieb','vow'],sieb:['kow','schub','lap','kbed'],schub:['sieb','kmw','lap'],binl:['kow','perm','bin'],
+  lap:['beleg','hyp','bin','bayes'],beleg:['lap','kmw','bin','hyp'],hyp:['bin','lap','kow','bayes'],bayes:['lap','unabh','hyp','bin'],
+  unabh:['bin','bayes','sieb','lap'],bin:['hyp','geo','unabh','pois'],minn:['bin','geo','schub','wett'],wett:['bin','minn','bayes','vert'],
+  vert:['bin','indik','hyp','lap'],indik:['vert','bin','beleg','lap'],geo:['bin','minn','pois'],pois:['bin','geo','stet'],stet:['vert','pois','lap'],
+  eukl:['inv','phi','euler'],inv:['eukl','euler','phi','rsa'],euler:['phi','inv','rsa'],phi:['euler','sieb','inv'],rsa:['dh','inv','aff','euler'],
+  aff:['caes','inv','rsa'],caes:['aff','dh','rsa'],dh:['rsa','euler','caes'],
+};
+/* t = Typ, m = Modell, q = Aufgabentext, a = Ansatz, s = Signalwörter */
+const RECOG=[
+ {t:'K2',m:'vmw',q:'Ein Codeschloss hat 4 Stellen, jede zeigt einen von 26 Buchstaben. Wie viele Codes gibt es?',a:'26⁴ = 456 976',s:'Stellen/Positionen = Reihenfolge wichtig; Buchstaben dürfen mehrfach vorkommen.'},
+ {t:'K2',m:'kmw',q:'Eine Eisdiele bietet 12 Sorten. Du nimmst 3 Kugeln im Becher; Sorten dürfen doppelt sein. Wie viele verschiedene Bestellungen gibt es?',a:'C(12+3−1, 3) = C(14,3) = 364 — nicht 12³!',s:'„im Becher“ = Reihenfolge egal; „Sorten doppelt“ = Wiederholung. Die Klausur-Falle SS26.'},
+ {t:'K2',m:'vow',q:'8 Sprinterinnen laufen im Finale. Wie viele Möglichkeiten gibt es für Gold, Silber und Bronze?',a:'8·7·6 = 336',s:'Plätze 1/2/3 = Reihenfolge wichtig; eine Person nur ein Platz = ohne Wdh.'},
+ {t:'K2',m:'kow',q:'Aus 15 Studierenden wird eine Dreier-Lerngruppe gebildet. Wie viele Gruppen sind möglich?',a:'C(15,3) = 455',s:'Gruppe ohne Rollen = Reihenfolge egal; Personen = ohne Wdh.'},
+ {t:'K2',m:'kmw',q:'7 identische Werbeflyer werden auf 4 Briefkästen verteilt (ein Kasten darf leer bleiben oder mehrere bekommen). Wie viele Verteilungen gibt es?',a:'C(4+7−1, 7) = C(10,7) = 120',s:'„identische“ Objekte auf unterscheidbare Fächer = Reihenfolge egal + Wdh. (Stars & Bars).'},
+ {t:'K2',m:'kmw',q:'Beim Bäcker gibt es 5 Sorten Brötchen. Wie viele verschiedene Tüten mit 8 Brötchen kann man kaufen?',a:'C(5+8−1, 8) = C(12,8) = 495',s:'Tüte = Reihenfolge egal; Sorten beliebig oft.'},
+ {t:'K2',m:'vmw',q:'5 verschiedene Briefe werden in 3 Briefkästen geworfen. Wie viele Möglichkeiten gibt es?',a:'3⁵ = 243 (jeder Brief wählt einen Kasten)',s:'Unterscheidbare Objekte, jedes wählt frei = nᵏ mit n = Ziele, k = Objekte.'},
+ {t:'K2',m:'kow',q:'Beim Skat erhält ein Spieler 10 von 32 Karten. Wie viele verschiedene Blätter gibt es?',a:'C(32,10)',s:'„Blatt/Hand“ = Reihenfolge egal, Karten einmalig.'},
+ {t:'K2',m:'vow',q:'Wie viele vierstellige Zahlen gibt es, die aus lauter verschiedenen Ziffern bestehen?',a:'9·9·8·7 = 4536 (erste Ziffer ≠ 0)',s:'Stellen = Reihenfolge; „verschiedene“ = ohne Wdh.; Sonderfall führende Null.'},
+ {t:'K2',m:'kmw',q:'Ein Dominostein zeigt zwei Zahlen von 0 bis 6; (1;3) und (3;1) sind derselbe Stein. Wie viele Steine gibt es?',a:'C(7+2−1, 2) = C(8,2) = 28',s:'Paar ohne Reihenfolge, gleiche Zahl zweimal erlaubt (Doppelsteine) = Kombination mit Wdh.'},
+ {t:'K1',m:'perm',q:'Auf ein Regal kommen 8 Bücher, davon 3 identische Exemplare desselben Romans. Wie viele erkennbar verschiedene Anordnungen gibt es?',a:'8!/3! = 6720',s:'Alle anordnen + identische Objekte = Multimenge.'},
+ {t:'K1',m:'perm',q:'Wie viele verschiedene Buchstabenfolgen lassen sich aus STATISTIK bilden?',a:'9!/(2!·3!·2!) = 15 120 (S:2, T:3, I:2)',s:'„Buchstaben umordnen“ mit Mehrfachbuchstaben.'},
+ {t:'K1',m:'perm',q:'5 Personen stellen sich für ein Foto in eine Reihe; ein Paar will nebeneinander stehen. Wie viele Aufstellungen gibt es?',a:'Block: 4!·2! = 48',s:'„nebeneinander/zusammen“ → als Block zählen, Block intern permutieren.'},
+ {t:'K1',m:'perm',q:'12 Kinder werden auf die Mannschaften Rot, Blau und Grün zu je 4 aufgeteilt. Wie viele Aufteilungen gibt es?',a:'12!/(4!·4!·4!) = 34 650',s:'Aufteilen in benannte Gruppen fester Größe = Multinomialkoeffizient.'},
+ {t:'K3',m:'kbed',q:'Aus 6 Frauen und 5 Männern soll ein Team mit genau 2 Frauen und 2 Männern gebildet werden. Wie viele Teams gibt es?',a:'C(6,2)·C(5,2) = 150',s:'Auswahl aus zwei Gruppen mit fester Quote → multiplizieren.'},
+ {t:'K3',m:'kbed',q:'Wie viele Pokerhände (5 aus 52 Karten) enthalten genau 2 Asse?',a:'C(4,2)·C(48,3)',s:'„genau j aus einer Teilgruppe“ → C(Gruppe, j)·C(Rest, k−j).'},
+ {t:'K3',m:'kbed',q:'Ein 4er-Ausschuss wird aus 10 Personen gewählt; die Vorsitzende muss dabei sein. Wie viele Ausschüsse gibt es?',a:'C(9,3) = 84',s:'Pflichtmitglied → Platz und Person abziehen.'},
+ {t:'K4',m:'sieb',q:'Wie viele der Zahlen von 1 bis 500 sind durch 3 oder durch 7 teilbar?',a:'⌊500/3⌋ + ⌊500/7⌋ − ⌊500/21⌋ = 166 + 71 − 23 = 214',s:'„durch a ODER b“, Mengen überlappen; Schnitt = kgV.'},
+ {t:'K4',m:'sieb',q:'3 Gäste greifen beim Gehen zufällig je einen der 3 Mäntel. Bei wie vielen Verteilungen erwischt niemand den eigenen?',a:'Derangement D₃ = 3!·(1 − 1 + 1/2 − 1/6) = 2',s:'„niemand das Eigene / kein Element am Platz“.'},
+ {t:'K4',m:'sieb',q:'Von 120 Kunden trinken 70 Kaffee, 50 Tee und 25 beides. Wie viele trinken weder Kaffee noch Tee?',a:'120 − (70 + 50 − 25) = 25',s:'Überlappende Kategorien, „beides“ gegeben, „weder noch“ gefragt.'},
+ {t:'K4',m:'sieb',q:'Wie viele der Zahlen von 1 bis 300 haben mit 30 keinen gemeinsamen Teiler außer 1?',a:'30 = 2·3·5 → 300 − (150+100+60−50−30−20+10) = 80',s:'„durch keine der Primteiler teilbar“ → N − |A∪B∪C|.',o:['kow','schub','kbed']},
+ {t:'K4',m:'sieb',q:'Ein Passwort hat 6 Zeichen aus Kleinbuchstaben und Ziffern. Wie viele Passwörter enthalten mindestens eine Ziffer und mindestens einen Buchstaben?',a:'36⁶ − 26⁶ − 10⁶',s:'Zwei „mindestens ein“-Bedingungen gleichzeitig → Gegenereignis ist eine Vereinigung.'},
+ {t:'K4',m:'sieb',q:'Für zwei Ereignisse gilt P(A) = 0,5, P(B) = 0,4 und P(A∩B) = 0,2. Wie groß ist P(A∪B)?',a:'0,5 + 0,4 − 0,2 = 0,7',s:'ODER bei überlappenden Ereignissen — Siebformel gilt wortgleich für P.',o:['unabh','bayes','lap']},
+ {t:'K4',m:'sieb',q:'Von 38 Studierenden, die mindestens eine von drei Klausuren bestanden haben, kennt man alle Einzel- und Paar-Anzahlen. Wie viele haben alle drei bestanden?',a:'|A∩B∩C| = |A∪B∪C| − Σ einzeln + Σ Paare',s:'Drei überlappende Mengen; Formel nach dem Dreierschnitt umstellen.'},
+ {t:'K5',m:'schub',q:'Begründe: In einer WG mit 13 Bewohnern haben mindestens zwei im selben Monat Geburtstag.',a:'13 Objekte (Bewohner) auf 12 Fächer (Monate) → ein Fach doppelt.',s:'„Begründe / mindestens zwei … gleich“, keine Wahrscheinlichkeit gefragt.'},
+ {t:'K5',m:'schub',q:'In einer Schublade liegen lose rote, blaue und schwarze Socken. Wie viele muss man im Dunkeln mindestens herausnehmen, um sicher ein gleichfarbiges Paar zu haben?',a:'3 Farben → (2−1)·3 + 1 = 4',s:'„sicher / garantiert“ → worst case + 1.'},
+ {t:'K5',m:'schub',q:'Zeige: Unter 7 verschiedenen natürlichen Zahlen gibt es immer zwei, deren Summe oder Differenz ein Vielfaches von 10 ist.',a:'6 Fächer nach Rest mod 10: {0}, {1,9}, {2,8}, {3,7}, {4,6}, {5}; 7 Zahlen → ein Fach doppelt.',s:'„Zeige … gibt es immer zwei“ → Fächer geschickt wählen.'},
+ {t:'K5',m:'schub',q:'Ein Dorf hat 400 Einwohner. Kann man sicher sein, dass zwei am selben Tag des Jahres Geburtstag haben?',a:'Ja: 400 Objekte, 366 Fächer.',s:'„sicher sein“ statt „wie wahrscheinlich“.',o:['beleg','lap','sieb']},
+ {t:'K6',m:'binl',q:'Wie groß ist der Koeffizient von x⁴ in (1 + x)⁹?',a:'C(9,4) = 126',s:'„Koeffizient von … in (a+b)ⁿ“.'},
+ {t:'K6',m:'binl',q:'Welchen Koeffizienten hat x²y³ in (2x + y)⁵?',a:'C(5,2)·2² = 40',s:'Lehrsatz mit Vorfaktor: Potenz des Vorfaktors nicht vergessen.'},
+ {t:'K6',m:'binl',q:'Welchen Koeffizienten hat a²bc in (a + b + c)⁴?',a:'4!/(2!·1!·1!) = 12',s:'Drei Summanden → Multinomialkoeffizient.'},
+ {t:'K6',m:'perm',q:'Ein Roboter fährt auf einem Gitter vom Start zum Ziel, das 5 Felder östlich und 3 Felder nördlich liegt. Er fährt nur nach Osten oder Norden. Wie viele Wege gibt es?',a:'Folgen aus 5×O und 3×N: 8!/(5!·3!) = C(8,3) = 56',s:'Gitterweg = Anordnung von Schritten zweier Sorten.',o:['vmw','kmw','vow']},
+ {t:'K6',m:'kow',q:'Nach einer Besprechung gibt jeder jedem einmal die Hand; insgesamt sind es 66 Händedrücke. Wie viele Personen waren da?',a:'C(n,2) = 66 → n(n−1) = 132 → n = 12',s:'„jeder mit jedem“ = Paare = C(n,2).'},
+ {t:'W1',m:'lap',q:'Drei Würfel werden geworfen. Wie wahrscheinlich ist die Augensumme 4?',a:'günstig: (1,1,2) in 3 Reihenfolgen → 3/216',s:'Endlich viele gleichwahrscheinliche Ergebnisse, |Ω| = 6³.'},
+ {t:'W1',m:'sieb',q:'Aus 52 Karten wird eine gezogen. Wie wahrscheinlich ist sie eine Dame oder eine Herzkarte?',a:'4/52 + 13/52 − 1/52 = 16/52',s:'ODER mit Überlappung (Herzdame!) → Siebformel für P.',o:['lap','hyp','unabh']},
+ {t:'W1',m:'lap',q:'Zwei Würfel: Wie wahrscheinlich ist ein Pasch?',a:'6/36 = 1/6',s:'Abzählen im 36er-Grundraum.'},
+ {t:'W2',m:'beleg',q:'5 Personen steigen im Erdgeschoss in einen Fahrstuhl; jede wählt zufällig eines von 8 Stockwerken. Wie wahrscheinlich steigen alle in verschiedenen Stockwerken aus?',a:'8·7·6·5·4 / 8⁵',s:'n Akteure wählen unabhängig aus k Zielen.'},
+ {t:'W2',m:'beleg',q:'4 Freunde nennen unabhängig je eine Zahl von 1 bis 10. Wie wahrscheinlich sind alle Zahlen verschieden?',a:'10·9·8·7 / 10⁴ = 0,504',s:'Gleiches Modell wie der Fahrstuhl — andere Kleidung.'},
+ {t:'W2',m:'beleg',q:'Wie wahrscheinlich haben unter 23 zufälligen Personen mindestens zwei am selben Tag Geburtstag?',a:'1 − 365·364·…·343 / 365²³',s:'Belegungsmodell + „mindestens zwei gleich“ → Gegenereignis „alle verschieden“.',o:['schub','bin','lap']},
+ {t:'W2',m:'beleg',q:'3 Kugeln werden zufällig auf 5 Schubladen verteilt. Wie wahrscheinlich landen alle in derselben Schublade?',a:'5 / 5³ = 1/25',s:'Kugeln auf Fächer, |Ω| = 5³.'},
+ {t:'W3',m:'hyp',q:'Aus einer Lieferung von 20 Teilen (6 defekt) werden 5 Teile ohne Zurücklegen geprüft. Wie wahrscheinlich ist genau eines defekt?',a:'C(6,1)·C(14,4) / C(20,5)',s:'Stichprobe OHNE Zurücklegen aus zwei Sorten.'},
+ {t:'W3',m:'hyp',q:'Lotto 6 aus 49: Wie wahrscheinlich sind genau 4 Richtige?',a:'C(6,4)·C(43,2) / C(49,6)',s:'Ziehung ohne Zurücklegen; „Richtige“ und „Falsche“ sind die zwei Sorten.'},
+ {t:'W3',m:'hyp',q:'In einem Gremium sitzen 12 Personen, davon 7 Frauen. 4 Personen werden ausgelost. Wie wahrscheinlich sind genau 2 Frauen dabei?',a:'C(7,2)·C(5,2) / C(12,4)',s:'Auslosen von Personen = ohne Zurücklegen.'},
+ {t:'V1',m:'bin',q:'Eine Urne enthält 4 rote und 6 blaue Kugeln. Es wird 5-mal MIT Zurücklegen gezogen. Wie wahrscheinlich sind genau 2 rote dabei?',a:'Bin(5; 0,4): C(5,2)·0,4²·0,6³',s:'Mit Zurücklegen → p bleibt konstant → Binomial (ohne Zurücklegen wäre hypergeometrisch).'},
+ {t:'W4',m:'bayes',q:'Ein Virenscanner erkennt 95 % der infizierten Dateien, schlägt aber auch bei 2 % der sauberen an. 1 % der Dateien ist infiziert. Der Scanner schlägt an — wie wahrscheinlich ist die Datei infiziert?',a:'0,95·0,01 / (0,95·0,01 + 0,02·0,99) ≈ 0,324',s:'Wirkung (Alarm) bekannt, Ursache gesucht; Trefferquote + Fehlalarmrate + Grundanteil.'},
+ {t:'W4',m:'bayes',q:'Zwei Fabriken liefern 60 % bzw. 40 % der Teile mit Ausschussquoten von 2 % bzw. 5 %. Ein Teil ist defekt. Wie wahrscheinlich stammt es aus Fabrik 2?',a:'0,4·0,05 / (0,6·0,02 + 0,4·0,05) = 0,625',s:'„stammt es aus …“ nach beobachtetem Defekt.'},
+ {t:'W4',m:'bayes',q:'Drei Lieferanten liefern 50 %, 30 %, 20 % der Ware mit 1 %, 2 %, 3 % Ausschuss. Wie groß ist der Ausschussanteil insgesamt?',a:'totale W.: 0,5·0,01 + 0,3·0,02 + 0,2·0,03 = 0,017',s:'Mehrere Wege führen zum Ereignis → Pfade addieren.'},
+ {t:'W4',m:'bayes',q:'Urne A enthält 3 rote und 1 blaue Kugel, Urne B 1 rote und 3 blaue. Eine Urne wird zufällig gewählt, die gezogene Kugel ist rot. Wie wahrscheinlich war es Urne A?',a:'½·¾ / (½·¾ + ½·¼) = 3/4',s:'Zweistufiges Experiment, Ergebnis der 2. Stufe bekannt, 1. Stufe gesucht.'},
+ {t:'W4',m:'bayes',q:'70 % der Studierenden haben gelernt. Wer gelernt hat, besteht mit 90 %, sonst mit 30 %. Eine Person hat bestanden. Wie wahrscheinlich hat sie gelernt?',a:'0,7·0,9 / (0,7·0,9 + 0,3·0,3) = 0,875',s:'P(Ursache | Wirkung) aus P(Wirkung | Ursache).'},
+ {t:'W5',m:'unabh',q:'3 Schützen treffen mit den Wahrscheinlichkeiten 0,5, 0,3 und 0,2 und schießen gleichzeitig auf eine Scheibe. Wie wahrscheinlich wird sie getroffen?',a:'1 − 0,5·0,7·0,8 = 0,72',s:'Verschiedene p (kein Binomial!), unabhängig, „mindestens einer“.'},
+ {t:'W5',m:'unabh',q:'Zwei redundante Server fallen unabhängig mit Wahrscheinlichkeit 0,1 bzw. 0,05 aus. Das System steht nur, wenn beide ausfallen. Wie wahrscheinlich steht es?',a:'0,1·0,05 = 0,005',s:'UND bei Unabhängigkeit = Produkt.'},
+ {t:'W5',m:'unabh',q:'Eine Kette aus drei Bauteilen funktioniert nur, wenn alle funktionieren (unabhängig, mit 0,9, 0,95 und 0,8). Wie zuverlässig ist die Kette?',a:'0,9·0,95·0,8 = 0,684',s:'„alle müssen“ = UND, unabhängig.'},
+ {t:'V1',m:'bin',q:'Eine Maschine produziert 2 % Ausschuss. Wie wahrscheinlich ist unter 50 Teilen höchstens eines defekt?',a:'Bin(50; 0,02): P(X=0) + P(X=1)',s:'Feste Anzahl n, unabhängig, konstantes p, zwei Ausgänge.'},
+ {t:'V1',m:'bin',q:'Ein Test hat 10 Fragen mit je 4 Antworten. Jemand rät alles. Wie wahrscheinlich sind genau 3 richtig?',a:'C(10,3)·0,25³·0,75⁷',s:'10 unabhängige Versuche mit p = ¼.'},
+ {t:'V1',m:'bin',q:'Tennisspieler A gewinnt jeden Satz mit Wahrscheinlichkeit 2/3. Es werden genau 4 Sätze gespielt. Wie wahrscheinlich gewinnt A mehr als die Hälfte?',a:'P(X≥3) = C(4,3)·(2/3)³·(1/3) + (2/3)⁴ = 16/27',s:'Feste Satzzahl, konstantes p → Binomial, k-Bereich aus dem Text.',o:['wett','geo','vert']},
+ {t:'V2',m:'minn',q:'Wie oft muss man würfeln, damit mit mindestens 90 % Wahrscheinlichkeit mindestens eine Sechs fällt?',a:'(5/6)ⁿ ≤ 0,1 → n ≥ ln 0,1 / ln(5/6) = 12,6 → 13',s:'„Wie oft … damit mit mindestens … % mindestens ein“.'},
+ {t:'V2',m:'minn',q:'Ein Schütze trifft mit 20 %. Wie viele Schüsse braucht er mindestens, um mit 95,5 % Wahrscheinlichkeit mindestens einmal zu treffen?',a:'0,8ⁿ ≤ 0,045 → n ≥ 13,9 → 14',s:'Gesucht ist n, gegeben eine Mindestwahrscheinlichkeit. Original SS26.'},
+ {t:'V2',m:'minn',q:'Ein Los gewinnt mit 5 %. Wie viele Lose muss man kaufen, damit die Chance auf mindestens einen Gewinn über 50 % liegt?',a:'0,95ⁿ < 0,5 → n > 13,5 → 14',s:'„Wie viele …, damit die Chance über …“.'},
+ {t:'V3',m:'wett',q:'Im Wettschießen führt A mit 5:3. Beide haben noch 4 Schüsse; A trifft mit 0,5, B mit 0,7. Wie wahrscheinlich gewinnt B noch?',a:'X~Bin(4; 0,5), Y~Bin(4; 0,7); 3+Y > 5+X ⇔ Y ≥ X+3 → Σₓ P(X=x)·P(Y ≥ x+3)',s:'Zwischenstand + zwei Restserien + „gewinnt noch“.'},
+ {t:'V3',m:'wett',q:'Elfmeterschießen: Team A hat 3 Tore und noch 2 Schüsse (je 0,8), Team B hat 2 Tore und noch 3 Schüsse (je 0,7). Wie wahrscheinlich liegt A am Ende vorn?',a:'X~Bin(2; 0,8), Y~Bin(3; 0,7); 3+X > 2+Y ⇔ X ≥ Y → Σ_y P(Y=y)·P(X ≥ y)',s:'Zwei Serien, Vergleich der Endstände.'},
+ {t:'V3',m:'wett',q:'Schütze 1 (p = 0,4) hat 8 Treffer aus 10 Schüssen, Schütze 2 (p = 0,2) hat 10 Treffer aus 15. Jeder schießt 20-mal. Wie wahrscheinlich gewinnt Schütze 1 noch?',a:'X~Bin(10; 0,4), Y~Bin(5; 0,2); 8+X > 10+Y ⇔ X ≥ Y+3 → Doppelsumme',s:'Nur die VERBLEIBENDEN Schüsse sind zufällig. Original SS26.'},
+ {t:'V4',m:'vert',q:'3 Torschützen schießen je auf eines von n Toren (zufällig, unabhängig, jeder Schuss sitzt). X = Anzahl der getroffenen Tore. Bestimme die Verteilung von X, E[X] und Var(X).',a:'|Ω| = n³; P(X=1) = 1/n², P(X=2) = 3(n−1)/n², P(X=3) = (n−1)(n−2)/n²; Σ=1; E, Var per Definition',s:'„Verteilung von X“ ohne Standardnamen. Jäger/Hasen der SS26.'},
+ {t:'V4',m:'vert',q:'Zwei Würfel werden geworfen. X sei die größere der beiden Augenzahlen. Bestimme die Wahrscheinlichkeitsfunktion und den Erwartungswert.',a:'P(X=k) = (2k−1)/36, E[X] = 161/36',s:'X ist über das Experiment definiert → Tabelle selbst aufstellen.'},
+ {t:'V4',m:'vert',q:'Ein Match endet, sobald jemand zwei Sätze hintereinander oder insgesamt drei Sätze gewonnen hat (beide gleich stark). X = Anzahl der Sätze. Verteilung und E[X]?',a:'Baum: P(2)=½, P(3)=¼, P(4)=⅛, P(5)=⅛ → E = 23/8',s:'Abbruchregel → Baum zeichnen, Werte von X sammeln.',o:['geo','bin','wett']},
+ {t:'V4',m:'indik',q:'n Datensätze werden zufällig auf n Speicherplätze gehasht. X = Anzahl der Plätze mit genau einem Datensatz. Wie groß ist E[X]?',a:'E[X] = n·P(Platz hat genau einen) = n·n·(1/n)·(1−1/n)ⁿ⁻¹ = n·(1−1/n)ⁿ⁻¹',s:'Nur E gefragt, X zählt Dinge mit einer Eigenschaft.'},
+ {t:'V4',m:'indik',q:'10 Gäste geben ihre Hüte ab und bekommen sie zufällig zurück. Wie viele Gäste erhalten im Mittel ihren eigenen Hut?',a:'E = 10·(1/10) = 1',s:'„im Mittel wie viele“ → Summe von Indikatoren.',o:['sieb','vert','bin']},
+ {t:'V4',m:'vert',q:'X nimmt die Werte 0, 1, 2, 3 mit den Wahrscheinlichkeiten 0, ¼, ½, ¼ an. Bestimme Varianz und Standardabweichung.',a:'E = 2, E[X²] = ¼ + 2 + 9/4 = 4,5 → Var = 0,5, σ ≈ 0,707',s:'Tabelle gegeben → stur Definition.'},
+ {t:'V4',m:'indik',q:'In einer Urne liegen Kugeln mit den Nummern 1 bis n. Man zieht k Kugeln ohne Zurücklegen. Welchen Wert hat die Summe der Nummern im Mittel?',a:'E[Summe] = k·E[eine Nummer] = k·(n+1)/2',s:'Erwartungswert einer Summe → Linearität, Abhängigkeit egal.',o:['hyp','vert','kow']},
+ {t:'V5',m:'geo',q:'Ein Spieler trifft mit Wahrscheinlichkeit 0,3. Wie wahrscheinlich fällt der erste Treffer genau im 4. Versuch?',a:'0,7³·0,3',s:'„erster Treffer im k-ten Versuch“.'},
+ {t:'V5',m:'geo',q:'Bei einem Würfelspiel darf man erst nach einer Sechs loslegen. Wie wahrscheinlich braucht man mehr als drei Würfe?',a:'(5/6)³ = 125/216',s:'„mehr als k Versuche bis zum ersten Erfolg“ = k Nieten.'},
+ {t:'V5',m:'geo',q:'Wie oft muss man im Mittel würfeln, bis die erste Sechs fällt?',a:'E = 1/p = 6',s:'„im Mittel bis zum ersten …“.',o:['minn','bin','indik']},
+ {t:'V5',m:'pois',q:'An einem Druckserver gehen im Mittel 120 Aufträge pro Stunde ein (Poisson-verteilt). Wie wahrscheinlich kommt in einer Minute kein Auftrag?',a:'λ = 2 pro Minute → e⁻² ≈ 0,135',s:'„im Mittel … pro Zeiteinheit“, Anzahl in einem Intervall.'},
+ {t:'V6',m:'stet',q:'Die Dichte von X sei f(x) = C·x auf [0, 4] und sonst 0. Bestimme C und E[X].',a:'∫₀⁴ Cx dx = 8C = 1 → C = 1/8; E = ∫₀⁴ x·x/8 dx = 8/3',s:'„Dichte“, Intervall, Konstante C.'},
+ {t:'V6',m:'stet',q:'Die Wartezeit auf einen Bus ist gleichmäßig zwischen 0 und 10 Minuten verteilt. Wie wahrscheinlich wartet man länger als 7 Minuten, und wie lange im Mittel?',a:'P = 3/10, E = 5',s:'Kontinuierliche Größe, „gleichmäßig zwischen“.'},
+ {t:'V6',m:'stet',q:'f(x) = C·(2 − x) für 0 ≤ x ≤ 2, sonst 0. Welchen Wert hat der Normierungsfaktor, und wie groß ist der Erwartungswert?',a:'∫₀²(2−x)dx = 2 → C = ½; E = ½·∫₀²(2x − x²)dx = 2/3',s:'„Normierungsfaktor“ → ∫f = 1.'},
+ {t:'Z2',m:'inv',q:'Bei einem RSA-System ist φ(n) = 40 und e = 7. Bestimme den privaten Schlüssel d.',a:'d = 7⁻¹ mod 40 = 23 (Tableau; Probe 7·23 = 161 = 4·40 + 1)',s:'d·e ≡ 1 (mod φ) → Inverse.',o:['rsa','euler','phi']},
+ {t:'Z1',m:'eukl',q:'Bestimme ganze Zahlen x und y mit 729·x + 75·y = 6.',a:'ggT(729,75) = 3 | 6 → Tableau liefert 3 = …, dann ×2',s:'Lineare Gleichung in zwei ganzzahligen Unbekannten.'},
+ {t:'Z1',m:'eukl',q:'Warum gibt es keine ganzen Zahlen x, y mit 12·x + 42·y = 8?',a:'ggT(12,42) = 6 teilt 8 nicht → keine Lösung',s:'Lösbarkeit ⇔ ggT | rechte Seite.'},
+ {t:'Z2',m:'inv',q:'Löse 6·a ≡ 20 (mod 26).',a:'ggT(6,26) = 2 | 20 → 3a ≡ 10 (mod 13) → a ≡ 12 (mod 13) → a ∈ {12, 25}',s:'Kongruenz mit ggT > 1: durch ggT teilen — auch den Modul.'},
+ {t:'Z3',m:'euler',q:'Berechne möglichst effizient 7¹⁵⁷ mod 26.',a:'φ(26) = 12, 157 = 13·12 + 1 → 7¹ = 7',s:'Riesiger Exponent, ggT(a,n) = 1.'},
+ {t:'Z3',m:'euler',q:'Welchen Rest lässt 3⁴⁷ bei Division durch 23?',a:'Fermat: 3²² ≡ 1; 47 = 2·22 + 3 → 3³ = 27 ≡ 4',s:'Potenz modulo Primzahl.'},
+ {t:'Z3',m:'euler',q:'Zeige, dass a⁷ − a für jede ganze Zahl a durch 7 teilbar ist.',a:'7 prim → kleiner Fermat: a⁷ ≡ a (mod 7) ⇒ a⁷ − a ≡ 0',s:'„Zeige … aᵖ − a durch p teilbar“.'},
+ {t:'Z3',m:'euler',q:'Wie lautet die letzte Ziffer von 3²⁰²⁷?',a:'mod 10, φ(10) = 4, 2027 = 506·4 + 3 → 3³ = 27 → 7',s:'„letzte Ziffer“ = Rest mod 10.'},
+ {t:'Z3',m:'phi',q:'Wie viele der Zahlen 1, …, 100 sind zu 100 teilerfremd?',a:'φ(100) = 100·(1/2)·(4/5) = 40',s:'„teilerfremd zu n in 1..n“ ist genau die Definition von φ(n).',o:['euler','inv','schub']},
+ {t:'Z4',m:'rsa',q:'Öffentlicher Schlüssel n = 437, e = 317; abgefangen wurde c = 300. Wie lautet die Nachricht?',a:'437 = 19·23 (bis √n testen!) → φ = 396 → d = 317⁻¹ mod 396 = 5 → m = 300⁵ mod 437 = 116',s:'n, e, c gegeben → komplette Entschlüsselung. Original SS26.'},
+ {t:'Z4',m:'rsa',q:'Mit dem öffentlichen Schlüssel (n, e) = (55, 7) soll m = 9 verschlüsselt werden.',a:'c = 9⁷ mod 55 = 4 (Quadrier-Kette, keine Faktorisierung nötig)',s:'Nur m gegeben → Einzeiler.'},
+ {t:'Z4',m:'rsa',q:'94319 ist Produkt zweier Primzahlen, und φ(94319) = 93696. Bestimme die Faktoren.',a:'p + q = n − φ + 1 = 624 → x² − 624x + 94319 = 0 → 257 und 367',s:'n und φ(n) gegeben.',o:['phi','eukl','euler']},
+ {t:'Z5',m:'aff',q:'Von einer Chiffre f(x) = (a·x + b) mod 26 weiß man: E wird zu K und N wird zu V. Bestimme den Schlüssel.',a:'4a + b ≡ 10, 13a + b ≡ 21 → 9a ≡ 11 (mod 26) → a = 7, b = 8',s:'Zwei Buchstabenpaare, Form a·x + b.'},
+ {t:'Z5',m:'aff',q:'Ein Text wurde mit f(x) = (5x + 8) mod 26 verschlüsselt. Wie entschlüsselt man den Buchstaben R?',a:'x = 5⁻¹·(y − 8) = 21·(17 − 8) = 189 ≡ 7 → H',s:'a und b bekannt → Umkehrfunktion mit a⁻¹.'},
+ {t:'Z6',m:'caes',q:'In einem Geheimtext ist jeder Buchstabe um dieselbe Anzahl Stellen im Alphabet verschoben. Der häufigste Buchstabe ist H; der Klartext ist deutsch. Wie wurde verschoben?',a:'häufigster Buchstabe im Deutschen ist E → E→H: k = 3',s:'„um dieselbe Stellenzahl verschoben“ + Häufigkeitsanalyse.'},
+ {t:'Z6',m:'caes',q:'Unter den Klartext wird wiederholt ein Schlüsselwort geschrieben und buchstabenweise modulo 26 addiert. Verschlüssle damit ein Wort.',a:'Vigenère: yᵢ = xᵢ + kᵢ mod 26, Schlüssel periodisch',s:'Schlüsselwort, periodisch, buchstabenweise Addition.'},
+ {t:'Z7',m:'dh',q:'Alice und Bob einigen sich öffentlich auf p = 23 und g = 5. Alice wählt geheim 6, Bob geheim 15. Welchen gemeinsamen Schlüssel erhalten sie?',a:'α = 5⁶ mod 23 = 8, β = 5¹⁵ mod 23 = 19, K = 19⁶ mod 23 = 2',s:'Öffentliches p und g, zwei geheime Zahlen, „gemeinsamer Schlüssel“.'},
+];
+
+/* ============================================================
+   KARTEIKARTEN
+   ============================================================ */
+const DECK=[
+ // Grundlagen / Mengen
+ {c:'K',q:'A ∪ B, A ∩ B, Ā — in Worten?',a:'Vereinigung (in A ODER B), Durchschnitt (in A UND B), Komplement (nicht in A). |Ā| = |Ω| − |A|.'},
+ {c:'K',q:'Was ist eine Multimenge?',a:'Eine „Menge“, in der Elemente mehrfach vorkommen dürfen, z. B. {a, a, b}. Reihenfolge egal, Vielfachheit zählt.'},
+ {c:'K',q:'Wie viele Teilmengen hat eine n-elementige Menge?',a:'2ⁿ (Potenzmenge) = Σ C(n,k).'},
+ {c:'K',q:'Binomialkoeffizient C(n,k) — Formel und Bedeutung?',a:'n!/(k!·(n−k)!) = Anzahl der k-elementigen Teilmengen einer n-Menge.'},
+ {c:'K',q:'Rechenregeln für C(n,k)?',a:'C(n,k) = C(n,n−k) · C(n,0) = C(n,n) = 1 · C(n,1) = n · C(n,2) = n(n−1)/2 · Pascal: C(n,k) = C(n−1,k−1) + C(n−1,k).'},
+ {c:'K',q:'Binomischer Lehrsatz?',a:'(a+b)ⁿ = Σₖ C(n,k)·aⁿ⁻ᵏ·bᵏ. Koeffizient von xᵏ in (a+bx)ⁿ: C(n,k)·aⁿ⁻ᵏ·bᵏ.'},
+ {c:'K',q:'Koeffizient von xⁱyʲzˡ in (x+y+z)ⁿ?',a:'Multinomialkoeffizient n!/(i!·j!·l!) (mit i+j+l = n).'},
+ {c:'K',q:'Die 2 Fragen vor jeder Auswahl-Aufgabe?',a:'1) Ist die Reihenfolge wichtig? 2) Darf sich ein Element wiederholen? Erst dann die Formel aus der 2×2-Matrix.'},
+ {c:'K',q:'Reihenfolge wichtig, MIT Wiederholung?',a:'nᵏ (Variation mit Wdh.) — PIN, Wörter, Kugeln auf Urnen.'},
+ {c:'K',q:'Reihenfolge wichtig, OHNE Wiederholung?',a:'n!/(n−k)! = n·(n−1)·…·(n−k+1) — Podium, Ämter.'},
+ {c:'K',q:'Reihenfolge egal, OHNE Wiederholung?',a:'C(n,k) — Ausschuss, Lotto, Kartenhand.'},
+ {c:'K',q:'Reihenfolge egal, MIT Wiederholung?',a:'C(n+k−1, k) — Eis (3 Kugeln, 10 Sorten → C(12,3) = 220), identische Bonbons auf Kinder.'},
+ {c:'K',q:'Die Eis-Falle der SS26-Klausur?',a:'3 Kugeln aus 10 Sorten, Reihenfolge egal: C(12,3) = 220 — NICHT 10³ = 1000 (das wären geordnete Tripel).'},
+ {c:'K',q:'Permutation einer Multimenge?',a:'n!/(n₁!·n₂!·…·nₖ!) — z. B. MISSISSIPPI: 11!/(4!·4!·2!) = 34 650.'},
+ {c:'K',q:'„Alle X stehen zusammen“ — Trick?',a:'Block als 1 Element zählen (und ggf. Block intern permutieren).'},
+ {c:'K',q:'Wort „beginnt mit S“ (S kommt c-mal vor)?',a:'Ein S fixieren → (n−1)! im Zähler UND die S-Gruppe auf (c−1)! reduzieren.'},
+ {c:'K',q:'Gitterwege: a Schritte rechts, b Schritte hoch?',a:'C(a+b, a) — Anordnung von a×R und b×O.'},
+ {c:'K',q:'„Jeder stößt mit jedem an“ — Anzahl?',a:'C(n,2) = n(n−1)/2. Rückwärts: 741 → n(n−1) = 1482 → n = 39.'},
+ {c:'K',q:'Siebformel für 2 Mengen?',a:'|A∪B| = |A| + |B| − |A∩B|'},
+ {c:'K',q:'Siebformel für 3 Mengen?',a:'|A∪B∪C| = |A|+|B|+|C| − |A∩B| − |A∩C| − |B∩C| + |A∩B∩C|'},
+ {c:'K',q:'Allgemeine Siebformel — Vorzeichenregel?',a:'Einzelmengen +, Paarschnitte −, Dreierschnitte +, Viererschnitte − … (alternierend).'},
+ {c:'K',q:'Siebformel bei Teilbarkeit in 1..N?',a:'|durch t teilbar| = ⌊N/t⌋; Schnitt = teilbar durch das kgV. „Durch keine“ = N − |Vereinigung|.'},
+ {c:'K',q:'Derangement Dₙ?',a:'Permutationen ohne Fixpunkt: Dₙ = n!·Σₖ₌₀ⁿ (−1)ᵏ/k!. D₃ = 2, D₄ = 9, D₅ = 44.'},
+ {c:'K',q:'Passwörter der Länge k mit mind. 1 Ziffer UND mind. 1 Buchstabe?',a:'36ᵏ − 26ᵏ − 10ᵏ (alle minus nur-Buchstaben minus nur-Ziffern).'},
+ {c:'K',q:'Schubfachprinzip?',a:'Mehr als n Objekte in n Fächern ⇒ ein Fach enthält mindestens 2.'},
+ {c:'K',q:'Erweitertes Schubfachprinzip?',a:'m Objekte in n Fächern ⇒ ein Fach enthält mindestens ⌈m/n⌉. Für „sicher k gleiche“: (k−1)·n + 1 ziehen.'},
+ {c:'K',q:'Socken: 3 Farben, sicher 4 gleichfarbige — wie viele ziehen?',a:'(4−1)·3 + 1 = 10 (worst case: 3 von jeder Farbe).'},
+ // Wahrscheinlichkeit
+ {c:'W',q:'Die Axiome der Wahrscheinlichkeit (Kolmogorow)?',a:'P(A) ≥ 0 · P(Ω) = 1 · A, B disjunkt ⇒ P(A∪B) = P(A) + P(B).'},
+ {c:'W',q:'Laplace-Wahrscheinlichkeit — wann und wie?',a:'Endlich viele GLEICHWAHRSCHEINLICHE Ergebnisse: P(A) = |A|/|Ω|.'},
+ {c:'W',q:'„Mindestens ein …“ — Reflex?',a:'Gegenereignis: 1 − P(kein …).'},
+ {c:'W',q:'ODER-Regel?',a:'P(A∪B) = P(A) + P(B) − P(A∩B). Einfach addieren nur bei disjunkten Ereignissen.'},
+ {c:'W',q:'UND-Regel (Multiplikationssatz)?',a:'P(A∩B) = P(A)·P(B|A). Nur bei Unabhängigkeit: P(A)·P(B).'},
+ {c:'W',q:'Wann sind A und B unabhängig?',a:'Genau dann, wenn P(A∩B) = P(A)·P(B) (äquivalent: P(B|A) = P(B)).'},
+ {c:'W',q:'Bedingte Wahrscheinlichkeit P(A|B)?',a:'P(A∩B)/P(B)'},
+ {c:'W',q:'Satz von der totalen Wahrscheinlichkeit?',a:'P(B) = Σ P(B|Aᵢ)·P(Aᵢ) über eine Zerlegung A₁,…,Aₙ (im Baum: passende Pfade addieren).'},
+ {c:'W',q:'Satz von Bayes?',a:'P(A|B) = P(B|A)·P(A) / [P(B|A)·P(A) + P(B|Ā)·P(Ā)]'},
+ {c:'W',q:'Bayes-Rezept: welche 4 Größen aus dem Text?',a:'P(A) (Grundanteil), P(Ā) = 1−P(A), P(B|A) (Trefferquote), P(B|Ā) (Fehlalarm). Baum zeichnen!'},
+ {c:'W',q:'Fahrstuhl: n Personen, k Stockwerke — Grundraum?',a:'|Ω| = kⁿ (Ziele hoch Akteure).'},
+ {c:'W',q:'Fahrstuhl: alle verschieden / alle gleich / A und B zusammen?',a:'k·(k−1)·…·(k−n+1)/kⁿ · k/kⁿ · 1/k'},
+ {c:'W',q:'Fahrstuhl: genau 2 Stockwerke werden gewählt?',a:'C(k,2)·(2ⁿ − 2)/kⁿ'},
+ {c:'W',q:'Hypergeometrische Verteilung?',a:'N Objekte, r „gute“, m gezogen OHNE Zurücklegen: P(X=k) = C(r,k)·C(N−r,m−k)/C(N,m), E = m·r/N.'},
+ {c:'W',q:'Binomial oder hypergeometrisch?',a:'Mit Zurücklegen / unabhängig, p konstant → Binomial. Ohne Zurücklegen (Stichprobe, Lieferung, Karten) → hypergeometrisch.'},
+ {c:'W',q:'3 Schützen mit 0,5 / 0,3 / 0,2 — P(Scheibe getroffen)?',a:'1 − 0,5·0,7·0,8 = 0,72 (verschiedene p → kein Binomial, sondern 1 − Π(1−pᵢ)).'},
+ {c:'W',q:'2 Kugeln gleichfarbig (ohne Zurücklegen)?',a:'Σ C(cᵢ,2)/C(N,2) = Σ cᵢ(cᵢ−1)/(N(N−1))'},
+ // Verteilungen
+ {c:'V',q:'Was ist die Verteilungsfunktion F einer Zufallsvariablen?',a:'F(x) = P(X ≤ x) — Treppenfunktion bei diskreten ZV, steigt von 0 auf 1.'},
+ {c:'V',q:'Erwartungswert und Varianz (diskret) — Definition?',a:'E[X] = Σ k·P(X=k) · E[X²] = Σ k²·P(X=k) · Var = E[X²] − (E[X])² · σ = √Var'},
+ {c:'V',q:'Rechenregeln für E und Var?',a:'E[aX+b] = a·E[X]+b · Var(aX+b) = a²·Var(X) · E[X+Y] = E[X]+E[Y] immer · Var(X+Y) = Var(X)+Var(Y) nur bei Unabhängigkeit.'},
+ {c:'V',q:'Verteilung selbst aufstellen — die 5 Schritte?',a:'① |Ω| ② Werte von X ③ Fälle zählen → P(X=k) ④ Kontrolle Σ = 1 ⑤ E, E[X²], Var.'},
+ {c:'V',q:'3 Jäger, n Hasen: P(X=1), P(X=2), P(X=3)?',a:'1/n² · 3(n−1)/n² · (n−1)(n−2)/n² (|Ω| = n³; X=2: C(n,2)·(2³−2)).'},
+ {c:'V',q:'3 Jäger, n Hasen: E[X]?',a:'3 − 3/n + 1/n² = n·(1 − ((n−1)/n)³) (zweite Form per Indikator-Trick).'},
+ {c:'V',q:'Indikator-Trick?',a:'X = I₁ + … + Iₘ ⇒ E[X] = Σ P(Iᵢ = 1). Gilt immer (auch bei Abhängigkeit) — E ohne Verteilung.'},
+ {c:'V',q:'2 Würfel: P(Max = k) und P(Min = k)?',a:'(2k−1)/36 bzw. (13−2k)/36. E[Max] = 161/36, E[Min] = 91/36.'},
+ {c:'V',q:'Binomialverteilung: P(X=k), E, Var?',a:'C(n,k)·pᵏ·(1−p)ⁿ⁻ᵏ · E = n·p · Var = n·p·(1−p)'},
+ {c:'V',q:'Binomial erkennen — 4 Merkmale?',a:'Feste Anzahl n · unabhängig · zwei Ausgänge · p konstant.'},
+ {c:'V',q:'Herleitung der Binomialformel in einem Satz?',a:'Eine feste Folge mit k Treffern hat Wahrscheinlichkeit pᵏ(1−p)ⁿ⁻ᵏ; es gibt C(n,k) Positionen für die Treffer.'},
+ {c:'V',q:'Mindest-n: „mit ≥ s mindestens 1 Treffer“?',a:'1 − (1−p)ⁿ ≥ s ⇔ n ≥ ln(1−s)/ln(1−p), aufrunden. ⚠️ ln(1−p) < 0 → Ungleichung dreht sich. Probe mit n−1 und n.'},
+ {c:'V',q:'Wettkampf zweier Serien — Schema?',a:'1) Restserien X~Bin(n_A,p_A), Y~Bin(n_B,p_B) 2) Stand_A + X > Stand_B + Y ⇔ X ≥ Y+Δ 3) P = Σ_y P(Y=y)·P(X ≥ y+Δ).'},
+ {c:'V',q:'Gleichmäßige diskrete Verteilung auf 1..n?',a:'P(X=k) = 1/n · E = (n+1)/2 · Var = (n²−1)/12'},
+ {c:'V',q:'Bernoulli-Verteilung?',a:'Ein Versuch: P(X=1) = p, P(X=0) = 1−p · E = p · Var = p(1−p).'},
+ {c:'V',q:'Geometrische Verteilung?',a:'Versuche bis zum 1. Erfolg: P(X=k) = (1−p)ᵏ⁻¹·p · E = 1/p · P(X > k) = (1−p)ᵏ.'},
+ {c:'V',q:'Poisson-Verteilung?',a:'P(X=k) = λᵏ·e^(−λ)/k!, E = Var = λ. λ auf das gefragte Intervall umrechnen!'},
+ {c:'V',q:'Stetige ZV: C, E, Var, P(a<X<b)?',a:'C aus ∫f = 1 · E = ∫x·f · E[X²] = ∫x²·f · Var = E[X²] − E² · P = ∫ₐᵇ f.'},
+ {c:'V',q:'Stetige Gleichverteilung auf [a,b]?',a:'f = 1/(b−a) · E = (a+b)/2 · Var = (b−a)²/12'},
+ // Krypto
+ {c:'Z',q:'Caesar-Chiffre?',a:'y = x + k mod 26 (A=0…Z=25). Nur 26 Schlüssel → Durchprobieren oder Häufigkeitsanalyse.'},
+ {c:'Z',q:'Monoalphabetische Substitution — Schlüsselzahl und Angriff?',a:'Beliebige Permutation des Alphabets: 26! Schlüssel. Trotzdem unsicher: Häufigkeitsanalyse (E ≈ 17 %, dann N, I, S, R, A, T).'},
+ {c:'Z',q:'Vigenère-Chiffre?',a:'Schlüsselwort periodisch unter den Text, buchstabenweise Addition mod 26 (polyalphabetisch). Analyse: Schlüssellänge (Kasiski), dann je Spalte Caesar.'},
+ {c:'Z',q:'Symmetrisch vs. asymmetrisch?',a:'Symmetrisch: ein gemeinsamer geheimer Schlüssel (schnell, Schlüsseltausch-Problem). Asymmetrisch: öffentlicher + privater Schlüssel (RSA; langsam). Hybrid: RSA tauscht Sitzungsschlüssel.'},
+ {c:'Z',q:'Was ist eine Einwegfunktion?',a:'Leicht zu berechnen, praktisch nicht umkehrbar. Kandidaten: Multiplikation von Primzahlen (Faktorisieren schwer), modulare Potenz (diskreter Logarithmus schwer).'},
+ {c:'Z',q:'ggT per Euklid ablesen?',a:'ggT(a,b) = ggT(b, a mod b); der ggT ist der letzte Rest ≠ 0.'},
+ {c:'Z',q:'Euklid-Tableau — Aufbau?',a:'Spalten Rest | x | y. Start (a|1|0), (b|0|1). q = ⌊oben/unten⌋, neue Zeile = obere − q·untere. Letzte Zeile mit Rest ≠ 0: ggT = x·a + y·b.'},
+ {c:'Z',q:'a·x + b·y = c lösbar ⇔ ?',a:'ggT(a,b) | c. Dann Tableau-Lösung mit c/ggT multiplizieren. Sonst „keine Lösung“ hinschreiben.'},
+ {c:'Z',q:'Inverse a⁻¹ mod m — wann, wie?',a:'Existiert ⇔ ggT(a,m) = 1. Tableau mit (m, a): y-Wert der ggT-Zeile mod m. Probe: a·a⁻¹ mod m = 1.'},
+ {c:'Z',q:'Probierformel (1+m·k)/a — Regel?',a:'Nur als Schnelltest bis k = 10. Kein Treffer → STOPP: Modul falsch (n statt φ)? Faktorisierung falsch? → Tableau.'},
+ {c:'Z',q:'a·x ≡ b (mod m) mit g = ggT(a,m)?',a:'g ∤ b → keine Lösung. Sonst alles ÷ g (auch den Modul!), im kleinen Modul lösen → g Lösungen mod m.'},
+ {c:'Z',q:'φ(p), φ(p·q), φ(p²), allgemein?',a:'p−1 · (p−1)(q−1) · p(p−1) (nicht (p−1)²!) · φ(n) = n·∏(1 − 1/p).'},
+ {c:'Z',q:'Euler-Theorem?',a:'ggT(a,n) = 1 ⇒ a^φ(n) ≡ 1 (mod n). Anwendung: Exponent mod φ(n) reduzieren.'},
+ {c:'Z',q:'Kleiner Fermat?',a:'p prim ⇒ aᵖ ≡ a (mod p); falls p ∤ a: aᵖ⁻¹ ≡ 1. Beweisaufgabe „p | aᵖ − a“: aᵖ − a ≡ a − a = 0.'},
+ {c:'Z',q:'Quadrier-Kette?',a:'a², a⁴, a⁸ … je mod n (jeden Rest notieren), Exponent als Summe von Zweierpotenzen, zugehörige Reste multiplizieren (je mod n).'},
+ {c:'Z',q:'RSA entschlüsseln — 5 Schritte?',a:'1) n faktorisieren (bis √n!) 2) φ = (p−1)(q−1) 3) d = e⁻¹ mod φ (Tableau) 4) m = cᵈ mod n 5) Probe mᵉ mod n = c.'},
+ {c:'Z',q:'RSA verschlüsseln?',a:'c = mᵉ mod n — Einzeiler, keine Faktorisierung nötig.'},
+ {c:'Z',q:'Warum funktioniert RSA?',a:'cᵈ = m^(e·d) = m^(1+k·φ) = m·(m^φ)ᵏ ≡ m (Euler). Sicherheit: n faktorisieren ist praktisch unmöglich.'},
+ {c:'Z',q:'Faktorisieren von n — bis wohin testen?',a:'Alle Primzahlen bis √n. 437 = 19·23 — wer bei 13 aufhört, findet nichts (SS26!). 17² = 289, 19² = 361, 23² = 529.'},
+ {c:'Z',q:'n und φ(n) gegeben — p und q?',a:'p + q = n − φ(n) + 1, p·q = n → quadratische Gleichung x² − (p+q)x + n = 0.'},
+ {c:'Z',q:'Welche e sind bei RSA zulässig?',a:'Nur e mit ggT(e, φ(n)) = 1 (sonst existiert d nicht).'},
+ {c:'Z',q:'Affine Chiffre: Verschlüsseln, Entschlüsseln, gültige a?',a:'y = (a·x + b) mod 26 · x = a⁻¹·(y − b) mod 26 · nur ggT(a,26) = 1 (a ungerade, ≠ 13).'},
+ {c:'Z',q:'Affine aus 2 Paaren — Schritte?',a:'2 Gleichungen → subtrahieren: a·Δx ≡ Δy → ggT-Check (ggf. ÷g inkl. Modul, Kandidaten prüfen) → a → b = y₁ − a·x₁ → Probe mit beiden Paaren.'},
+ {c:'Z',q:'Diffie-Hellman?',a:'Öffentlich p, g. Alice: a geheim, sendet α = gᵃ mod p. Bob: b geheim, sendet β = gᵇ mod p. K = βᵃ = αᵇ = g^(ab) mod p.'},
+ {c:'Z',q:'Digitale Signatur mit RSA?',a:'Mit dem privaten d signieren (s = mᵈ mod n), jeder prüft mit dem öffentlichen e (sᵉ mod n = m).'},
+ // Taktik
+ {c:'T',q:'Erster Schritt bei JEDER Klausuraufgabe?',a:'Klassifizieren: Welches Modell? Welche Formel? Erst dann rechnen. (2 verlorene SS26-Aufgaben standen auf dem Spicker.)'},
+ {c:'T',q:'Abbruchdisziplin?',a:'3 Minuten kein Fortschritt → markieren, nächste Aufgabe, später zurück.'},
+ {c:'T',q:'Welche Proben in den letzten 15 Minuten?',a:'Σ P = 1? · e·d mod φ = 1? · mᵉ mod n = c? · Inverse: a·a⁻¹ mod m = 1? · Brüche gekürzt? · „mindestens“ per Gegenereignis?'},
+];
+
+/* ============================================================
+   LERNPLAN + DEFINITION OF READY
+   ============================================================ */
+const EXAM_DATE=[2027,0,25,10,0];
+const PLAN=[
+ {id:'W1',from:[2026,10,10],to:[2026,10,15],title:'Diagnose + Vier Grundaufgaben',types:['K2','K3'],items:['SS26-Rekonstruktion ohne Hilfe anrechnen (Diagnose, Lücken notieren)','Postmortem + Strategie lesen','T1: die 4 Grundaufgaben als 2×2-Matrix','Drill K2 + K3: je 15 Aufgaben']},
+ {id:'W2',from:[2026,10,16],to:[2026,10,22],title:'Permutationen, Lehrsatz, Mengen',types:['K1','K6'],items:['T1: Multimengen-Permutationen, Block, fixierte Plätze','Binomialkoeffizient, Pascal, binomischer Lehrsatz, Mengen-Basics','Drill K1 + K6: je 15 Aufgaben','Skript-Aufgaben 2.2.x / 2.3.x']},
+ {id:'W3',from:[2026,10,23],to:[2026,10,29],title:'Siebformel + Schubfach · Meilenstein M1',types:['K4','K5'],items:['T1: Siebformel 2/3 Mengen, Teilbarkeit, Derangement','Schubfachprinzip inkl. erweiterter Form','Drill K4 (20×) + K5 (10×)','M1: Eis- und Siebformel-Aufgabe der Rekonstruktion fehlerfrei']},
+ {id:'W4',from:[2026,10,30],to:[2026,11,6],title:'Laplace, UND/ODER, Fahrstuhl, Urne',types:['W1','W2','W3','W5'],items:['T2: Ergebnisräume, Laplace, UND/ODER','Fahrstuhl-/Belegungsmodell und Urne (hypergeometrisch)','Drill W1, W2, W3, W5: je 10 Aufgaben','Skript-Aufgaben 3.2.x']},
+ {id:'W5',from:[2026,11,7],to:[2026,11,13],title:'Bedingte W., Baum, Bayes · M2',types:['W4'],items:['T2: bedingte W., Multiplikationssatz, Ereignisbaum','Totale Wahrscheinlichkeit + Bayes (2 und 3 Ursachen)','Drill W4: 20 Aufgaben','M2: Bayes + eine unbekannte Laplace-Einkleidung sicher']},
+ {id:'W6',from:[2026,11,14],to:[2026,11,20],title:'Verteilung aufstellen, E/Var, Indikator',types:['V4'],items:['T3: 5-Schritte-Schema, E und Var aus der Definition','Jäger/Hasen komplett selbst + Indikator-Trick','Drill V4: 20 Aufgaben','Skript-Aufgaben 3.3.x (Max zweier Würfel, Match, Hash)']},
+ {id:'W7',from:[2026,11,21],to:[2026,11,27],title:'Binomial, Mindest-n, Wettkampf (Feiertage, leicht) · M3',types:['V1','V2','V3','V5','V6'],items:['Binomial inkl. Herleitung; Mindest-n-Ungleichung','Wettkampf zweier Serien (Schützen-Aufgabe)','Geometrisch, Poisson, stetige ZV (kurz)','M3: Jäger- und beide Schützen-Aufgaben fehlerfrei']},
+ {id:'W8',from:[2026,11,28],to:[2027,0,3],title:'Euklid-Tableau, Inverse, φ/Euler/Fermat (leicht)',types:['Z1','Z2','Z3'],items:['Tableau-Trainer: 10 Inverse unter 3 min','φ-Funktion, Euler, Fermat, Quadrier-Kette','Drill Z1, Z2, Z3: je 10 Aufgaben']},
+ {id:'W9',from:[2027,0,4],to:[2027,0,10],title:'RSA, Affine, DH, Klassiker · M4',types:['Z4','Z5','Z6','Z7'],items:['RSA komplett (Faktorisieren bis √n!) — 10 Aufgaben','Affine Chiffre inkl. ggT-Tücke','Diffie-Hellman, Caesar, Vigenère, Theorie-Karten','M4: RSA-Rekonstruktion (437/317/300) < 15 min inkl. Proben']},
+ {id:'W10',from:[2027,0,11],to:[2027,0,17],title:'Probeklausuren W1 + W2, Spickzettel',types:[],items:['Probeklausur W1 unter Zeit (120 min)','Fehleranalyse → schwache Typen nachdrillen','Probeklausur W2 unter Zeit','Spickzettel per Hand schreiben']},
+ {id:'W11',from:[2027,0,18],to:[2027,0,24],title:'Generalprobe',types:[],items:['Probeklausur W3 OHNE Spicker (Ziel ≥ 60 %)','Probeklausur W4 (Überraschungsthemen)','SS26-Rekonstruktion unter Zeit (Ziel ≥ 85 %)','So 24.01.: nur leicht — Karten, Spicker lesen, früh schlafen']},
+];
+const DOR=[
+ {id:'d1',t:'Erkennung: ≥ 90 % über die letzten 40 Fragen'},
+ {id:'d2',t:'SS26-Rekonstruktion unter Klausurbedingungen ≥ 85 %'},
+ {id:'d3',t:'2 Probeklausuren unter Zeit ≥ 70 %'},
+ {id:'d4',t:'Euklid-Tableau: Inverse mod m < 1000 in < 3 min inkl. Probe'},
+ {id:'d5',t:'Unbekannte „Verteilung aufstellen“-Aufgabe komplett (Werte, P, Σ=1, E, Var)'},
+ {id:'d6',t:'Siebformel mit 3 Mengen fehlerfrei, inkl. einer Anwendungsaufgabe'},
+ {id:'d7',t:'Spickzettel geschrieben UND 1 Probeklausur ohne ihn ≥ 60 %'},
+];
+
+/* ============================================================
+   SPICKER (Nachschlageansicht)
+   ============================================================ */
+const SPICKER=[
+ {h:'⓪ Erkennung — vor jeder Aufgabe 10 Sekunden',b:`<ul>
+<li>„Wie viele Möglichkeiten / Anordnungen?“ → Kombinatorik → Matrix ①b</li>
+<li>„durch A ODER B / mindestens eine Eigenschaft / keine“ (überlappend) → <b>Siebformel ①c</b></li>
+<li>„mit Sicherheit / garantiert / zeige, dass immer zwei“ → Schubfach ①d</li>
+<li>„Wahrscheinlichkeit, dass …“ + endlich &amp; gleichwahrscheinlich → Laplace ③</li>
+<li>Akteure wählen Ziele (Fahrstuhl, Hash, Geburtstage) → Belegung ③b, |Ω| = kⁿ</li>
+<li>Ziehen <b>ohne</b> Zurücklegen aus 2 Sorten → hypergeometrisch ③c</li>
+<li>feste Anzahl n, unabhängig, p konstant → Binomial ④ · verschiedene pᵢ → 1 − Π(1−pᵢ)</li>
+<li>„Wie oft mindestens, damit P ≥ …?“ → Ungleichung ④b</li>
+<li>zwei Spieler/Serien, Zwischenstand → Wettkampf ④c</li>
+<li>„Test / Ursache gegeben Wirkung“ → Bayes ⑤</li>
+<li>„Verteilung von X / E[X] / Var(X)“ ohne Standardnamen → <b>Baukasten ⑥</b></li>
+<li>„bis zum ersten Erfolg“ → geometrisch · „im Mittel λ pro Zeit“ → Poisson</li>
+<li>mod n, Schlüssel, verschlüsselt → Krypto ⑧–⑩</li></ul>`},
+ {h:'①a Permutationen',b:`<ul><li>n verschiedene: <b>n!</b> · Multimenge: <b>n!/(n₁!·…·nₖ!)</b></li>
+<li>„beginnt mit X“: Platz fixieren, Rest permutieren (X-Gruppe schrumpft!) · „zusammen“: als Block</li>
+<li>Gruppen bleiben zusammen: (Anzahl Gruppen)! · Π(Gruppengröße)! · abwechselnd m/m: 2·m!·m!</li>
+<li>Gitterwege a rechts, b hoch: C(a+b, a) · Aufteilen in Gruppen: n!/(c₁!·c₂!·…)</li></ul>`},
+ {h:'①b Auswahl k aus n — DIE MATRIX',b:`<table class="tab"><tr><th></th><th>mit Wdh.</th><th>ohne Wdh.</th></tr>
+<tr><td><b>Reihenfolge wichtig</b><br>(Wort, PIN, Plätze)</td><td><b>nᵏ</b></td><td><b>n!/(n−k)!</b></td></tr>
+<tr><td><b>Reihenfolge egal</b><br>(Auswahl, Hand, Becher)</td><td><b>C(n+k−1, k)</b> ⚠️ Eis!</td><td><b>C(n, k)</b></td></tr></table>
+<ul><li>C(n,k) = n!/(k!(n−k)!) = C(n,n−k) · C(n,2) = n(n−1)/2 · Pascal: C(n,k) = C(n−1,k−1) + C(n−1,k)</li>
+<li>Pflicht m: C(n−m, k−m) · genau j aus Gruppe p: C(p,j)·C(n−p,k−j) · mindestens → summieren / Gegenereignis</li>
+<li>Eis: 3 Kugeln, 10 Sorten → C(12,3) = 220 (nicht 10³)</li>
+<li>Lehrsatz: (a+b)ⁿ = Σ C(n,k)aⁿ⁻ᵏbᵏ · Σ C(n,k) = 2ⁿ · Multinomial: n!/(i!j!l!)</li></ul>`},
+ {h:'①c Siebformel ①d Schubfach',b:`<ul><li><b>|A∪B| = |A|+|B| − |A∩B|</b></li>
+<li><b>|A∪B∪C| = |A|+|B|+|C| − |A∩B| − |A∩C| − |B∩C| + |A∩B∩C|</b> (allg.: + − + − …)</li>
+<li>Teilbarkeit 1..N: ⌊N/t⌋, Schnitt = kgV · „keine“ = N − Vereinigung · gilt wortgleich für P</li>
+<li>Derangement: Dₙ = n!·Σ(−1)ᵏ/k! (D₃=2, D₄=9, D₅=44)</li>
+<li>mind. 1 Ziffer UND mind. 1 Buchstabe: 36ᵏ − 26ᵏ − 10ᵏ</li>
+<li><b>Schubfach:</b> n+1 Objekte in n Fächer → ein Fach doppelt · allgemein ⌈m/n⌉ · „sicher k gleiche“: (k−1)·n + 1</li></ul>`},
+ {h:'③ Laplace · Belegung · Urne',b:`<ul><li>P = günstige/mögliche · 2 Würfel: 36 · „mindestens ein“ → 1 − P(kein)</li>
+<li>ODER: P(A∪B) = P(A)+P(B)−P(A∩B) · UND: P(A)·P(B|A), unabhängig: P(A)·P(B)</li>
+<li><b>Belegung (n Akteure, k Ziele, |Ω| = kⁿ):</b> alle gleich k/kⁿ · alle verschieden k(k−1)…/kⁿ · A+B zusammen 1/k · A allein ((k−1)/k)ⁿ⁻¹ · genau 2 Ziele C(k,2)(2ⁿ−2)/kⁿ</li>
+<li><b>Hypergeometrisch:</b> P(X=k) = C(r,k)·C(N−r,m−k)/C(N,m) · E = m·r/N · mit Zurücklegen → Binomial</li>
+<li>2 gleichfarbig: Σ cᵢ(cᵢ−1)/(N(N−1))</li></ul>`},
+ {h:'④ Binomial · Ungleichung · Wettkampf',b:`<ul><li><b>P(X=k) = C(n,k)pᵏ(1−p)ⁿ⁻ᵏ</b> · E = np · Var = np(1−p)</li>
+<li><b>④b Mindest-n:</b> 1−(1−p)ⁿ ≥ s ⇔ n ≥ ln(1−s)/ln(1−p) → aufrunden, Probe n−1 und n (ln negativ → Ungleichung dreht sich)</li>
+<li><b>④c Wettkampf:</b> 1) Restserien X~Bin(n_A,p_A), Y~Bin(n_B,p_B) 2) Stand_A+X &gt; Stand_B+Y ⇔ X ≥ Y+Δ 3) P = Σ_y P(Y=y)·P(X ≥ y+Δ)</li>
+<li>geometrisch: P(X=k) = (1−p)ᵏ⁻¹p, E = 1/p, P(X&gt;k) = (1−p)ᵏ · Poisson: λᵏe^(−λ)/k!</li></ul>`},
+ {h:'⑤ Bayes',b:`<ul><li><b>P(A|B) = P(B|A)·P(A) / [P(B|A)·P(A) + P(B|Ā)·P(Ā)]</b></li>
+<li>4 Größen aus dem Text, Baum zeichnen · totale W.: P(B) = Σ P(B|Aᵢ)P(Aᵢ)</li></ul>`},
+ {h:'⑥ Verteilungs-Baukasten ⑦ stetig',b:`<ol><li>Ω und |Ω| (oft Ziele^Akteure)</li><li>Werte von X</li><li>je Wert Fälle zählen → P(X=k)</li><li><b>Kontrolle Σ P = 1</b></li><li>E = Σk·P · E[X²] = Σk²·P · Var = E[X²] − E²</li></ol>
+<ul><li><b>Indikator:</b> X = ΣIᵢ → E[X] = ΣP(Iᵢ=1)</li>
+<li>Jäger: P(1)=1/n² · P(2)=3(n−1)/n² · P(3)=(n−1)(n−2)/n² · E = 3 − 3/n + 1/n²</li>
+<li>Max/Min 2 Würfel: (2k−1)/36 bzw. (13−2k)/36</li>
+<li>E[aX+b] = aE[X]+b · Var(aX+b) = a²Var(X) · gleichmäßig 1..n: E=(n+1)/2, Var=(n²−1)/12</li>
+<li><b>stetig:</b> C aus ∫f=1 · E=∫x·f · Var=∫x²·f − E² · auf [a,b] gleichverteilt: E=(a+b)/2, Var=(b−a)²/12</li></ul>`},
+ {h:'⑧ Krypto-Werkzeugkasten',b:`<p><b>Euklid-Tableau</b> (Rest | x | y), Start (a|1|0), (b|0|1), neue Zeile = obere − q·untere:</p>
+<table class="tab"><tr><th>Rest</th><th>x</th><th>y</th><th>q</th></tr><tr><td>396</td><td>1</td><td>0</td><td></td></tr><tr><td>317</td><td>0</td><td>1</td><td>q=1</td></tr><tr><td>79</td><td>1</td><td>−1</td><td>q=4</td></tr><tr class="g"><td>1</td><td>−4</td><td>5</td><td>← ggT</td></tr></table>
+<ul><li>Probe: −4·396 + 5·317 = 1 ✓ → 317⁻¹ mod 396 = 5</li>
+<li>a·x+b·y=c lösbar ⇔ ggT | c · Inverse existiert ⇔ ggT(a,m)=1 · negativ → +m</li>
+<li>a·x ≡ b (mod m): g=ggT(a,m); g∤b keine Lösung, sonst alles ÷g (auch Modul) → g Lösungen</li>
+<li>Probierformel (1+m·k)/a nur bis k=10, dann STOPP → Tableau</li>
+<li>φ(p)=p−1 · φ(pq)=(p−1)(q−1) · φ(p²)=p(p−1) · φ(n)=n·∏(1−1/p)</li>
+<li>Euler: a^φ(n) ≡ 1 → Exponent mod φ · Fermat: aᵖ ≡ a (mod p)</li>
+<li>Quadrier-Kette: a², a⁴, a⁸ … je mod n, Reste notieren</li></ul>`},
+ {h:'⑨ RSA',b:`<ol start="0"><li>c gegeben → entschlüsseln · nur m gegeben → c = mᵉ mod n</li>
+<li><b>Faktorisieren bis √n</b> (2,3,5,7,11,13,17,19,23 …) — 437 = 19·23!</li>
+<li>φ = (p−1)(q−1) — ab hier Modul φ · zulässige e: ggT(e,φ)=1</li>
+<li>d = e⁻¹ mod φ per Tableau · Probe e·d mod φ = 1</li>
+<li>m = cᵈ mod n (Quadrier-Kette, wieder Modul n)</li>
+<li>Endprobe mᵉ mod n = c</li></ol><p>n und φ gegeben: p+q = n−φ+1.</p>`},
+ {h:'⑩ Affine · Caesar · Vigenère · DH',b:`<ul><li>Affin: y = (a·x+b) mod 26, A=0 · 2 Paare → subtrahieren → a·Δx ≡ Δy → ggT-Check → a → b → Probe · x = a⁻¹(y−b)</li>
+<li>Caesar: y = x+k mod 26 · Vigenère: Schlüsselwort periodisch addieren · monoalphabetisch: Häufigkeitsanalyse (E am häufigsten)</li>
+<li>Diffie-Hellman: α = gᵃ, β = gᵇ, K = βᵃ = αᵇ (mod p)</li></ul>
+<p><b>Konstanten:</b> Primzahlen bis 31: 2,3,5,7,11,13,17,19,23,29,31 · 17²=289, 19²=361, 23²=529 · 2¹⁰=1024<br>
+<b>Checkliste:</b> klassifiziert? Formel notiert? (mod …)? Σ P = 1 / Probe? · 3 min kein Fortschritt → weiter.</p>`},
+];
+
+const WUK={RI,pick,shuffle,fact,comb,gcd,lcm,mod,powmod,tableau,egcd,modinv,isPrime,phi,derange,binpmf,duel,minN,parseNum,parseYN,checkField,fieldShow,
+  TYPES,BLOCKS,GEN,genProblem,examSet,MODELS,CONF,RECOG,DECK,PLAN,DOR,SPICKER};
+if(typeof module!=='undefined'&&module.exports)module.exports=WUK;
+</script>
+<script id="ui">
+/* ============================================================
+   WuK Trainer WS27 — OBERFLÄCHE (Zustand, Modi, Navigation)
+   ============================================================ */
+const SKEY='wuk-ws27-v1';
+const $=id=>document.getElementById(id);
+function el(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+const dayInt=d=>{d=d||new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();};
+const dayTs=i=>new Date(Math.floor(i/10000),Math.floor(i/100)%100-1,i%100).getTime();
+const daysSince=last=>last?Math.round((dayTs(dayInt())-dayTs(last))/86400000):999;
+const BOX_INT={1:0,2:1,3:3,4:7,5:14};
+
+let S=load();
+function load(){
+  let s=null;try{s=JSON.parse(localStorage.getItem(SKEY));}catch(e){}
+  s=s||{};
+  s.per=s.per||{};s.rec=s.rec||{};
+  TYPES.forEach(t=>{s.per[t.key]=s.per[t.key]||{n:0,c:0,box:1,last:0};s.rec[t.key]=s.rec[t.key]||{n:0,c:0};});
+  s.recItems=s.recItems||{};s.recHist=s.recHist||[];s.cards=s.cards||{};s.plan=s.plan||{};s.dor=s.dor||{};
+  s.tab=s.tab||{times:[],best:null};s.exams=s.exams||[];s.daily=s.daily||{day:0,rec:0,tab:0,drill:0};
+  s.streak=s.streak||0;s.lastDay=s.lastDay||0;s.solved=s.solved||0;s.correct=s.correct||0;
+  return s;
+}
+function save(){try{localStorage.setItem(SKEY,JSON.stringify(S));}catch(e){}}
+function touchDay(){
+  const t=dayInt();
+  if(S.daily.day!==t)S.daily={day:t,rec:0,tab:0,drill:0};
+  if(S.lastDay!==t){S.streak=(S.lastDay&&daysSince(S.lastDay)===1)?S.streak+1:1;S.lastDay=t;}
+}
+function bump(key,ok){
+  touchDay();S.solved++;if(ok)S.correct++;S.daily.drill++;
+  const p=S.per[key];p.n++;if(ok)p.c++;p.box=ok?Math.min(5,p.box+1):1;p.last=dayInt();
+  save();refreshHeader();
+}
+function isDue(key){const p=S.per[key];return p.n>0&&daysSince(p.last)>=BOX_INT[p.box];}
+
+/* ---------- Aufgabe rendern ---------- */
+const PH={int:'Zahl',prob:'z. B. 0,25 oder 1/4',text:'Text',yn:'ja / nein'};
+function evalProblem(prob,vals){return prob.fields.map(f=>checkField(f,vals[prob.fields.indexOf(f)]||'',vals));}
+function renderProblem(container,prob,onResult,showType){
+  container.innerHTML='';
+  const head=el('div','ptype',showType?prob.title:'Aufgabe');
+  const pr=el('div','prompt',prob.prompt);
+  const fw=el('div','fields');const inputs=[];
+  const checkBtn=el('button','btn','Prüfen');
+  prob.fields.forEach((f,i)=>{
+    const row=el('div','field');const lab=el('label',null,f.label);const inp=el('input');inp.type='text';inp.autocomplete='off';inp.autocapitalize='off';inp.spellcheck=false;
+    inp.inputMode=(f.kind==='text'||f.kind==='yn')?'text':'text';inp.placeholder=PH[f.kind];inp.setAttribute('aria-label',f.label);
+    row.append(lab,inp);fw.appendChild(row);inputs.push(inp);
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter'){if(i<inputs.length-1)inputs[i+1].focus();else checkBtn.click();}});
+  });
+  const fb=el('div','fb');
+  const sol=el('div','sol','<span class="lbl">Rechenweg</span>'+prob.solution);
+  const nextRow=el('div','btnrow');nextRow.style.display='none';
+  const solBtn=el('button','btn ghost','Rechenweg');const nextBtn=el('button','btn','Nächste ›');nextRow.append(solBtn,nextBtn);
+  const skip=el('button','btn ghost','Lösung zeigen (zählt als falsch)');skip.style.marginTop='.5rem';
+  let answered=false;
+  function finish(oks){
+    answered=true;const allOk=oks.every(Boolean);
+    inputs.forEach((x,i)=>{x.classList.add(oks[i]?'ok':'bad');x.disabled=true;});
+    fb.className='fb show '+(allOk?'ok':'bad');
+    fb.innerHTML=allOk?'✓ Richtig!':'✗ Nicht ganz. Lösung: '+prob.fields.map(f=>f.label+' '+fieldShow(f)).join(' · ');
+    sol.classList.add('show');checkBtn.style.display='none';skip.style.display='none';nextRow.style.display='flex';
+    if(!showType)head.textContent=prob.title;
+    onResult(allOk,oks);
+  }
+  checkBtn.onclick=()=>{
+    if(answered)return;const vals=inputs.map(x=>x.value);
+    if(vals.every(v=>!v.trim())){fb.className='fb show bad';fb.textContent='Bitte etwas eintippen.';inputs[0].focus();return;}
+    finish(evalProblem(prob,vals));
+  };
+  skip.onclick=()=>{if(!answered)finish(prob.fields.map(()=>false));};
+  solBtn.onclick=()=>sol.classList.toggle('show');
+  nextBtn.onclick=()=>nextBtn._next&&nextBtn._next();
+  container.append(head,pr,fw,fb,checkBtn,skip,nextRow,sol);
+  return {nextBtn,inputs};
+}
+
+/* ============================================================
+   HEUTE
+   ============================================================ */
+const examTs=()=>new Date(EXAM_DATE[0],EXAM_DATE[1],EXAM_DATE[2],EXAM_DATE[3],EXAM_DATE[4]).getTime();
+const D2=a=>new Date(a[0],a[1],a[2]);
+const fmtD=a=>('0'+a[2]).slice(-2)+'.'+('0'+(a[1]+1)).slice(-2)+'.';
+function currentWeek(){
+  const now=Date.now();
+  for(let i=0;i<PLAN.length;i++){if(now<D2(PLAN[i].to).getTime()+86400000)return i;}
+  return PLAN.length-1;
+}
+let weekIdx=null;
+function renderHeute(){
+  touchDay();
+  const ms=examTs()-Date.now();const cd=$('cdCard');
+  if(ms>0){const d=Math.floor(ms/86400000),h=Math.floor(ms%86400000/3600000);
+    cd.innerHTML=`<div class="big">${d} Tage</div><p class="muted" style="margin:.2rem 0 0">und ${h} Stunden bis zur Klausur · ${Math.ceil(d/7)} Wochen</p>`;}
+  else cd.innerHTML=ms>-2*3600000?'<div class="big">Jetzt!</div><p class="muted">Erst klassifizieren, dann rechnen. Viel Erfolg!</p>':'<div class="big">Geschafft</div><p class="muted">Die Klausur vom 25.01.2027 liegt hinter dir.</p>';
+  const dc=$('dailyCard');const r=Math.min(S.daily.rec,5),t=Math.min(S.daily.tab,1);
+  dc.innerHTML=`<h3>Tägliche 10 Minuten</h3>
+    <div class="row"><span class="name">${r>=5?'✓':'○'} 5 Erkennungsfragen</span><span class="badge">${S.daily.rec}/5</span><button class="btn sm" data-j="rec">Los</button></div>
+    <div class="row"><span class="name">${t>=1?'✓':'○'} 1 Euklid-Tableau</span><span class="badge">${S.daily.tab}/1</span><button class="btn sm" data-j="tab">Los</button></div>
+    <div class="row"><span class="name">Drill heute</span><span class="badge">${S.daily.drill} Aufgaben</span><button class="btn ghost sm" data-j="drill">Los</button></div>`;
+  dc.querySelectorAll('button[data-j]').forEach(b=>b.onclick=()=>go(b.dataset.j));
+  if(weekIdx==null)weekIdx=currentWeek();
+  renderWeek();renderAmpel();renderDor();
+  $('stTotal').textContent=S.solved;$('stAcc').textContent=S.solved?Math.round(100*S.correct/S.solved)+' %':'–';
+}
+function renderWeek(){
+  const w=PLAN[weekIdx];const cur=currentWeek();const wc=$('weekCard');
+  const done=w.items.filter((_,i)=>S.plan[w.id+'-'+i]).length;
+  wc.innerHTML=`<div class="row" style="border:none;padding-top:0"><button class="btn ghost sm" id="wkPrev" ${weekIdx===0?'disabled':''} aria-label="Vorherige Woche">‹</button>
+    <span class="name center"><span class="lbl" style="margin:0">${weekIdx===cur?'Diese Woche':weekIdx<cur?'Vergangene Woche':'Kommende Woche'} · ${w.id} · ${fmtD(w.from)}–${fmtD(w.to)}</span>${w.title}</span>
+    <button class="btn ghost sm" id="wkNext" ${weekIdx===PLAN.length-1?'disabled':''} aria-label="Nächste Woche">›</button></div>
+    <div class="prog"><i style="width:${Math.round(100*done/w.items.length)}%"></i></div><div id="wkItems"></div>
+    <div class="chips" style="margin:.6rem 0 0">${w.types.map(t=>`<button class="chip" data-t="${t}">${t} üben</button>`).join('')}</div>`;
+  const box=$('wkItems');
+  w.items.forEach((txt,i)=>{const id=w.id+'-'+i;const lab=el('label','chk'+(S.plan[id]?' done':''));const cb=el('input');cb.type='checkbox';cb.checked=!!S.plan[id];
+    cb.onchange=()=>{S.plan[id]=cb.checked;save();renderWeek();};lab.append(cb,el('span',null,txt));box.appendChild(lab);});
+  $('wkPrev').onclick=()=>{weekIdx--;renderWeek();};$('wkNext').onclick=()=>{weekIdx++;renderWeek();};
+  wc.querySelectorAll('button[data-t]').forEach(b=>b.onclick=()=>{drillType=b.dataset.t;go('drill');});
+}
+function renderAmpel(){
+  const a=$('ampel');a.innerHTML='';
+  TYPES.forEach(t=>{const p=S.per[t.key];const q=p.n?p.c/p.n:0;const cls=p.n<3?'':q>=0.8?'g':q>=0.5?'y':'r';
+    const b=el('button',null,`<span class="d ${cls}"></span><span><b>${t.key} ${t.name}</b><small>${p.n?Math.round(q*100)+' % · '+p.n+'× · '+(daysSince(p.last)===0?'heute':'vor '+daysSince(p.last)+' T.'):'noch nicht geübt'}</small></span>`);
+    b.onclick=()=>{drillType=t.key;go('drill');};a.appendChild(b);});
+}
+function renderDor(){
+  const box=$('dorList');box.innerHTML='';
+  const h=S.recHist.slice(-40);const rq=h.length?Math.round(100*h.filter(Boolean).length/h.length):null;
+  DOR.forEach(d=>{let extra='';
+    if(d.id==='d1')extra=rq==null?' (noch keine Daten)':` (aktuell ${rq} % aus ${h.length})`;
+    if(d.id==='d4')extra=S.tab.best?` (Bestzeit ${fmtT(S.tab.best)})`:'';
+    if(d.id==='d3'&&S.exams.length)extra=` (App-Klausuren: ${S.exams.slice(-3).map(e=>e.pct+' %').join(', ')})`;
+    const lab=el('label','chk'+(S.dor[d.id]?' done':''));const cb=el('input');cb.type='checkbox';cb.checked=!!S.dor[d.id];
+    cb.onchange=()=>{S.dor[d.id]=cb.checked;save();renderDor();};lab.append(cb,el('span',null,d.t+extra));box.appendChild(lab);});
+}
+const fmtT=s=>Math.floor(s/60)+':'+('0'+Math.round(s%60)).slice(-2);
+
+/* ============================================================
+   ERKENNUNG
+   ============================================================ */
+let recFilter='all',recCur=null;
+function buildRecChips(){
+  const w=$('recChips');w.innerHTML='';
+  [{id:'all',name:'Alle'}].concat(BLOCKS).forEach(b=>{const c=el('button','chip'+(b.id===recFilter?' on':''),b.name);c.onclick=()=>{recFilter=b.id;buildRecChips();nextRec();};w.appendChild(c);});
+}
+function pickRec(){
+  if(Math.random()<0.25){ // generierte Aufgabe
+    const p=genProblem(recFilter==='all'?'all':recFilter);
+    if(p.m&&MODELS[p.m])return {t:p.key,m:p.m,q:p.prompt,a:p.rec,s:null,gen:true};
+  }
+  const pool=RECOG.map((it,i)=>({it,i})).filter(x=>recFilter==='all'||x.it.t[0]===recFilter);
+  let tot=0;const ws=pool.map(x=>{const st=S.recItems[x.i];const w=!st?3:(st.lastOk?1:5);tot+=w;return w;});
+  let r=Math.random()*tot;for(let j=0;j<pool.length;j++){r-=ws[j];if(r<=0)return Object.assign({idx:pool[j].i},pool[j].it);}
+  return Object.assign({idx:pool[0].i},pool[0].it);
+}
+function nextRec(){
+  const it=pickRec();recCur=it;const card=$('recCard');card.innerHTML='';
+  let wrong=(it.o||shuffle(CONF[it.m]||[])).filter(m=>m!==it.m).slice(0,3);
+  const others=shuffle(Object.keys(MODELS).filter(m=>m!==it.m&&!wrong.includes(m)));while(wrong.length<3)wrong.push(others.pop());
+  const opts=shuffle([it.m].concat(wrong));
+  card.append(el('div','ptype','Welches Modell?'),el('div','prompt',it.q));
+  const btns=[];const after=el('div');
+  opts.forEach(m=>{const b=el('button','opt',MODELS[m]);btns.push(b);card.appendChild(b);
+    b.onclick=()=>{
+      const ok=m===it.m;btns.forEach((x,j)=>{x.disabled=true;if(opts[j]===it.m)x.classList.add('right');});if(!ok)b.classList.add('wrong');
+      touchDay();S.daily.rec++;const r=S.rec[it.t];r.n++;if(ok)r.c++;S.recHist.push(ok?1:0);if(S.recHist.length>200)S.recHist=S.recHist.slice(-200);
+      if(it.idx!=null)S.recItems[it.idx]={lastOk:ok?1:0};save();refreshHeader();
+      after.innerHTML=`<div class="fb show ${ok?'ok':'bad'}">${ok?'✓ Richtig erkannt!':'✗ Richtig wäre: '+MODELS[it.m]}</div>
+        <div class="sol show"><span class="lbl">Ansatz</span>${it.a}${it.s?'<br><span class="lbl" style="margin-top:.6rem">Signalwörter</span>'+it.s:''}<br><span class="lbl" style="margin-top:.6rem">Typ</span>${it.t} · ${TYPES.find(t=>t.key===it.t).name}</div>`;
+      const row=el('div','btnrow');const d=el('button','btn ghost','Diesen Typ rechnen');const n=el('button','btn','Weiter ›');
+      d.onclick=()=>{drillType=it.t;go('drill');};n.onclick=nextRec;row.append(d,n);after.appendChild(row);renderRecStat();
+    };});
+  card.appendChild(after);renderRecStat();
+}
+function renderRecStat(){
+  const h=S.recHist.slice(-40);const weak=TYPES.filter(t=>S.rec[t.key].n>=3&&S.rec[t.key].c/S.rec[t.key].n<0.7).map(t=>t.key);
+  $('recStat').innerHTML=(h.length?`Letzte ${h.length}: <b>${Math.round(100*h.filter(Boolean).length/h.length)} %</b> richtig · heute ${S.daily.day===dayInt()?S.daily.rec:0} Fragen`:'Noch keine Fragen beantwortet.')+(weak.length?`<br>Unsicher erkannt: ${weak.join(', ')}`:'');
+}
+
+/* ============================================================
+   DRILL
+   ============================================================ */
+let drillType='all';
+function buildChips(){
+  const w=$('typeChips');w.innerHTML='';
+  const all=[{key:'all',label:'🎲 Gemischt'}].concat(BLOCKS.map(b=>({key:b.id,label:b.name})),TYPES.map(t=>({key:t.key,label:t.key+' '+t.name})));
+  all.forEach(t=>{const c=el('button','chip'+(t.key===drillType?' on':''),t.label);c.onclick=()=>{drillType=t.key;buildChips();newDrill();};w.appendChild(c);if(t.key===drillType)setTimeout(()=>{if(c.scrollIntoView)c.scrollIntoView({block:'nearest',inline:'center'});},0);});
+}
+function newDrill(){
+  const prob=genProblem(drillType);
+  const {nextBtn}=renderProblem($('drillCard'),prob,ok=>bump(prob.key,ok),drillType.length===2);
+  nextBtn._next=newDrill;
+}
+
+/* ============================================================
+   TABLEAU-TRAINER
+   ============================================================ */
+let ttLevel='klausur',tt=null,ttTimer=null;
+function buildTTChips(){
+  const w=$('ttChips');w.innerHTML='';
+  [['leicht','Leicht (m < 100)'],['klausur','Klausur (m < 1000)']].forEach(([k,n])=>{const c=el('button','chip'+(k===ttLevel?' on':''),n);c.onclick=()=>{ttLevel=k;buildTTChips();newTT();};w.appendChild(c);});
+}
+function newTT(){
+  clearInterval(ttTimer);
+  let m,a,rows;
+  do{m=ttLevel==='leicht'?RI(20,99):pick([RI(100,999),pick([120,180,216,220,288,336,396,432,504,616,660,780,840])]);a=RI(7,m-3);rows=tableau(m,a);}
+  while(gcd(a,m)!==1||rows.length<5||rows.length>9);
+  tt={m,a,rows,step:2,errors:0,start:Date.now(),done:false,phase:'rows'};
+  renderTT();ttTimer=setInterval(()=>{const t=$('ttClock');if(t&&tt&&!tt.done)t.textContent=fmtT((Date.now()-tt.start)/1000);},500);
+}
+function renderTT(){
+  const c=$('ttCard');c.innerHTML='';
+  c.append(el('div','ptype','Erweiterter Euklid'),el('div','prompt',`Bestimme <b>${tt.a}<sup>−1</sup> mod ${tt.m}</b> mit dem Tableau. <span class="badge" id="ttClock">0:00</span>`));
+  let h='<table class="tab"><tr><th>Rest</th><th>x</th><th>y</th><th>q</th></tr>';
+  for(let i=0;i<tt.step;i++){const r=tt.rows[i];const shownQ=(i>=1&&i<tt.step-1)?'q='+r.q:'';h+=`<tr${r.r===1?' class="g"':''}><td>${r.r}</td><td>${neg(r.x)}</td><td>${neg(r.y)}</td><td>${shownQ}</td></tr>`;}
+  c.appendChild(el('div',null,h+'</table>'));
+  const fb=el('div','fb');
+  if(tt.phase==='rows'){
+    c.appendChild(el('p','muted','Nächste Zeile: q = ⌊vorletzter Rest / letzter Rest⌋, dann neue Zeile = obere − q·untere (alle 3 Spalten).'));
+    const row=el('div','ttrow');const ins=['q','Rest','x','y'].map(n=>{const i=el('input');i.type='text';i.placeholder=n;i.autocomplete='off';i.setAttribute('aria-label',n);row.appendChild(i);return i;});
+    const chk=el('button','btn','Zeile prüfen');const show=el('button','btn ghost','Zeile zeigen (Fehler +1)');show.style.marginTop='.5rem';
+    ins.forEach((i,k)=>i.addEventListener('keydown',e=>{if(e.key==='Enter'){if(k<3)ins[k+1].focus();else chk.click();}}));
+    const adv=()=>{tt.step++;if(tt.rows[tt.step-1].r===1)tt.phase='inv';renderTT();};
+    chk.onclick=()=>{
+      const tr=tt.rows[tt.step],q=tt.rows[tt.step-1].q;const want=[q,tr.r,tr.x,tr.y];const got=ins.map(i=>parseNum(i.value));
+      const oks=want.map((w,k)=>got[k]===w);ins.forEach((i,k)=>{i.classList.remove('ok','bad');i.classList.add(oks[k]?'ok':'bad');});
+      if(oks.every(Boolean))adv();else{tt.errors++;fb.className='fb show bad';fb.textContent='Noch nicht richtig — rote Felder prüfen (Vorzeichen? alle 3 Spalten mit demselben q?).';}
+    };
+    show.onclick=()=>{tt.errors++;adv();};
+    c.append(row,fb,chk,show);setTimeout(()=>ins[0].focus(),30);
+  }else if(tt.phase==='inv'){
+    c.appendChild(el('p','muted','Rest 1 erreicht → ggT = 1. Jetzt die Inverse ablesen (y-Wert mod m, negativ → + m) und die Probe a·a⁻¹ mod m = 1 rechnen.'));
+    const f=el('div','field');const i=el('input');i.type='text';i.placeholder='0 … '+(tt.m-1);i.setAttribute('aria-label','Inverse');f.append(el('label',null,`${tt.a}<sup>−1</sup> ≡`),i);
+    const chk=el('button','btn','Inverse prüfen');
+    i.addEventListener('keydown',e=>{if(e.key==='Enter')chk.click();});
+    chk.onclick=()=>{
+      const inv=modinv(tt.a,tt.m);
+      if(parseNum(i.value)===inv){tt.done=true;tt.phase='done';clearInterval(ttTimer);const secs=(Date.now()-tt.start)/1000;
+        touchDay();S.daily.tab++;S.tab.times.push({t:Math.round(secs),e:tt.errors,m:tt.m,d:dayInt()});if(S.tab.times.length>60)S.tab.times=S.tab.times.slice(-60);
+        if(tt.errors===0&&ttLevel==='klausur'&&(S.tab.best==null||secs<S.tab.best))S.tab.best=Math.round(secs);
+        tt.secs=secs;save();refreshHeader();renderTT();renderTTStats();}
+      else{tt.errors++;i.classList.add('bad');fb.className='fb show bad';fb.textContent='Stimmt nicht. y-Wert der ggT-Zeile nehmen, bei negativem Wert + m; Probe rechnen.';}
+    };
+    c.append(f,fb,chk);setTimeout(()=>i.focus(),30);
+  }else{
+    const inv=modinv(tt.a,tt.m);const fast=tt.secs<=180;
+    c.appendChild(el('div','fb show '+(tt.errors===0&&fast?'ok':'bad'),`${tt.errors===0?'✓ Fehlerfrei':'Fertig mit '+tt.errors+' Fehler'+(tt.errors>1?'n':'')} in ${fmtT(tt.secs)} ${fast?'— unter 3 Minuten.':'— Ziel sind 3 Minuten.'}`));
+    c.appendChild(el('div','sol show',`<span class="lbl">Probe</span>${tt.a}·${inv} = ${tt.a*inv} = ${Math.floor(tt.a*inv/tt.m)}·${tt.m} + 1 ✓`));
+    const n=el('button','btn','Nächstes Tableau ›');n.onclick=newTT;c.appendChild(n);
+  }
+}
+function renderTTStats(){
+  const t=S.tab.times;const last=t.slice(-5).reverse();
+  $('ttStats').innerHTML=`<div class="grid3"><div class="mini"><div class="n">${t.length}</div><div class="l">Tableaus</div></div><div class="mini"><div class="n">${S.tab.best?fmtT(S.tab.best):'–'}</div><div class="l">Bestzeit (Klausur, fehlerfrei)</div></div><div class="mini"><div class="n">${t.length?fmtT(t.slice(-5).reduce((a,x)=>a+x.t,0)/Math.min(5,t.length)):'–'}</div><div class="l">Ø letzte 5</div></div></div>`+
+    (last.length?'<div style="margin-top:.6rem">'+last.map(x=>`<div class="row"><span class="name">mod ${x.m}</span><span class="badge">${fmtT(x.t)}</span><span class="badge">${x.e} Fehler</span></div>`).join('')+'</div>':'');
+}
+
+/* ============================================================
+   KARTEIKARTEN + WIEDERHOLUNG (Leitner)
+   ============================================================ */
+let cardFilter='all',deckOrder=[],deckPos=0,flipped=false,dueOnly=false;
+const cardState=i=>S.cards[i]||{box:1,last:0};
+const cardDue=i=>{const c=cardState(i);return daysSince(c.last)>=BOX_INT[c.box];};
+function buildCardChips(){
+  const w=$('cardChips');w.innerHTML='';
+  [['all','Alle'],['K','Kombinatorik'],['W','Wahrsch.'],['V','Verteilungen'],['Z','Krypto'],['T','Taktik'],['due','Nur fällige']].forEach(([k,n])=>{
+    const on=k==='due'?dueOnly:(k===cardFilter);const c=el('button','chip'+(on?' on':''),n);
+    c.onclick=()=>{if(k==='due')dueOnly=!dueOnly;else cardFilter=k;buildCardChips();shuffleDeck();renderFlash();};w.appendChild(c);});
+}
+function shuffleDeck(){
+  let idx=DECK.map((_,i)=>i).filter(i=>cardFilter==='all'||DECK[i].c===cardFilter);
+  if(dueOnly)idx=idx.filter(cardDue);
+  deckOrder=shuffle(idx).sort((a,b)=>cardState(a).box-cardState(b).box);deckPos=0;flipped=false;
+}
+function renderFlash(){
+  const f=$('flash');
+  if(!deckOrder.length){f.innerHTML='<div class="face"><div>✓ Keine Karten in dieser Auswahl fällig.</div></div>';$('flashProg').textContent='';return;}
+  const i=deckOrder[deckPos];const card=DECK[i];
+  f.innerHTML=`<div class="face"><div class="${flipped?'a':'q'}">${flipped?card.a:card.q}</div><div class="hint">${flipped?'Gewusst?':'Tippen zum Umdrehen'}</div></div>`;
+  $('flashProg').textContent=`Karte ${deckPos+1} / ${deckOrder.length} · Box ${cardState(i).box}`;
+}
+function rateFlash(ok){
+  if(!deckOrder.length)return;const i=deckOrder[deckPos];const c=cardState(i);
+  touchDay();S.cards[i]={box:ok?Math.min(5,c.box+1):1,last:dayInt()};save();refreshHeader();
+  if(!ok)deckOrder.push(i);
+  deckPos++;if(deckPos>=deckOrder.length)shuffleDeck();flipped=false;renderFlash();
+}
+function renderRepStatus(){
+  const due=TYPES.filter(t=>isDue(t.key)).sort((a,b)=>S.per[a.key].box-S.per[b.key].box);
+  const fresh=TYPES.filter(t=>S.per[t.key].n===0);const dc=DECK.map((_,i)=>i).filter(cardDue).length;
+  const box=$('repStatus');$('repCard').style.display='none';
+  box.innerHTML=`<div class="grid3" style="margin-bottom:.7rem"><div class="mini"><div class="n">${due.length}</div><div class="l">Typen fällig</div></div><div class="mini"><div class="n">${fresh.length}</div><div class="l">Typen neu</div></div><div class="mini"><div class="n">${dc}</div><div class="l">Karten fällig</div></div></div>`+
+    (due.length?due.map(t=>`<div class="row"><span class="name">${t.key} ${t.name}</span><span class="badge">Box ${S.per[t.key].box}</span></div>`).join(''):'<p class="muted center">Kein geübter Typ ist gerade fällig.</p>')+
+    `<div class="btnrow" style="margin-top:.8rem"><button class="btn" id="repStart">${due.length?'Fällige Typen wiederholen':'Neue Typen starten'}</button><button class="btn ghost" id="repCards">Fällige Karten (${dc})</button></div>`;
+  $('repStart').onclick=nextRep;$('repCards').onclick=()=>{dueOnly=true;cardFilter='all';go('cards');};
+  if(!due.length&&!fresh.length)$('repStart').disabled=true;
+}
+function nextRep(){
+  const due=TYPES.filter(t=>isDue(t.key)).sort((a,b)=>S.per[a.key].box-S.per[b.key].box);
+  const fresh=TYPES.filter(t=>S.per[t.key].n===0);const list=due.length?due:fresh;
+  if(!list.length){renderRepStatus();return;}
+  $('repStatus').innerHTML=`<p class="muted" style="margin:0">Noch ${list.length} ${due.length?'fällige':'neue'} Typen</p>`;
+  const card=$('repCard');card.style.display='block';const key=list[0].key;const prob=genProblem(key);
+  const {nextBtn}=renderProblem(card,prob,ok=>bump(key,ok),false);nextBtn.textContent='Weiter ›';nextBtn._next=nextRep;
+}
+
+/* ============================================================
+   KLAUSUR
+   ============================================================ */
+let exam=null,examTimer=null;
+function renderExamIntro(){
+  const b=$('examIntro');b.style.display='block';
+  b.innerHTML=`<div class="card center"><p>7 Aufgaben, gemischt aus Kombinatorik, Wahrscheinlichkeit, Verteilungen und Krypto — immer dabei: Siebformel oder Grundaufgabe, eine Verteilungsaufgabe, RSA oder Inverse.</p>
+    <div class="btnrow"><button class="btn" id="ex120">Echt: 120 min</button><button class="btn ghost" id="ex45">Kurz: 45 min</button></div>
+    <p class="muted" style="margin-top:.7rem">Papier, Stift, Taschenrechner und (falls schon geschrieben) Spickzettel bereitlegen. Die App prüft nur die Endergebnisse — den Rechenweg vergleichst du danach mit der Musterlösung.</p></div>`+
+    (S.exams.length?`<div class="card"><h3>Verlauf</h3>${S.exams.slice(-8).reverse().map(e=>`<div class="row"><span class="name">${('0'+e.d%100).slice(-2)}.${('0'+Math.floor(e.d/100)%100).slice(-2)}.${Math.floor(e.d/10000)} · ${e.min} min</span><span class="badge">${e.pct} %</span></div>`).join('')}</div>`:'');
+  $('ex120').onclick=()=>startExam(120);$('ex45').onclick=()=>startExam(45);
+}
+function startExam(min){
+  const probs=examSet().map(k=>GEN[k]());
+  exam={probs,answers:probs.map(()=>null),cur:0,left:min*60,min};
+  $('examIntro').style.display='none';$('examResult').style.display='none';$('examRun').style.display='block';
+  renderExamDots();renderExamCard();tickExam();clearInterval(examTimer);
+  const end=Date.now()+min*60000;
+  examTimer=setInterval(()=>{exam.left=Math.max(0,Math.round((end-Date.now())/1000));tickExam();if(exam.left<=0)submitExam();},1000);
+}
+function tickExam(){const m=Math.floor(exam.left/60),s=exam.left%60;const t=$('examTimer');t.textContent=m+':'+('0'+s).slice(-2);t.classList.toggle('low',exam.left<=300);}
+function renderExamDots(){
+  const d=$('examDots');d.innerHTML='';
+  exam.probs.forEach((p,i)=>{const a=exam.answers[i];const x=el('div','dot'+(i===exam.cur?' cur':'')+(a&&a.some(v=>v.trim())?' done':''),i+1);
+    x.onclick=()=>{saveExamInputs();exam.cur=i;renderExamCard();renderExamDots();};d.appendChild(x);});
+}
+function renderExamCard(){
+  const prob=exam.probs[exam.cur];const c=$('examCard');c.innerHTML='';
+  c.append(el('div','ptype',`Aufgabe ${exam.cur+1} / ${exam.probs.length}`),el('div','prompt',prob.prompt));
+  const fw=el('div','fields');exam.inputs=[];
+  prob.fields.forEach((f,i)=>{const row=el('div','field');const inp=el('input');inp.type='text';inp.autocomplete='off';inp.placeholder=PH[f.kind];inp.setAttribute('aria-label',f.label);
+    const saved=exam.answers[exam.cur];if(saved&&saved[i]!=null)inp.value=saved[i];row.append(el('label',null,f.label),inp);fw.appendChild(row);exam.inputs.push(inp);});
+  c.appendChild(fw);
+}
+function saveExamInputs(){if(exam&&exam.inputs)exam.answers[exam.cur]=exam.inputs.map(i=>i.value);}
+function submitExam(){
+  clearInterval(examTimer);saveExamInputs();
+  let pts=0;const detail=exam.probs.map((prob,i)=>{const vals=exam.answers[i]||prob.fields.map(()=>'');const oks=evalProblem(prob,vals);
+    const sc=oks.filter(Boolean).length/oks.length;pts+=sc;bump(prob.key,sc===1);return {prob,sc,vals};});
+  const pct=Math.round(100*pts/exam.probs.length);S.exams.push({d:dayInt(),min:exam.min,pct});save();
+  $('examRun').style.display='none';const r=$('examResult');r.style.display='block';
+  r.innerHTML=`<div class="card center"><div class="big">${pct} %</div><p class="muted">${fm(pts,1)} von ${exam.probs.length} Aufgaben · ${pct>=70?'Ziel (≥ 70 %) erreicht.':'Ziel sind ≥ 70 %.'}</p></div>
+    <div class="card">${detail.map((d,i)=>`<details><summary>${d.sc===1?'✓':d.sc>0?'◐':'✗'} Aufgabe ${i+1} — ${d.prob.title}</summary><p>${d.prob.prompt}</p><p><b>Deine Antwort:</b> ${d.vals.map((v,j)=>d.prob.fields[j].label+' '+(v||'–')).join(' · ')}<br><b>Lösung:</b> ${d.prob.fields.map(f=>f.label+' '+fieldShow(f)).join(' · ')}</p><div class="sol show">${d.prob.solution}</div></details>`).join('')}</div>`;
+  const b=el('button','btn','Zur Klausur-Übersicht');b.onclick=()=>{r.style.display='none';renderExamIntro();};r.appendChild(b);exam=null;window.scrollTo(0,0);
+}
+
+/* ============================================================
+   SPICKER + NAVIGATION + THEME + START
+   ============================================================ */
+function renderSpick(){$('spickBody').innerHTML=SPICKER.map((s,i)=>`<details${i<1?' open':''}><summary>${s.h}</summary>${s.b}</details>`).join('');}
+function go(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$('s-'+name).classList.add('active');
+  document.querySelectorAll('nav.tabs button').forEach(b=>{const on=b.dataset.go===name;b.classList.toggle('on',on);if(on&&b.scrollIntoView)b.scrollIntoView({block:'nearest',inline:'center'});});
+  if(name==='heute')renderHeute();
+  if(name==='rec'){buildRecChips();if(!recCur)nextRec();else renderRecStat();}
+  if(name==='drill'){buildChips();newDrill();}
+  if(name==='tab'){buildTTChips();if(!tt||tt.done)newTT();renderTTStats();}
+  if(name==='rep')renderRepStatus();
+  if(name==='cards'){buildCardChips();shuffleDeck();renderFlash();}
+  if(name==='exam'){if(!exam){$('examRun').style.display='none';$('examResult').style.display='none';renderExamIntro();}}
+  if(name==='spick')renderSpick();
+  window.scrollTo(0,0);
+}
+function refreshHeader(){
+  $('streakN').textContent=S.streak;const d=Math.ceil((examTs()-Date.now())/86400000);$('cdN').textContent=d>0?d+' T':'0';
+}
+document.querySelectorAll('nav.tabs button').forEach(b=>b.onclick=()=>go(b.dataset.go));
+$('flash').onclick=()=>{flipped=!flipped;renderFlash();};
+$('flashYes').onclick=()=>rateFlash(true);$('flashNo').onclick=()=>rateFlash(false);
+$('examPrev').onclick=()=>{saveExamInputs();exam.cur=(exam.cur+exam.probs.length-1)%exam.probs.length;renderExamCard();renderExamDots();};
+$('examNext').onclick=()=>{saveExamInputs();exam.cur=(exam.cur+1)%exam.probs.length;renderExamCard();renderExamDots();};
+$('examSubmit').onclick=()=>{if(confirm('Klausur abgeben und auswerten?'))submitExam();};
+$('resetBtn').onclick=()=>{if(confirm('Wirklich den gesamten Fortschritt löschen?')){try{localStorage.removeItem(SKEY);}catch(e){}S=load();weekIdx=null;refreshHeader();renderHeute();}};
+const themeBtn=$('themeBtn');
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);themeBtn.textContent=t==='dark'?'☀️':'🌙';try{localStorage.setItem('wuk-ws27-theme',t);}catch(e){}}
+let savedTheme=null;try{savedTheme=localStorage.getItem('wuk-ws27-theme');}catch(e){}
+applyTheme(savedTheme||((window.matchMedia&&matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light'));
+themeBtn.onclick=()=>applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+refreshHeader();renderHeute();
+if('serviceWorker' in navigator&&location.protocol.startsWith('http')){navigator.serviceWorker.register('service-worker.js').catch(()=>{});}
+</script>
+</body>
+</html>

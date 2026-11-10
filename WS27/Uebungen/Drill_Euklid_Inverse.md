@@ -1,6 +1,6 @@
 # 🏋️ Drill: Euklid-Tableau & Inverse (Ziel: < 3 min pro Inverse inkl. Probe)
 
-> Phase 4, Woche 1. Methode: T4 §2 (Tableau!). **Jede Aufgabe endet mit der Probe
+> Woche 8 (Tableau täglich ab Woche 1). Methode: T4 §2 (Tableau!). **Jede Aufgabe endet mit der Probe
 > a·a⁻¹ mod m = 1** — ohne Probe gilt die Aufgabe als nicht gelöst.
 > Stoppuhr benutzen: Die SS26-Klausur ist an genau dieser Fertigkeit gescheitert.
 

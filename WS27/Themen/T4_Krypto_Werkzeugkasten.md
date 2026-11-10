@@ -1,4 +1,4 @@
-# T4 — Krypto-Werkzeugkasten (Phase 4)
+# T4 — Krypto-Werkzeugkasten (Wochen 8–9)
 
 > Skript: Kap. 4 (S. 329–438). **Ein** Werkzeugkasten (ggT, Euklid, Inverse, φ, Euler,
 > schnelle Exponentiation) schaltet **drei** große Aufgabentypen frei: Zahlentheorie,
@@ -147,3 +147,46 @@ Entschlüsseln: x = a⁻¹·(y−b) mod 26.
    11¹⁶ ≡ 81 · 29 = 16+8+4+1 → 81·9·81·11 mod 91 = **72**. Endprobe: 72⁵ mod 91 = 11 ✓.
 6. 11 prim → Fermat: a¹¹ ≡ a (mod 11) ⇒ a¹¹ − a ≡ 0 (mod 11) ⇒ 11 | a¹¹ − a. ∎
 </details>
+
+---
+
+# Ergänzungen November 2026
+
+## 9. Skript-Typen Zahlentheorie und klassische Chiffren (alle nachgerechnet)
+
+**Faktorisieren mit Hilfe von φ** (Skript 4.4.1): n = p·q und φ = (p−1)(q−1) = n − (p+q) + 1
+→ **p+q = n − φ + 1**. Dann sind p, q die Lösungen von x² − (p+q)·x + n = 0.
+n = 94319, φ = 93696: p+q = 624 → x = 312 ± √(312² − 94319) = 312 ± 55 → **257 · 367**.
+
+**Diophantische Gleichung mit ggT > 1** (4.4.2): 729x + 75y = 6. Tableau liefert 7·729 − 68·75 = 3,
+mal 2 → x = 14, y = −136. Für rechte Seite 5: 3 ∤ 5 → keine Lösung.
+
+**Beweisaufgaben — drei Bausteine:**
+- *Teilbarkeit durch Primzahl p:* Fermat aᵖ ≡ a (mod p).
+- *a³ − a ist für ungerades a ein Vielfaches von 8* (4.4.3): a³ − a = (a−1)·a·(a+1). a−1 und a+1 sind
+  aufeinanderfolgende gerade Zahlen; eine ist durch 4 teilbar, die andere durch 2 → Produkt durch 8.
+- *m−1 ist in ℤₘ zu sich selbst invers* (4.4.4): (m−1)² = m² − 2m + 1 ≡ 1 (mod m).
+
+**Potenzreste:** 3⁴⁷ mod 23 → Fermat 3²² ≡ 1, 47 = 2·22 + 3 → 27 ≡ **4** ·
+7¹⁵⁷ mod 26 → φ(26) = 12, 157 = 13·12 + 1 → **7** · letzte zwei Ziffern von 3⁸² → φ(100) = 40, 82 = 2·40 + 2 → **09**.
+
+**Lineare Kongruenz** (4.4.7): 7x ≡ 10 (mod 31) → 7⁻¹ = 9 → x = 90 mod 31 = **28**; eindeutig, da ggT(7,31) = 1.
+Mit ggT > 1: 9x ≡ 6 (mod 15) → ÷3 → 3x ≡ 2 (mod 5) → x ≡ 4 → Lösungen 4, 9, 14.
+
+**RSA-Varianten:** nur verschlüsseln (c = mᵉ mod n, kein φ nötig) · e aus Kandidaten wählen (ggT(e,φ) = 1) ·
+entschlüsseln · p, q aus φ rekonstruieren · Signatur = mit d „verschlüsseln", mit e prüfen.
+
+**Caesar rechnen:** Buchstabe → Zahl (A=0), +k mod 26, → Buchstabe. KLAUSUR, k=3 → NODXVXU.
+Angriff: 26 Schlüssel durchprobieren oder häufigsten Buchstaben = E setzen.
+
+**Vigenère rechnen:** Schlüsselwort periodisch unter den Text, spaltenweise addieren mod 26.
+ANGRIFF + KEY → KREBMDP. Entschlüsseln: subtrahieren.
+
+**Theoriefragen in einem Satz:**
+- Substitution ändert die Buchstaben (Häufigkeitsprofil verschoben/vertauscht), Transposition ändert nur
+  die Positionen (Häufigkeiten wie im Klartext) → statistisch unterscheidbar.
+- Brute Force: 80 Bit statt 40 Bit = 2⁴⁰-mal so viele Schlüssel → 2⁴⁰ Stunden statt 1 Stunde.
+- One-Time-Pad ist nur sicher mit echt zufälligem, einmalig benutztem Schlüssel in Textlänge;
+  wird der Schlüssel aus dem Geheimtext fortgesetzt, kennt der Angreifer ihn.
+- Diffie-Hellman vereinbart nur einen Schlüssel (kein Verschlüsseln); Sicherheit = diskreter Logarithmus.
+  Beispiel p=17, g=3, a=5, b=7: α=5, β=11, K=10.

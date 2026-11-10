@@ -2,8 +2,8 @@
 
 > **Die Übung, die SS26 gefehlt hat.** Für jede Aufgabe schreibst du nur 2 Zeilen:
 > **(1) Modell/Aufgabentyp, (2) anzusetzende Formel** (mit eingesetzten Größen, ohne
-> auszurechnen). Ziel: 20/20 in unter 15 Minuten. Erst Teil A (nach Phase 1–2 lösbar),
-> Teil B ab Phase 3–4. **Bestanden ab 18/20** (→ Definition of Ready).
+> auszurechnen). Ziel: 20/20 in unter 15 Minuten. Erst Teil A (nach Woche 3 lösbar),
+> Teil B ab Woche 9. **Bestanden ab 18/20** (→ Definition of Ready).
 
 ## Teil A
 

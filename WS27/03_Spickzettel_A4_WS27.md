@@ -1,146 +1,145 @@
-# 📄 A4-Spickzettel WS27 — Vorlage (1 Seite, handschriftlich)
+# 📄 A4-Spickzettel WS27 — Vorlage (1 Seite, einseitig, handschriftlich)
 
-> **Neuaufbau 09.07.2026 nach der SS26-Klausur.** Was neu ist gegenüber SS26:
-> **⓪ Entscheidungsbaum** (Erkennung zuerst!), **①b Entscheidungsmatrix** mit allen
-> 4 Grundaufgaben, **①c Siebformel**, **⑥ Verteilungs-Baukasten** (aufstellen + Indikator),
-> **④b Ungleichung & ④c Wettkampf**, Krypto: **Euklid-Tableau als Standard**,
-> Faktorisierung **bis √n**, Probierformel nur mit **Abbruch bei k=10**.
+> **Stand 10.11.2026 — Vollabdeckung der offiziellen Themen-Auswahl.**
+> Jede Zeile ist in **[04_Spickzettel_erklaert.md](04_Spickzettel_erklaert.md)** erklärt
+> (wann benutzen, warum gilt das, Mini-Beispiel, Falle). Erst dort verstehen, dann hier abschreiben.
 >
-> **Kürzungs-Reihenfolge, falls die Seite nicht reicht** (von zuerst streichen → nie streichen):
-> 🧮-TR-Zeilen eindampfen → ⑦ stetige Zeile → ③b Details → …
-> **NIE streichen: ⓪, ①b, ①c, ⑥, ⑨-Tableau.** Genau deren Fehlen hat SS26 gekostet.
+> **Vor dem Schreiben prüfen:** Gilt weiterhin „1 A4-Seite, einseitig, handschriftlich"?
+> (Stand SS26. Falls beidseitig erlaubt: Vorderseite ⓪–⑦, Rückseite ⑧–⑫ mit mehr Luft.)
+>
+> **Layout-Empfehlung:** Querformat, 3 Spalten, Fineliner 0,3 mm.
+> Spalte 1 = ⓪–② Kombinatorik · Spalte 2 = ③–⑦ Wahrscheinlichkeit · Spalte 3 = ⑧–⑫ Krypto.
+>
+> **Prioritäten:** ● = Pflicht (nie streichen) · ○ = wenn Platz ist.
+> Kürzen in dieser Reihenfolge: Beispiele in Klammern → ○-Zeilen → 🧮-Zeilen. **Nie: ⓪, ①, ②, ⑥, ⑧a, ⑨.**
 
 ---
 
-## ⓪ ERKENNUNG — vor jeder Aufgabe 10 Sekunden klassifizieren!
+## ⓪ ERKENNUNG — 10 Sekunden vor jeder Aufgabe ●
 
-- **„Wie viele Möglichkeiten/Anordnungen…?"** → Kombinatorik → Matrix ①b
-- **„…durch A ODER B ODER C / mindestens eine Eigenschaft"** (überlappend) → **Siebformel ①c**
-- **„Wahrscheinlichkeit, dass…"** + endlich & gleichwahrscheinlich → Laplace ③
-- **feste Anzahl n unabhängiger Versuche, Treffer/Niete** → Binomial ④
-- **„Wie oft mindestens, damit P ≥ …?"** → Ungleichung ④b
-- **zwei Spieler/Serien im Vergleich** → Wettkampf ④c
-- **Ziehen ohne Zurücklegen aus 2 Sorten** → hypergeometrisch ③c
-- **„Test/Diagnose/Ursache gegeben Wirkung"** → Bayes ⑤
-- **„Verteilung von X aufstellen / E[X] / Var(X)"** ohne Standardnamen → **Baukasten ⑥**
-- **mod n, Schlüssel, verschlüsselt** → Krypto ⑦–⑨
+| Signal im Text | Modell |
+|---|---|
+| „Wie viele Möglichkeiten / Anordnungen / Auswahlen" | Kombinatorik → ① |
+| „A **oder** B **oder** C", „mindestens eine Eigenschaft", überlappend | **Siebformel ②** |
+| „mit Sicherheit", „mindestens zwei gleiche", „zeigen Sie, dass es … gibt" | Schubfach ②b |
+| „Wahrscheinlichkeit", endlich viele gleich wahrscheinliche Fälle | Laplace ③ |
+| „Test / Diagnose / stammt von / Ursache, gegeben Beobachtung" | Bayes ⑤ |
+| feste Zahl n unabhängiger Versuche, Treffer ja/nein, p konstant | Binomial ④ |
+| „ohne Zurücklegen", Stichprobe aus 2 Sorten | hypergeometrisch ③c |
+| „wie oft mindestens, damit P ≥ …" | Mindest-n ④b |
+| zwei Spieler/Serien, Zwischenstand, „gewinnt … noch?" | Wettkampf ④c |
+| „bis zum ersten Treffer" | geometrisch ⑥ |
+| „Verteilung von X", „E(X), Var(X)" ohne Standardnamen | **Baukasten ⑥** |
+| Dichte f(x), Konstante C | stetig ⑦ |
+| mod, Schlüssel, Chiffre, ggT | Krypto ⑧–⑫ |
 
-## ①a Permutationen
-- n verschiedene: **n!** · Multimenge: **n!/(n₁!·…·nₖ!)**
-- „beginnt mit X": Plätze fixieren, Rest permutieren · „zusammen": als Block zählen
+## ① Zählen ●
 
-## ①b Auswahl: k aus n — DIE MATRIX (erst 2 Fragen, dann Formel!)
-| | **mit Wdh.** | **ohne Wdh.** |
+**Permutation:** n! · Multimenge **n!/(n₁!·…·nₖ!)** · „zusammen" = Block (×Block intern) · Platz fix → Rest permutieren
+
+**k aus n — erst 2 Fragen, dann Formel:**
+
+| | **Wdh. ja** | **Wdh. nein** |
 |---|---|---|
-| **Reihenfolge wichtig** (Wort, PIN, Tupel, „nacheinander") | **nᵏ** | **n!/(n−k)!** |
-| **Reihenfolge egal** (Auswahl, Gremium, Hand, „gleichzeitig") | **C(n+k−1, k)** ⚠️Eis! | **C(n, k)** |
+| **Reihenfolge wichtig** (Wort, PIN, Podium, „nacheinander") | **nᵏ** | **n!/(n−k)!** |
+| **Reihenfolge egal** (Auswahl, Tüte, Gremium, „gleichzeitig") | **C(n+k−1, k)** ⚠ Eis, Domino | **C(n,k)** |
 
-- C(n,k)=n!/(k!(n−k)!) · C(n,k)=C(n,n−k) · C(n,0)=C(n,n)=1 · C(n,2)=n(n−1)/2
-- „erste m Pflicht" → C(n−m,k−m) · „genau j aus Gruppe p" → C(p,j)·C(n−p,k−j)
-- „mindestens j" → summieren oder Gegenereignis
-- **Eis-Merker:** 3 Kugeln, 10 Sorten, Reihenfolge egal, Wdh. ja → C(12,3)=220 (**nicht** 10³!)
+- C(n,k)=n!/(k!(n−k)!) = C(n,n−k) · C(n,1)=n · C(n,2)=n(n−1)/2 · Pascal: C(n,k)=C(n−1,k−1)+C(n−1,k)
+- „genau j aus Gruppe g" → C(g,j)·C(n−g,k−j) · „mindestens" → Gegenereignis oder Summe · „Pflicht" → C(n−1,k−1)
+- k gleiche Dinge auf n Empfänger = C(n+k−1,k); jeder ≥ 1: C(k−1,n−1)
+- **(a+b)ⁿ = Σ C(n,k)·aᵏ·bⁿ⁻ᵏ** → Koeff. von xᵏ in (a+bx)ⁿ: C(n,k)·aⁿ⁻ᵏ·bᵏ · Σ C(n,k) = 2ⁿ = |P(M)|
+- ○ Multinomial: Koeff. xᵃyᵇzᶜ in (x+y+z)ⁿ = n!/(a!b!c!) · Gitterwege r rechts/h hoch: C(r+h, r)
+- ○ Mengen: |A∪B|=|A|+|B|−|A∩B| · |A×B|=|A|·|B| · A\B = A∩B̄ · De Morgan: (A∪B)‾ = Ā∩B̄
 
-## ①c Siebformel (Inklusion–Exklusion) ⭐NEU
-- 2 Mengen: **|A∪B| = |A|+|B| − |A∩B|**
-- 3 Mengen: **|A∪B∪C| = |A|+|B|+|C| − |A∩B| − |A∩C| − |B∩C| + |A∩B∩C|**
-- allgemein: einzeln + · Paare − · Tripel + · … (Vorzeichen wechseln)
-- Teilbarkeit 1..N: |durch t| = **⌊N/t⌋**; Schnitt = durch **kgV** teilbar
-- „keine der Eigenschaften" = N − |A∪B∪C| · gilt identisch für **P**: P(A∪B)=P(A)+P(B)−P(A∩B)
-- Derangement (kein Element am Platz): **Dₙ = n!·Σₖ₌₀ⁿ (−1)ᵏ/k!** (D₃=2, D₄=9)
-- **Schubfach:** n+1 Objekte in n Fächer → 1 Fach doppelt; allg. ⌈n/m⌉
+## ② Siebformel ●
 
-## ③ Laplace: P = günstige/mögliche
-- 2 Würfel: 36 · 3 Würfel: 216 · **„mindestens ein" → 1 − P(kein)**
-- UND (unabh.): P(A)·P(B) · ODER: Siebformel ①c
-### ③b Fahrstuhl (n Pers., k Stockw., Ω=kⁿ)
-- hält nur 1×: k/kⁿ · alle einzeln: k·(k−1)·…·(k−n+1)/kⁿ · A+B zusammen: 1/k
-- genau r Stopps, Gruppen n₁..nᵣ: **C(k,r)·M·n!/(n₁!…nᵣ!)/kⁿ** (M = Zuordnungen der Größen)
-### ③c Urne/Hypergeometrisch (N gesamt, r „gut", m gezogen, ohne Zurückl.)
-- **P(X=k) = C(r,k)·C(N−r,m−k)/C(N,m)** · E[X] = m·r/N · mit Zurückl. → Binomial p=r/N
-- 2 gleichfarbig: Σcᵢ(cᵢ−1)/(N(N−1))
+- **|A∪B| = |A|+|B|−|A∩B|**
+- **|A∪B∪C| = |A|+|B|+|C| − |A∩B| − |A∩C| − |B∩C| + |A∩B∩C|** (einzeln +, Paare −, Tripel +, …)
+- Teilbarkeit in 1..N: **⌊N/t⌋**, Schnitt = **kgV** (⚠ nicht Produkt: kgV(4,6)=12)
+- „keine" = N − |A∪B∪C| · **rückwärts:** Formel nach der fehlenden Größe umstellen
+- gilt genauso für P · Derangement Dₙ = n!·Σ(−1)ᵏ/k! (D₃=2, D₄=9, D₅=44)
+- **②b Schubfach:** n+1 Objekte, n Fächer → ein Fach ≥ 2 · sicher k gleiche bei n Fächern: **(k−1)·n+1**
+  · Beweis-Schema: Fächer definieren → Objekte zählen → „mehr Objekte als Fächer"
 
-## ④ Binomial: X~Bin(n,p), feste n, unabhängig, 2 Ausgänge
-- **P(X=k)=C(n,k)pᵏ(1−p)ⁿ⁻ᵏ** · **E=np** · **Var=np(1−p)** · σ=√Var
-- „mindestens/höchstens" → summieren (kürzere Seite!) oder Gegenereignis
-### ④b Mindest-n-Ungleichung ⭐ („wie oft, damit ≥ s mind. 1 Treffer")
-- **1−(1−p)ⁿ ≥ s ⇔ (1−p)ⁿ ≤ 1−s ⇔ n ≥ ln(1−s)/ln(1−p)** → aufrunden!
-- ⚠️ ln(1−p) < 0 → beim Teilen **dreht sich die Ungleichung** · Probe mit n−1 und n!
-- z.B. p=0,2, s=0,955: n ≥ ln 0,045/ln 0,8 = 13,9 → **14**
-### ④c Wettkampf / Vergleich zweier Serien ⭐NEU
-1. Reste bestimmen: X~Bin(n_A,p_A), Y~Bin(n_B,p_B) (nur **verbleibende** Versuche!)
-2. Gewinnbedingung als Ungleichung: Stand_A + X > Stand_B + Y ⇔ **X ≥ Y + Δ**
-3. **P = Σ_y P(Y=y)·P(X ≥ y+Δ)** — über die kleinere Serie summieren
-4. „Gleichstand" ggf. separat · Ansatz hinschreiben = Großteil der Punkte
+## ③ Laplace: P = günstig/möglich ●
 
-## ⑤ Bayes (Test/Ursache)
-- **P(A|B) = P(B|A)·P(A) / [P(B|A)·P(A) + P(B|Ā)·P(Ā)]**
-- erst 4 Größen aus dem Text: P(A), P(Ā)=1−P(A), P(B|A), P(B|Ā) · Baum zeichnen
+- **„mindestens ein" → 1 − P(kein)** · 2 Würfel 36, 3 Würfel 216 · Skat 32 = 4 Farben × 8 Werte
+- UND unabhängig: P(A)·P(B) · allgemein P(A∩B)=P(A)·P(B|A) · ODER: ②
+- unabhängige Treffer p₁,p₂,p₃, „mind. einer": **1−(1−p₁)(1−p₂)(1−p₃)**
+- **③b Fahrstuhl** (n Pers., k Ziele, Ω=kⁿ): alle gleich k/kⁿ · alle verschieden k!/(k−n)!/kⁿ ·
+  ○ genau r Ziele, Gruppen n₁..nᵣ: C(k,r)·M·n!/(n₁!…nᵣ!)/kⁿ
+- **③c Hypergeometrisch** (N gesamt, r gut, m gezogen): **P(X=k)=C(r,k)·C(N−r,m−k)/C(N,m)** · E=m·r/N
 
-## ⑥ Verteilungs-Baukasten (X ohne Standardnamen) ⭐NEU — Jäger/Hasen-Typ!
-1. **Ω und |Ω|** festlegen (oft Laplace: Möglichkeiten^Akteure, z.B. n³ bei 3 Jägern)
-2. **Werte von X** auflisten (X ∈ {…})
-3. je Wert **Fälle abzählen** (Kombinatorik ①!) → P(X=k) = günstige/|Ω|
-4. **Kontrolle: Σ P(X=k) = 1** (Pflicht — findet Zählfehler sofort!)
-5. **E[X] = Σ k·P(X=k)** · **E[X²] = Σ k²·P(X=k)** · **Var = E[X²] − (E[X])²**
-- **Indikator-Trick** (E ohne Verteilung!): X = Σ Iᵢ → **E[X] = Σ P(Iᵢ=1)** (Linearität, gilt immer)
-  z.B. n Hasen, 3 Jäger: P(Hase i getroffen) = 1−((n−1)/n)³ → E[X] = n·(1−((n−1)/n)³)
-- Jäger-Muster: P(X=1)=1/n² · P(X=2)=3(n−1)/n² · P(X=3)=(n−1)(n−2)/n²
-- Min/Max n Würfel: P(Max ≤ k)=(k/6)ⁿ → P(Max=k)=(kⁿ−(k−1)ⁿ)/6ⁿ; Min analog (7−k)
-- geometrisch (1. Treffer im k-ten Versuch): P=(1−p)ᵏ⁻¹p · E=1/p
+## ④ Binomial X~Bin(n,p) ●
 
-## ⑦ Stetige ZV
-- **C aus ∫f=1** · E[X]=∫x·f · E[X²]=∫x²·f · Var=E[X²]−E² · P(a<X<b)=∫ₐᵇf
+- **P(X=k)=C(n,k)·pᵏ·(1−p)ⁿ⁻ᵏ** · **E=np** · **Var=np(1−p)**
+- **④b Mindest-n:** 1−(1−p)ⁿ ≥ s ⇔ **n ≥ ln(1−s)/ln(1−p)** → aufrunden, ⚠ Ungleichung dreht (ln<0), Probe n−1 und n
+  (p=0,2; s=0,955 → 13,9 → 14) · „mind. 2 Treffer": P(X≤1) ≤ 1−s, n probieren
+- **④c Wettkampf:** ① Reste X~Bin(n_A,p_A), Y~Bin(n_B,p_B) ② Stand_A+X > Stand_B+Y ⇔ **X ≥ Y+Δ**
+  ③ **P = Σ_y P(Y=y)·P(X ≥ y+Δ)** (über die kürzere Serie) ④ Gleichstand extra
+
+## ⑤ Bayes ●
+
+- total: **P(B)=Σ P(B|Aᵢ)·P(Aᵢ)** · **P(Aⱼ|B)=P(B|Aⱼ)·P(Aⱼ)/P(B)** · Baum: Pfad × , Pfade +
+- erst alle Größen aus dem Text: P(A), P(Ā), P(B|A), P(B|Ā)
+
+## ⑥ Verteilungs-Baukasten ●
+
+1. **|Ω|** (oft Ziele^Akteure) 2. **Werte von X** 3. je Wert Fälle zählen → P(X=k) 4. **Σ P = 1 ✓** 5. Tabelle k | P | k·P | k²·P
+- **E[X]=Σ k·P(X=k)** · **Var=E[X²]−(E[X])²** · σ=√Var · F(x)=P(X≤x)
+- E[aX+b]=aE[X]+b · Var(aX+b)=a²Var(X) · E[X+Y]=E[X]+E[Y] immer
+- **Indikator:** X=ΣIᵢ ⇒ **E[X]=ΣP(Iᵢ=1)** (Hasen: n·(1−((n−1)/n)³))
+- Jäger (3 Akteure, n Ziele): 1/n² · 3(n−1)/n² · (n−1)(n−2)/n²
+- Max zweier Würfel: (2k−1)/36 · Min: (13−2k)/36 · gleichverteilt 1..n: E=(n+1)/2, Var=(n²−1)/12
+- geometrisch: P(X=k)=(1−p)ᵏ⁻¹p · **P(X>k)=(1−p)ᵏ** · E=1/p · ○ Poisson: λᵏe^(−λ)/k!, E=Var=λ
+
+## ⑦ Stetig ○
+
+- C aus ∫f=1 · E=∫x·f · E[X²]=∫x²·f · Var=E[X²]−E² · P(a<X<b)=∫ₐᵇf · gleichvert. [a,b]: E=(a+b)/2, Var=(b−a)²/12
 
 ---
 
-## ⑧ KRYPTO-WERKZEUGKASTEN
-**🧮 CASIO:** ÷R = Teilen mit Rest (Rest in Ans) · GGT(a;b) · FORMAT→Primfaktorzerlegung · negativer Rest → +Modul
+## ⑧ Krypto-Werkzeuge ●
 
-### ⑧a Erweiterter Euklid als TABLEAU ⭐ Standardmethode (statt Rückwärtseinsetzen!)
-Ziel: x, y mit a·x + b·y = ggT. Zeilen: (Rest | x | y), Start: (a|1|0), (b|0|1);
-je Schritt q = ⌊oben/unten⌋, **neue Zeile = obere − q·untere** (alle 3 Spalten!). Letzte Zeile mit Rest ≠ 0 ⇒ ggT, x, y.
+**⑧a Erweiterter Euklid als TABLEAU** (Rest | x | y), Start (a|1|0), (b|0|1), q=⌊oben/unten⌋, **neu = obere − q·untere**
 ```
-Beispiel 396, 317:   396 |  1 |  0
-                     317 |  0 |  1     q=1
-                      79 |  1 | −1     q=4
-                       1 | −4 |  5  ← ggT=1: −4·396 + 5·317 = 1 ✓
+396 |  1 |  0
+317 |  0 |  1    q=1
+ 79 |  1 | −1    q=4
+  1 | −4 |  5    ← ggT=1:  −4·396 + 5·317 = 1 ✓
 ```
-- **Probe (Pflicht): a·x + b·y ausrechnen = ggT?** · Lösbar ⇔ ggT | c; skalieren ×(c/ggT)
-- ggT ∤ c → „keine Lösung" hinschreiben (fertig, Punkte!)
+- **Probe: a·x+b·y = ggT** · a·x+b·y=c lösbar ⇔ **ggT | c**, dann ×(c/ggT) · sonst „keine Lösung" hinschreiben
+- **⑧b Inverse a⁻¹ mod m** (⇔ ggT(a,m)=1): Tableau (m,a), y-Wert mod m (negativ → +m) · **Probe a·a⁻¹ mod m = 1**
+- a·x ≡ b (mod m): g=ggT(a,m) · g∤b → keine · sonst alles ÷g (auch Modul), x₀=(a/g)⁻¹·(b/g), **g Lösungen** x₀+k·m/g
+- **⑧c φ:** φ(p)=p−1 · **φ(pq)=(p−1)(q−1)** · φ(pᵏ)=pᵏ⁻¹(p−1) · φ(n)=n·∏(1−1/p)
+- **Euler:** ggT(a,n)=1 ⇒ a^φ(n)≡1 → Exponent mod φ nehmen · **Fermat:** aᵖ≡a (mod p)
+- **Quadrier-Kette:** a, a², a⁴, a⁸ … je mod n **notieren**; Exponent = Summe von Zweierpotenzen
+- ○ p,q aus n und φ: **p+q = n−φ+1**, dann x²−(p+q)x+n=0
+- ○ Beweise: aᵖ−a → Fermat · (m−1)²=m²−2m+1≡1 · a³−a=(a−1)a(a+1)
 
-### ⑧b Inverse a⁻¹ mod m (existiert ⇔ ggT(a,m)=1)
-- Tableau mit (m, a) → y-Spalte der ggT-Zeile = Kandidat → **Inverse = Wert mod m** (negativ → +m)
-- oben: 317⁻¹ mod 396 = 5 · **Probe: a·a⁻¹ ÷R m → Rest 1?** ✓
-- Schnelltest (nur wenn a klein!): **(1+m·k)/a** für k=1..10 — ⚠️ **k=10 ohne Treffer → STOPP:
-  Modul falsch? (φ statt n!) Faktorisierung falsch? → Tableau rechnen!**
+## ⑨ RSA ●
 
-### ⑧c φ & Euler & schnelle Exponentiation
-- φ(p)=p−1 · **φ(p·q)=(p−1)(q−1)** · φ(p²)=p(p−1) ⚠️nicht (p−1)²! · allg. φ(n)=n·∏(1−1/p)
-- ggT(a,n)=1 ⇒ **a^φ(n) ≡ 1 (mod n)** · Exponent: e = q·φ + r (🧮 e ÷R φ) → aᵉ ≡ aʳ
-- **Quadrier-Kette:** a², a⁴, a⁸, … je mod n, **jeden Rest notieren + mit TR prüfen**;
-  Exponent als Summe von Zweierpotenzen → zugehörige Reste multiplizieren, je mod n
-- Fermat (p prim): aᵖ ≡ a (mod p) ⇒ p | aᵖ−a (Beweisaufgabe!)
+1. **Faktorisieren bis √n** — Primzahlen 2,3,5,7,11,13,17,19,23,29,31 (437=19·23!)
+2. **φ=(p−1)(q−1)** — ab hier Modul φ
+3. **d=e⁻¹ mod φ** per Tableau (φ,e) · Probe e·d mod φ = 1 · mehrere e: nur ggT(e,φ)=1 gültig
+4. **m=cᵈ mod n** (wieder Modul n) per Quadrier-Kette · verschlüsseln: c=mᵉ mod n
+5. Endprobe mᵉ mod n = c · warum: m^(ed)=m^(1+kφ)≡m
 
-### ⑨ RSA — stur abarbeiten
-**0)** c gegeben → entschlüsseln (1–5) · nur m gegeben → Einzeiler c = mᵉ mod n
-**1) Faktorisieren bis √n!** Primzahlen **2,3,5,7,11,13,17,19** (reicht für n<529; √n ausrechnen!)
-   🧮 FORMAT→Primfaktorzerl. · ⚠️ „sieht prim aus" täuscht: 437=19·23, 91=7·13
-**2) φ=(p−1)(q−1)** · ⚠️ nie n−1, nie n · **ab hier nur noch mit φ rechnen!**
-**2b)** mehrere e? nur ggT(e,φ)=1 gültig
-**3) d = e⁻¹ mod φ** → **Tableau ⑧a/⑧b mit (φ, e)** · Probe: e·d ÷R φ → Rest 1 ✓
-   (Schnelltest (1+φk)/e nur bis k=10, dann STOPP→Tableau)
-**4) m = cᵈ mod n** → Quadrier-Kette ⑧c (jetzt wieder Modul n!)
-**5) Endprobe: mᵉ mod n = c?** ✓ · Formeln immer hinschreiben (Teilpunkte!)
+## ⑩ Affine y=(a·x+b) mod 26, A=0…Z=25 ●
 
-### ⑩ Affine Chiffre f(x)=(a·x+b) mod 26 · A=0!…Z=25
-1. 2 Paare → 2 Gleichungen · 2. subtrahieren: **a·(x₁−x₂) ≡ y₁−y₂** (negativ→+26)
-3. g=ggT(Koeff.,26): g=1→weiter · g|rechts→**alles ÷g, auch Modul!** · sonst „keine Lösung"
-4. a = Koeff.⁻¹·rechts (Inverse via ⑧b, im kleinen Modul) · g Kandidaten a₀, a₀+26/g,… → nur **ggT(a,26)=1** gültig
-5. b ≡ y₁ − a·x₁ (mod 26) · 6. **Probe mit beiden Paaren!** · Entschlüsseln: x = a⁻¹(y−b) mod 26
-### ⑩b Klassiker: Caesar = Verschiebung y=x+k mod 26 · Vigenère = Caesar mit Schlüsselwort
-  spaltenweise · Diffie-Hellman: öffentlich p, g; A: a geheim, α=gᵃ; B: b, β=gᵇ; Schlüssel K=βᵃ=αᵇ=g^(ab) mod p
+- 2 Paare → subtrahieren: a·Δx ≡ Δy (mod 26) → ⑧b (ggT-Fälle!) → nur ggT(a,26)=1 gültig
+- b = y₁−a·x₁ mod 26 · **Probe mit beiden Paaren** · entschlüsseln x=a⁻¹(y−b) mod 26
+
+## ⑪ Klassiker ○
+
+- Caesar y=x+k mod 26 (26 Schlüssel, häufigster Buchstabe = E=4 → k) · monoalphabetisch: 26! Schlüssel, Häufigkeitsanalyse
+- Vigenère: yᵢ = xᵢ + Schlüsselbuchstabe(i mod Länge) mod 26 · entschlüsseln: minus
+
+## ⑫ Diffie-Hellman ○
+
+- öffentlich p, g · A: α=gᵃ mod p · B: β=gᵇ mod p · **K=βᵃ=αᵇ mod p**
 
 ---
-**Konstanten:** 2¹⁰=1024 · Primzahlen bis 30: 2,3,5,7,11,13,17,19,23,29 · Quadrate: 17²=289, 19²=361, 23²=529
-**Checkliste je Aufgabe:** klassifiziert? ✓ Formel notiert? ✓ (mod …) dabei? ✓ Σ P=1 / Probe? ✓ „mindestens"→Gegenereignis? ✓
-**Abbruchdisziplin: 3 min kein Fortschritt → markieren, nächste Aufgabe, später zurück.**
+**Konstanten:** 17²=289 · 19²=361 · 23²=529 · 29²=841 · 31²=961 · 2¹⁰=1024 · A0 B1 C2 D3 E4 F5 G6 H7 I8 J9 K10 L11 M12 N13 O14 P15 Q16 R17 S18 T19 U20 V21 W22 X23 Y24 Z25
+**🧮** ÷R = Teilen mit Rest · GGT(a;b) · negativer Rest → +Modul
+**Jede Aufgabe:** klassifiziert? · Formel notiert? · (mod …) dabei? · Probe? — **3 min kein Fortschritt → weiter.**
